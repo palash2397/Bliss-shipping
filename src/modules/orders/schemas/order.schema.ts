@@ -32,19 +32,19 @@ export class Order {
   pickupAddress: string;
 
   @Prop({ required: true })
-  pickupLat: number;
+  pickupLat: string;
 
   @Prop({ required: true })
-  pickupLng: number;
+  pickupLng: string;
 
   @Prop({ required: true })
   dropAddress: string;
 
   @Prop({ required: true })
-  dropLat: number;
+  dropLat: string;
 
   @Prop({ required: true })
-  dropLng: number;
+  dropLng: string;
 
   @Prop({
     enum: DELIVERY_STATUS,

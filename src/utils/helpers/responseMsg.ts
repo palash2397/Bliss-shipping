@@ -92,6 +92,15 @@ export const Msg = {
   MERCHANT_PROFILES_FETCHED: `Merchant profiles fetched successfully`,
 
 
+  // Orders
+  ORDER_CREATED: `Order created successfully`,
+  ORDER_NOT_FOUND: `Order not found`,
+  ORDER_UPDATED: `Order updated successfully`,
+  ORDER_DELETED: `Order deleted successfully`,
+  ORDER_FETCHED: `Order fetched successfully`,
+  ORDERS_FETCHED: `Orders fetched successfully`,
+
+
  
 
 };
