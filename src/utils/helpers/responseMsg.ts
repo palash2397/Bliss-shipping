@@ -90,6 +90,7 @@ export const Msg = {
   MERCHANT_PROFILE_DELETED: `Merchant profile deleted successfully`,
   MERCHANT_PROFILE_FETCHED: `Merchant profile fetched successfully`,
   MERCHANT_PROFILES_FETCHED: `Merchant profiles fetched successfully`,
+  MERCHANT_SUMMARY_FETCHED: `Merchant summary fetched successfully`,
 
 
   // Orders

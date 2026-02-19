@@ -310,44 +310,56 @@ export class OrdersService {
   }
 
   async merchantSummary(userId: string) {
-    const merchant = await this.merchantModel.findOne({ userId });
+    try {
+      const merchant = await this.merchantModel.findOne({
+        userId: new Types.ObjectId(userId),
+      });
 
-    if (!merchant) {
-      return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      if (!merchant) {
+        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      }
+
+      const merchantId = merchant._id;
+
+      const [total, delivered, inTransit, failed] = await Promise.all([
+        this.orderModel.countDocuments({
+          merchantId,
+          isDeleted: false,
+        }),
+
+        this.orderModel.countDocuments({
+          merchantId,
+          dispatchStatus: DELIVERY_STATUS.DELIVERED,
+          isDeleted: false,
+        }),
+
+        this.orderModel.countDocuments({
+          merchantId,
+          dispatchStatus: DELIVERY_STATUS.OUT_FOR_DELIVERY,
+          isDeleted: false,
+        }),
+
+        this.orderModel.countDocuments({
+          merchantId,
+          dispatchStatus: DELIVERY_STATUS.FAILED,
+          isDeleted: false,
+        }),
+
+        // this.orderModel.countDocuments({
+        //   merchantId,
+        //   dispatchStatus: DELIVERY_STATUS.CREATED,
+        //   isDeleted: false,
+        // }),
+      ]);
+
+      return new ApiResponse(
+        200,
+        { total, delivered, inTransit, failed },
+        Msg.MERCHANT_SUMMARY_FETCHED,
+      );
+    } catch (error) {
+      console.log(`Error getting merchant summary: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
-
-    const merchantId = merchant._id;
-
-    const [total, delivered, inTransit, failed] = await Promise.all([
-      this.orderModel.countDocuments({
-        merchantId,
-        isDeleted: false,
-      }),
-
-      this.orderModel.countDocuments({
-        merchantId,
-        dispatchStatus: DELIVERY_STATUS.DELIVERED,
-        isDeleted: false,
-      }),
-
-      this.orderModel.countDocuments({
-        merchantId,
-        dispatchStatus: DELIVERY_STATUS.OUT_FOR_DELIVERY,
-        isDeleted: false,
-      }),
-
-      this.orderModel.countDocuments({
-        merchantId,
-        dispatchStatus: DELIVERY_STATUS.FAILED,
-        isDeleted: false,
-      }),
-    ]);
-
-    return {
-      total,
-      delivered,
-      inTransit,
-      failed,
-    };
   }
 }

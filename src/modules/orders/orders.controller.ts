@@ -84,4 +84,9 @@ export class OrdersController {
   filter(@Req() req: any, @Query() query: any) {
     return this.ordersService.filterOrders(req.user.id, query);
   }
+
+  @Get('/merchant/summary')
+  getMerchantSummary(@Req() req: any) {
+    return this.ordersService.merchantSummary(req.user.id);
+  }
 }
