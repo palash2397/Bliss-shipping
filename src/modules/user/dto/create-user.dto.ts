@@ -28,7 +28,7 @@ export class CreateUserDto {
  
   password: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   role: string;
 
 }
