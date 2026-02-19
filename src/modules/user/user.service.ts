@@ -17,7 +17,7 @@ export class UserService {
   async createUser(dto: CreateUserDto) {
     try {
       const userDoc = await this.userModel.findOne({ email: dto.email });
-      if (userDoc) {
+      if (userDoc && (userDoc.role === dto.role)) {
         return new ApiResponse(400, {}, Msg.USER_EXISTS);
       }
       const user = await this.userModel.create(dto);
@@ -33,8 +33,17 @@ export class UserService {
       const { email, password } = dto;
       const user = await this.userModel.findOne({ email }).select('+password');
       if (!user) {
-        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
+        return new ApiResponse(404, {}, Msg.INVALID_CREDENTIALS);
       }
+
+      if (!user.isActive) {
+        return new ApiResponse(401, {}, Msg.USER_INACTIVE);
+      }
+
+      if (user.role !== dto.role) {
+        return new ApiResponse(401, {}, Msg.INVALID_CREDENTIALS);
+      }
+      
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
         return new ApiResponse(401, {}, Msg.INVALID_CREDENTIALS);

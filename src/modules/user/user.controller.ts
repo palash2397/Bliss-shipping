@@ -5,6 +5,9 @@ import { RoleGuard } from 'src/modules/auth/roles/roles.guard';
 
 
 import { CreateUserDto } from './dto/create-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
+
+
 import { Role } from 'src/common/enums/role.enum';
 import { Roles } from 'src/modules/auth/roles/roles.decorator';
 
@@ -19,6 +22,11 @@ export class UserController {
   @Roles(Role.ADMIN)
   async createUser(@Body() dto: CreateUserDto) {
     return this.userService.createUser(dto);
+  }
+
+  @Post('login')
+  async login(@Body() dto: LoginUserDto) {
+    return this.userService.login(dto);
   }
 
 }
