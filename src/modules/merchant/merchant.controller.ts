@@ -13,8 +13,8 @@ export class MerchantController {
   constructor(private readonly merchantService: MerchantService) {}
 
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Post('admin/profile')
-  @Roles(Role.ADMIN)
+  @Post('/profile')
+  @Roles(Role.MERCHANT)
   create(@Body() dto: CreateMerchantDto) {
     return this.merchantService.createProfile(dto);
   }

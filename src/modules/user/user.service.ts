@@ -7,17 +7,26 @@ import { Msg } from '../../utils/helpers/responseMsg';
 import { ApiResponse } from '../../utils/helpers/ApiResponse';
 
 import { UserDocument, User } from './schemas/user.schema';
+import {
+  MerchantDocument,
+  Merchant,
+} from '../merchant/schemas/merchant-profile.schema';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { Role } from '../../common/enums/role.enum';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Merchant.name) private merchantModel: Model<MerchantDocument>,
+  ) {}
 
   async createUser(dto: CreateUserDto) {
     try {
       const userDoc = await this.userModel.findOne({ email: dto.email });
-      if (userDoc && (userDoc.role === dto.role)) {
+      if (userDoc && userDoc.role === dto.role) {
         return new ApiResponse(400, {}, Msg.USER_EXISTS);
       }
       const user = await this.userModel.create(dto);
@@ -44,6 +53,14 @@ export class UserService {
       //   return new ApiResponse(401, {}, Msg.INVALID_CREDENTIALS);
       // }
       
+      // if (user.role === Role.MERCHANT) {
+      //   const merchant = await this.merchantModel.findOne({ user: user._id });
+      //   if (!merchant) {
+      //     return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      //   }
+        
+      // }
+
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
         return new ApiResponse(401, {}, Msg.INVALID_CREDENTIALS);
@@ -52,17 +69,21 @@ export class UserService {
       if (!user.isActive) {
         return new ApiResponse(401, {}, Msg.USER_INACTIVE);
       }
-      
-      const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET!, {
-        expiresIn: '10d',
-      });
+
+      const token = jwt.sign(
+        { id: user._id, role: user.role },
+        process.env.JWT_SECRET!,
+        {
+          expiresIn: '10d',
+        },
+      );
 
       const userData = {
         _id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
-        token
+        token,
       };
       return new ApiResponse(200, userData, Msg.LOGIN_SUCCESS);
     } catch (error) {

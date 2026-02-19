@@ -54,6 +54,12 @@ export class Order {
   dispatchStatus: string;
 
   @Prop({
+    index: true,
+    default: null,
+  })
+  externalOrderId: string;
+
+  @Prop({
     enum: STATUS,
     default: STATUS.PENDING,
     index: true,

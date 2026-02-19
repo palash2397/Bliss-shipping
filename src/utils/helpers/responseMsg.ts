@@ -99,6 +99,7 @@ export const Msg = {
   ORDER_DELETED: `Order deleted successfully`,
   ORDER_FETCHED: `Order fetched successfully`,
   ORDERS_FETCHED: `Orders fetched successfully`,
+  ORDERS_IMPORTED: `Orders imported successfully`,
 
 
  
