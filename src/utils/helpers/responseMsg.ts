@@ -76,6 +76,22 @@ export const Msg = {
   PHONE_ALREADY_VERIFIED: `Phone number already verified`,
 
 
+
+  // Merchant
+  MERCHANT_ALREADY_EXISTS: `Merchant already exists`,
+  MERCHANT_CREATED: `Merchant created successfully`,
+  MERCHANT_NOT_FOUND: `Merchant not found`,
+  MERCHANT_UPDATED: `Merchant updated successfully`,
+  MERCHANT_DELETED: `Merchant deleted successfully`,
+  MERCHANT_FETCHED: `Merchant fetched successfully`,
+  MERCHANTS_FETCHED: `Merchants fetched successfully`,
+  MERCHANT_PROFILE_CREATED: `Merchant profile created successfully`,
+  MERCHANT_PROFILE_UPDATED: `Merchant profile updated successfully`,
+  MERCHANT_PROFILE_DELETED: `Merchant profile deleted successfully`,
+  MERCHANT_PROFILE_FETCHED: `Merchant profile fetched successfully`,
+  MERCHANT_PROFILES_FETCHED: `Merchant profiles fetched successfully`,
+
+
  
 
 };

@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 import { Msg } from '../../utils/helpers/responseMsg';
 import { ApiResponse } from '../../utils/helpers/ApiResponse';
 
-import { UserDocument, User } from './schemas/create-user.schema';
+import { UserDocument, User } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 
