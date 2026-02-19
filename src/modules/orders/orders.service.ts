@@ -189,7 +189,9 @@ export class OrdersService {
 
   async findAllOrders(userId: string, page: number, limit: number) {
     try {
-      const merchant = await this.merchantModel.findOne({ userId: new Types.ObjectId(userId) });
+      const merchant = await this.merchantModel.findOne({
+        userId: new Types.ObjectId(userId),
+      });
       if (!merchant) {
         return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
       }
@@ -216,6 +218,22 @@ export class OrdersService {
       return new ApiResponse(200, { orders, total }, Msg.ORDERS_FETCHED);
     } catch (error) {
       console.log(`Error finding all orders: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+  async findOrderById(orderId: string, userId: string) {
+    try {
+      const order = await this.orderModel
+        .findOne({ _id: orderId, userId: new Types.ObjectId(userId) })
+        .populate('merchantId', 'contactName')
+        .lean();
+      if (!order) {
+        return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
+      }
+      return new ApiResponse(200, order, Msg.ORDER_FETCHED);
+    } catch (error) {
+      console.log(`Error finding order by id: ${error}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
