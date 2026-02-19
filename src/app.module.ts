@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './modules/user/user.module';
-import { MerchantOrdersModule } from './modules/merchant-orders/merchant-orders.module';
 import { MerchantModule } from './modules/merchant/merchant.module';
+import { OrdersModule } from './modules/orders/orders.module';
 
 @Module({
   imports: [
@@ -13,8 +13,10 @@ import { MerchantModule } from './modules/merchant/merchant.module';
       envFilePath: '.env',
     }),
     UserModule,
-    MerchantOrdersModule,
+
     MerchantModule,
+
+    OrdersModule,
   ],
   controllers: [],
   providers: [],

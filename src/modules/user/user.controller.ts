@@ -18,8 +18,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('create')
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard)
+  // @Roles(Role.ADMIN)
   async createUser(@Body() dto: CreateUserDto) {
     return this.userService.createUser(dto);
   }
