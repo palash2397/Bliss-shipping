@@ -19,7 +19,5 @@ export class LoginUserDto {
  
   password: string;
   
-  @IsNotEmpty()
-  role: string;
   
 }

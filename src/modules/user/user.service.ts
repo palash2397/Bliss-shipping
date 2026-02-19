@@ -40,9 +40,9 @@ export class UserService {
         return new ApiResponse(401, {}, Msg.USER_INACTIVE);
       }
 
-      if (user.role !== dto.role) {
-        return new ApiResponse(401, {}, Msg.INVALID_CREDENTIALS);
-      }
+      // if (user.role !== dto.role) {
+      //   return new ApiResponse(401, {}, Msg.INVALID_CREDENTIALS);
+      // }
       
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
