@@ -7,8 +7,9 @@ import {
   UploadedFile,
   UseInterceptors,
   BadRequestException,
-  HttpStatus,
   Get,
+  Param,
+  Query,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order';
@@ -72,5 +73,15 @@ export class OrdersController {
       parseInt(page, 10),
       parseInt(limit, 10),
     );
+  }
+
+  @Get('/find/:id')
+  findOne(@Req() req: any, @Param('id') id: string) {
+    return this.ordersService.findOrderById(id, req.user.id);
+  }
+
+  @Get('/filter')
+  filter(@Req() req: any, @Query() query: any) {
+    return this.ordersService.filterOrders(req.user.id, query);
   }
 }
