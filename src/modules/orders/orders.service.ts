@@ -364,47 +364,53 @@ export class OrdersService {
   }
 
   async recentOrders(userId: string, type: string) {
-    const merchant = await this.merchantModel.findOne({ userId });
-
-    if (!merchant) {
-      return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
-    }
-
-    const merchantId = merchant._id;
-
-    const todayStart = new Date();
-    todayStart.setHours(0, 0, 0, 0);
-
-    const tomorrowStart = new Date(todayStart);
-    tomorrowStart.setDate(todayStart.getDate() + 1);
-
-    const tomorrowEnd = new Date(tomorrowStart);
-    tomorrowEnd.setDate(tomorrowStart.getDate() + 1);
-
-    let filter: any = {
-      merchantId,
-      isDeleted: false,
-    };
-
-    if (type === 'today') {
-      filter.createdAt = { $gte: todayStart };
-    }
-
-    if (type === 'tomorrow') {
-      filter.createdAt = {
-        $gte: tomorrowStart,
-        $lt: tomorrowEnd,
-      };
-    }
-
-    if (type === 'scheduled') {
-      filter.dispatchStatus = 'SCHEDULED';
-    }
-
-    return this.orderModel
-      .find(filter)
-      .sort({ createdAt: -1 })
-      .limit(10)
-      .lean();
+   try {
+     const merchant = await this.merchantModel.findOne({ userId });
+ 
+     if (!merchant) {
+       return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+     }
+ 
+     const merchantId = merchant._id;
+ 
+     const todayStart = new Date();
+     todayStart.setHours(0, 0, 0, 0);
+ 
+     const tomorrowStart = new Date(todayStart);
+     tomorrowStart.setDate(todayStart.getDate() + 1);
+ 
+     const tomorrowEnd = new Date(tomorrowStart);
+     tomorrowEnd.setDate(tomorrowStart.getDate() + 1);
+ 
+     let filter: any = {
+       merchantId,
+       isDeleted: false,
+     };
+ 
+     if (type === 'today') {
+       filter.createdAt = { $gte: todayStart };
+     }
+ 
+     if (type === 'tomorrow') {
+       filter.createdAt = {
+         $gte: tomorrowStart,
+         $lt: tomorrowEnd,
+       };
+     }
+ 
+     if (type === 'scheduled') {
+       filter.dispatchStatus = 'SCHEDULED';
+     }
+ 
+     const orders = await this.orderModel
+       .find(filter)
+       .sort({ createdAt: -1 })
+       .limit(10)
+       .lean();
+    return new ApiResponse(200, orders, Msg.ORDERS_FETCHED);
+   } catch (error) {
+     console.log(`Error getting recent orders: ${error}`);
+     return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+   }
   }
 }
