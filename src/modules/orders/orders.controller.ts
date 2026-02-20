@@ -89,4 +89,9 @@ export class OrdersController {
   getMerchantSummary(@Req() req: any) {
     return this.ordersService.merchantSummary(req.user.id);
   }
+
+  @Get('/recent/:type')
+  recentOrders(@Req() req: any, @Param('type') type: string) {
+    return this.ordersService.recentOrders(req.user.id, type);
+  }
 }
