@@ -365,7 +365,7 @@ export class OrdersService {
 
   async recentOrders(userId: string, type: string) {
    try {
-     const merchant = await this.merchantModel.findOne({ userId });
+     const merchant = await this.merchantModel.findOne({ userId: new Types.ObjectId(userId) });
  
      if (!merchant) {
        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
