@@ -52,14 +52,6 @@ export class UserService {
       // if (user.role !== dto.role) {
       //   return new ApiResponse(401, {}, Msg.INVALID_CREDENTIALS);
       // }
-      
-      // if (user.role === Role.MERCHANT) {
-      //   const merchant = await this.merchantModel.findOne({ user: user._id });
-      //   if (!merchant) {
-      //     return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
-      //   }
-        
-      // }
 
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
@@ -85,6 +77,23 @@ export class UserService {
         role: user.role,
         token,
       };
+
+      if (user.role === Role.MERCHANT) {
+        const merchant = await this.merchantModel.findOne({ user: user._id });
+        console.log('merchant', merchant);
+        if (merchant) {
+          return new ApiResponse(
+            404,
+            { userData, isMerchant: true },
+            Msg.MERCHANT_NOT_FOUND,
+          );
+        }
+        return new ApiResponse(
+          200,
+          { userData, isMerchant: false },
+          Msg.LOGIN_SUCCESS,
+        );
+      }
       return new ApiResponse(200, userData, Msg.LOGIN_SUCCESS);
     } catch (error) {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
