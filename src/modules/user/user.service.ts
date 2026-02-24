@@ -79,8 +79,8 @@ export class UserService {
       };
 
       if (user.role === Role.MERCHANT) {
-        const merchant = await this.merchantModel.findOne({ user: user._id });
-        console.log('merchant', merchant);
+        console.log("Merchant ID:", user._id);
+        const merchant = await this.merchantModel.findOne({ userId: user._id });
         if (merchant) {
           return new ApiResponse(
             404,
