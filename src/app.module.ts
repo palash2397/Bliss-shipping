@@ -5,6 +5,9 @@ import { UserModule } from './modules/user/user.module';
 import { MerchantModule } from './modules/merchant/merchant.module';
 import { OrdersModule } from './modules/orders/orders.module';
 
+
+import { AppController } from './app.controller';
+
 @Module({
   imports: [
     DatabaseModule,
@@ -13,12 +16,10 @@ import { OrdersModule } from './modules/orders/orders.module';
       envFilePath: '.env',
     }),
     UserModule,
-
     MerchantModule,
-
     OrdersModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
