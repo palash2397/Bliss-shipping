@@ -11,6 +11,7 @@ async function bootstrap() {
 
   app.use(morgan('dev'));
 
+
   // enable global validation for DTOs
   app.useGlobalPipes(
     new ValidationPipe({
