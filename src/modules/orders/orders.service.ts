@@ -413,4 +413,14 @@ export class OrdersService {
      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
    }
   }
+
+  async cancelOrder(userId: string, orderId: string) {
+    try {
+      
+    } catch (error) {
+      console.log(`Error cancelling order: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+    
+  }
 }
