@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { CSV_IMPORT_STATUS } from 'src/common/enums/csv-import-history.enum';
 
 export type ImportHistoryDocument = ImportHistory & Document;
 
@@ -27,8 +28,8 @@ export class ImportHistory {
   failedRows: number;
 
   @Prop({
-    enum: ['SUCCESS', 'PARTIAL', 'FAILED'],
-    default: 'SUCCESS',
+    enum: CSV_IMPORT_STATUS,
+    default: CSV_IMPORT_STATUS.SUCCESS,
   })
   status: string;
 }
