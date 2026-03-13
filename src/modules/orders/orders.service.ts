@@ -332,7 +332,7 @@ export class OrdersService {
     }
   }
 
-async merchantSummary(userId: string) {
+  async merchantSummary(userId: string) {
     try {
       const merchant = await this.merchantModel.findOne({
         userId: new Types.ObjectId(userId),
@@ -474,7 +474,21 @@ async merchantSummary(userId: string) {
 
   async importHistory(userId: string) {
     try {
-      
+      const merchant = await this.merchantModel.findOne({
+        userId: new Types.ObjectId(userId),
+      });
+
+      if (!merchant) {
+        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      }
+
+      const data = await this.importHistoryModel
+        .find({ merchantId: merchant._id })
+        .sort({ createdAt: -1 })
+        .limit(20)
+        .lean();
+
+      return new ApiResponse(200, data, Msg.IMPORT_HISTORY_FETCHED);
     } catch (error) {
       console.log(`Error getting import history: ${error}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
