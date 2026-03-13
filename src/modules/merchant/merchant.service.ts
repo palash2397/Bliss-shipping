@@ -9,6 +9,7 @@ import { User, UserDocument } from '../user/schemas/user.schema';
 import { Merchant, MerchantDocument } from './schemas/merchant-profile.schema';
 
 import { CreateMerchantDto } from './dto/create-profile.dto';
+import { UpdateMerchantDto } from './dto/update-profile.dto';
 
 @Injectable()
 export class MerchantService {
@@ -57,6 +58,16 @@ export class MerchantService {
     } catch (error) {
       console.log(`error getting merchant profile: ${error.message}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+  async update(dto: UpdateMerchantDto, userId: string){
+    try {
+      
+    } catch (error) {
+       console.log(`error updating merchant profile: ${error.message}`);
+       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+      
     }
   }
 }
