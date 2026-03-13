@@ -5,6 +5,8 @@ import {
   
 } from 'class-validator';
 
-// export class UpdateMerchantDto extends CreateMerchantDto {
+import { CreateMerchantDto } from './create-profile.dto';
+
+export class UpdateMerchantDto extends CreateMerchantDto {
   
-// }
+}
