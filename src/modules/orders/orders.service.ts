@@ -364,59 +364,63 @@ export class OrdersService {
   }
 
   async recentOrders(userId: string, type: string) {
-   try {
-     const merchant = await this.merchantModel.findOne({ userId: new Types.ObjectId(userId) });
- 
-     if (!merchant) {
-       return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
-     }
- 
-     const merchantId = merchant._id;
- 
-     const todayStart = new Date();
-     todayStart.setHours(0, 0, 0, 0);
- 
-     const tomorrowStart = new Date(todayStart);
-     tomorrowStart.setDate(todayStart.getDate() + 1);
- 
-     const tomorrowEnd = new Date(tomorrowStart);
-     tomorrowEnd.setDate(tomorrowStart.getDate() + 1);
- 
-     let filter: any = {
-       merchantId,
-       isDeleted: false,
-     };
- 
-     if (type === 'today') {
-       filter.createdAt = { $gte: todayStart };
-     }
- 
-     if (type === 'tomorrow') {
-       filter.createdAt = {
-         $gte: tomorrowStart,
-         $lt: tomorrowEnd,
-       };
-     }
- 
-     if (type === 'scheduled') {
-       filter.dispatchStatus = 'SCHEDULED';
-     }
- 
-     const orders = await this.orderModel
-       .find(filter)
-       .sort({ createdAt: -1 })
-       .limit(10)
-       .lean();
-    return new ApiResponse(200, orders, Msg.ORDERS_FETCHED);
-   } catch (error) {
-     console.log(`Error getting recent orders: ${error}`);
-     return new ApiResponse(500, {}, Msg.SERVER_ERROR);
-   }
+    try {
+      const merchant = await this.merchantModel.findOne({
+        userId: new Types.ObjectId(userId),
+      });
+
+      if (!merchant) {
+        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      }
+
+      const merchantId = merchant._id;
+
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+
+      const tomorrowStart = new Date(todayStart);
+      tomorrowStart.setDate(todayStart.getDate() + 1);
+
+      const tomorrowEnd = new Date(tomorrowStart);
+      tomorrowEnd.setDate(tomorrowStart.getDate() + 1);
+
+      let filter: any = {
+        merchantId,
+        isDeleted: false,
+      };
+
+      if (type === 'today') {
+        filter.createdAt = { $gte: todayStart };
+      }
+
+      if (type === 'tomorrow') {
+        filter.createdAt = {
+          $gte: tomorrowStart,
+          $lt: tomorrowEnd,
+        };
+      }
+
+      if (type === 'scheduled') {
+        filter.dispatchStatus = 'SCHEDULED';
+      }
+
+      const orders = await this.orderModel
+        .find(filter)
+        .sort({ createdAt: -1 })
+        .limit(10)
+        .lean();
+      return new ApiResponse(200, orders, Msg.ORDERS_FETCHED);
+    } catch (error) {
+      console.log(`Error getting recent orders: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
   }
 
   async cancelOrder(userId: string, orderId: string) {
     try {
-      const merchant = await this.merchantModel.findOne({ userId: new Types.ObjectId(userId) });
+      const merchant = await this.merchantModel.findOne({
+        userId: new Types.ObjectId(userId),
+      });
       console.log('merchant', merchant);
       if (!merchant) {
         return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
@@ -435,16 +439,13 @@ export class OrdersService {
         return new ApiResponse(400, {}, Msg.ORDER_CANNOT_BE_CANCELLED);
       }
 
-  
-
       order.dispatchStatus = DELIVERY_STATUS.CANCELLED;
       await order.save();
-    
+
       return new ApiResponse(200, {}, Msg.ORDER_CANCELLED);
     } catch (error) {
       console.log(`Error cancelling order: ${error}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
-    
   }
 }
