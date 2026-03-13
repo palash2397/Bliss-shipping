@@ -462,8 +462,17 @@ export class OrdersService {
         return new ApiResponse(400, {}, Msg.ORDER_CANNOT_BE_CANCELLED);
       }
 
-      order.dispatchStatus = DELIVERY_STATUS.CANCELLED;
-      await order.save();
+      await this.orderModel.findByIdAndUpdate(orderId, {
+        dispatchStatus: DELIVERY_STATUS.CANCELLED,
+        dispatchStatusDate: new Date(),
+        $push: {
+          statusHistory: {
+            status: DELIVERY_STATUS.CANCELLED,
+            time: new Date(),
+            updatedBy: new Types.ObjectId(userId),
+          },
+        },
+      });
 
       return new ApiResponse(200, {}, Msg.ORDER_CANCELLED);
     } catch (error) {

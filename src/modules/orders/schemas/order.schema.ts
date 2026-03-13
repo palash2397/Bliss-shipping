@@ -75,7 +75,23 @@ export class Order {
   assignedDriverId: Types.ObjectId;
 
   @Prop({ default: null })
-  deliveredAt: Date;
+  dispatchStatusDate: Date;
+
+  @Prop({
+    type: [
+      {
+        status: { type: String },
+        time: { type: Date },
+        updatedBy: { type: String },
+      },
+    ],
+    default: [],
+  })
+  statusHistory: {
+    status: string;
+    time: Date;
+    updatedBy: string;
+  }[];
 
   @Prop({ default: null })
   failedReason: string;
