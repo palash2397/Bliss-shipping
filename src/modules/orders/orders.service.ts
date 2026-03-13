@@ -23,6 +23,7 @@ import {
 
 import { DELIVERY_STATUS } from '../../common/enums/delivery-status.enum';
 import { STATUS } from '../../common/enums/status.enum';
+import { CSV_IMPORT_STATUS } from 'src/common/enums/csv-import-history.enum';
 
 import { CreateOrderDto } from './dto/create-order';
 import { FilterOrdersDto } from './dto/filter-order.dto';
@@ -168,19 +169,19 @@ export class OrdersService {
           paymentStatus: STATUS.PENDING,
         });
 
-        // await this.importHistoryModel.create({
-        //   merchantId: merchant._id,
-        //   fileName: 'orders_upload.csv',
-        //   totalRows: records.length + failedRows.length,
-        //   successRows: records.length,
-        //   failedRows: failedRows.length,
-        //   status:
-        //     failedRows.length === 0
-        //       ? 'SUCCESS'
-        //       : records.length === 0
-        //         ? 'FAILED'
-        //         : 'PARTIAL',
-        // });
+        await this.importHistoryModel.create({
+          merchantId: merchant._id,
+          fileName: 'orders_upload.csv',
+          totalRows: records.length + failedRows.length,
+          successRows: records.length,
+          failedRows: failedRows.length,
+          status:
+            failedRows.length === 0
+              ? CSV_IMPORT_STATUS.SUCCESS
+              : records.length === 0
+                ? CSV_IMPORT_STATUS.FAILED
+                : CSV_IMPORT_STATUS.PARTIAL,
+        });
       } catch (error: any) {
         failedRows.push({
           rowNumber,
