@@ -427,9 +427,15 @@ export class OrdersService {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
       }
 
+      if (order.dispatchStatus == DELIVERY_STATUS.CANCELLED) {
+        return new ApiResponse(400, {}, Msg.ORDER_ALREADY_CANCELLED);
+      }
+
       if (order.dispatchStatus !== DELIVERY_STATUS.CREATED) {
         return new ApiResponse(400, {}, Msg.ORDER_CANNOT_BE_CANCELLED);
       }
+
+  
 
       order.dispatchStatus = DELIVERY_STATUS.CANCELLED;
       await order.save();
