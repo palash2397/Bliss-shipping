@@ -63,11 +63,19 @@ export class MerchantService {
 
   async update(dto: UpdateMerchantDto, userId: string) {
     try {
+      // const merchant = await this.merchantModel.findOne({
+      //   userId: new Types.ObjectId(userId),
+      // });
+      
+      // console.log('Merchant:', merchant);
+
       const updatedMerchant = await this.merchantModel.findByIdAndUpdate(
         userId,
         dto,
         { new: true },
       );
+
+      console.log("updatedMerchant ------------->", updatedMerchant);
       if (!updatedMerchant) {
         return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
       }
