@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types} from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 import { Msg } from '../../utils/helpers/responseMsg';
 import { ApiResponse } from '../../utils/helpers/ApiResponse';
@@ -47,7 +47,7 @@ export class MerchantService {
 
   async profile(id: string) {
     try {
-    console.log("Merchant ID:", id);
+      console.log('Merchant ID:', id);
       const merchant = await this.merchantModel
         .findOne({ userId: new Types.ObjectId(id) })
         .populate('userId', 'name email phone');
@@ -61,13 +61,21 @@ export class MerchantService {
     }
   }
 
-  async update(dto: UpdateMerchantDto, userId: string){
+  async update(dto: UpdateMerchantDto, userId: string) {
     try {
-      
+      const updatedMerchant = await this.merchantModel.findByIdAndUpdate(
+        userId,
+        dto,
+        { new: true },
+      );
+      if (!updatedMerchant) {
+        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      }
+
+      return new ApiResponse(200, updatedMerchant, Msg.MERCHANT_UPDATED);
     } catch (error) {
-       console.log(`error updating merchant profile: ${error.message}`);
-       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
-      
+      console.log(`error updating merchant profile: ${error.message}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
 }
