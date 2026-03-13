@@ -416,7 +416,21 @@ export class OrdersService {
 
   async cancelOrder(userId: string, orderId: string) {
     try {
+      const merchant = await this.merchantModel.findOne({ userId });
+      if (!merchant) {
+        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      }
       
+    
+      
+      // if (order.dispatchStatus !== 'SCHEDULED') {
+      //   return new ApiResponse(400, {}, Msg.ORDER_CANNOT_BE_CANCELLED);
+      // }
+      
+      // order.dispatchStatus = 'CANCELLED';
+      // await order.save();
+      
+      return new ApiResponse(200, {}, Msg.ORDER_CANCELLED);
     } catch (error) {
       console.log(`Error cancelling order: ${error}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
