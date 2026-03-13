@@ -7,6 +7,7 @@ import { OrdersModule } from './modules/orders/orders.module';
 
 
 import { AppController } from './app.controller';
+import { DispatcherModule } from './modules/dispatcher/dispatcher.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AppController } from './app.controller';
     UserModule,
     MerchantModule,
     OrdersModule,
+    DispatcherModule,
   ],
   controllers: [AppController],
   providers: [],
