@@ -63,24 +63,21 @@ export class MerchantService {
 
   async update(dto: UpdateMerchantDto, userId: string) {
     try {
-      // const merchant = await this.merchantModel.findOne({
-      //   userId: new Types.ObjectId(userId),
-      // });
-      
-      // console.log('Merchant:', merchant);
+      const merchant = await this.merchantModel.findOne({
+        userId: new Types.ObjectId(userId),
+      });
 
-      const updatedMerchant = await this.merchantModel.findByIdAndUpdate(
-        { userId: new Types.ObjectId(userId) },
+      if (!merchant) {
+        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      }
+
+      const updateMerchant = await this.merchantModel.findByIdAndUpdate(
+        merchant._id,
         dto,
         { new: true },
       );
 
-      console.log("updatedMerchant ------------->", updatedMerchant);
-      if (!updatedMerchant) {
-        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
-      }
-
-      return new ApiResponse(200, updatedMerchant, Msg.MERCHANT_UPDATED);
+      return new ApiResponse(200, updateMerchant, Msg.MERCHANT_UPDATED);
     } catch (error) {
       console.log(`error updating merchant profile: ${error.message}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
