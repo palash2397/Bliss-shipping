@@ -488,6 +488,10 @@ export class OrdersService {
         .limit(20)
         .lean();
 
+      if (!data || data.length === 0) {
+        return new ApiResponse(404, {}, Msg.IMPORT_HISTORY_NOT_FOUND);
+      }
+
       return new ApiResponse(200, data, Msg.IMPORT_HISTORY_FETCHED);
     } catch (error) {
       console.log(`Error getting import history: ${error}`);
