@@ -427,7 +427,7 @@ export class OrdersService {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
       }
 
-      if (order.dispatchStatus !== 'SCHEDULED') {
+      if (order.dispatchStatus !== DELIVERY_STATUS.CREATED) {
         return new ApiResponse(400, {}, Msg.ORDER_CANNOT_BE_CANCELLED);
       }
 
