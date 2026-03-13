@@ -11,6 +11,8 @@ import { ApiResponse } from '../../utils/helpers/ApiResponse';
 
 import { Order, OrderDocument } from './schemas/order.schema';
 import { User, UserDocument } from '../user/schemas/user.schema';
+import { ImportHistory, ImportHistoryDocument } from './schemas/import-history.schema';
+
 import {
   Merchant,
   MerchantDocument,
@@ -28,6 +30,8 @@ export class OrdersService {
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     @InjectModel(Merchant.name)
     private readonly merchantModel: Model<MerchantDocument>,
+    @InjectModel(ImportHistory.name)
+    private readonly importHistoryModel: Model<ImportHistoryDocument>,
 
     @InjectConnection()
     private readonly connection: Connection,
