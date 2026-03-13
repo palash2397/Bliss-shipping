@@ -429,6 +429,9 @@ export class OrdersService {
       if (order.dispatchStatus !== 'SCHEDULED') {
         return new ApiResponse(400, {}, Msg.ORDER_CANNOT_BE_CANCELLED);
       }
+
+      order.dispatchStatus = DELIVERY_STATUS.CANCELLED;
+      await order.save();
     
       return new ApiResponse(200, {}, Msg.ORDER_CANCELLED);
     } catch (error) {
