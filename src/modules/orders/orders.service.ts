@@ -230,6 +230,7 @@ export class OrdersService {
             isDeleted: false,
           })
           .populate('merchantId', 'contactName')
+          .populate('statusHistory.updatedBy', 'name')
           .sort({ createdAt: -1 })
           .skip(skip)
           .limit(limit)
@@ -259,6 +260,7 @@ export class OrdersService {
       const order = await this.orderModel
         .findOne({ _id: new Types.ObjectId(orderId), merchantId: merchant._id })
         .populate('merchantId', 'contactName')
+        .populate('statusHistory.updatedBy', 'name')
         .lean();
       if (!order) {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);

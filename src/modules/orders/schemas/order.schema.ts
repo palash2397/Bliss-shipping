@@ -68,7 +68,7 @@ export class Order {
 
   @Prop({
     type: Types.ObjectId,
-    ref: 'Driver',
+    ref: 'User',
     default: null,
     index: true,
   })
@@ -82,7 +82,7 @@ export class Order {
       {
         status: { type: String },
         time: { type: Date },
-        updatedBy: { type: String },
+        updatedBy: { type: Types.ObjectId, ref: 'User' },
       },
     ],
     default: [],
