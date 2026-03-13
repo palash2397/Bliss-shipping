@@ -332,7 +332,7 @@ export class OrdersService {
     }
   }
 
-  async merchantSummary(userId: string) {
+async merchantSummary(userId: string) {
     try {
       const merchant = await this.merchantModel.findOne({
         userId: new Types.ObjectId(userId),
@@ -468,6 +468,15 @@ export class OrdersService {
       return new ApiResponse(200, {}, Msg.ORDER_CANCELLED);
     } catch (error) {
       console.log(`Error cancelling order: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+  async importHistory(userId: string) {
+    try {
+      
+    } catch (error) {
+      console.log(`Error getting import history: ${error}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
