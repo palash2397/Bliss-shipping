@@ -102,5 +102,9 @@ export class OrdersController {
     return this.ordersService.cancelOrder(req.user.id, id);
   }
 
-
+  @Roles(Role.MERCHANT)
+  @Get('import/history')
+  async getImportHistory(@Req() req: any) {
+    return this.ordersService.importHistory(req.user.id);
+  }
 }

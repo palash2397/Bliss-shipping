@@ -478,6 +478,8 @@ export class OrdersService {
         userId: new Types.ObjectId(userId),
       });
 
+      console.log('merchant', merchant);
+
       if (!merchant) {
         return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
       }
