@@ -420,6 +420,11 @@ export class OrdersService {
       if (!merchant) {
         return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
       }
+
+      const order = await this.orderModel.findById(orderId);
+      if (!order) {
+        return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
+      }
       
     
       
