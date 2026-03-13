@@ -11,7 +11,10 @@ import { ApiResponse } from '../../utils/helpers/ApiResponse';
 
 import { Order, OrderDocument } from './schemas/order.schema';
 import { User, UserDocument } from '../user/schemas/user.schema';
-import { ImportHistory, ImportHistoryDocument } from './schemas/import-history.schema';
+import {
+  ImportHistory,
+  ImportHistoryDocument,
+} from './schemas/import-history.schema';
 
 import {
   Merchant,
@@ -19,6 +22,7 @@ import {
 } from '../merchant/schemas/merchant-profile.schema';
 
 import { DELIVERY_STATUS } from '../../common/enums/delivery-status.enum';
+import { STATUS } from '../../common/enums/status.enum';
 
 import { CreateOrderDto } from './dto/create-order';
 import { FilterOrdersDto } from './dto/filter-order.dto';
@@ -160,9 +164,23 @@ export class OrdersService {
           dropAddress: row.dropAddress,
           dropLat,
           dropLng,
-          dispatchStatus: 'CREATED',
-          paymentStatus: 'PENDING',
+          dispatchStatus: DELIVERY_STATUS.CREATED,
+          paymentStatus: STATUS.PENDING,
         });
+
+        // await this.importHistoryModel.create({
+        //   merchantId: merchant._id,
+        //   fileName: 'orders_upload.csv',
+        //   totalRows: records.length + failedRows.length,
+        //   successRows: records.length,
+        //   failedRows: failedRows.length,
+        //   status:
+        //     failedRows.length === 0
+        //       ? 'SUCCESS'
+        //       : records.length === 0
+        //         ? 'FAILED'
+        //         : 'PARTIAL',
+        // });
       } catch (error: any) {
         failedRows.push({
           rowNumber,
