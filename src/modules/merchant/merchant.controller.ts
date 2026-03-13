@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Param, Req, Get } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Param, Req, Get, Patch } from '@nestjs/common';
 import { MerchantService } from './merchant.service';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 
@@ -25,4 +25,12 @@ export class MerchantController {
   profile(@Req() req: any) {
     return this.merchantService.profile(req.user.id);
   }
+  
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Patch('profile')
+  @Roles(Role.MERCHANT)
+  update(@Body() dto: any, @Req() req: any) {
+    return this.merchantService.update(dto, req.user.id);
+  }
+
 }
