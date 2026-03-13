@@ -101,7 +101,8 @@ export const Msg = {
   ORDER_FETCHED: `Order fetched successfully`,
   ORDERS_FETCHED: `Orders fetched successfully`,
   ORDERS_IMPORTED: `Orders imported successfully`,
-
+  ORDER_CANCELLED: `Order cancelled successfully`,
+ 
 
  
 
