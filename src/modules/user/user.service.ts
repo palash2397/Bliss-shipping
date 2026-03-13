@@ -79,7 +79,7 @@ export class UserService {
       };
 
       if (user.role === Role.MERCHANT) {
-        console.log("Merchant ID:", user._id);
+        console.log('Merchant ID:', user._id);
         const merchant = await this.merchantModel.findOne({ userId: user._id });
         if (merchant) {
           return new ApiResponse(
