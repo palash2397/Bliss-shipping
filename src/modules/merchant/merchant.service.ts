@@ -70,7 +70,7 @@ export class MerchantService {
       // console.log('Merchant:', merchant);
 
       const updatedMerchant = await this.merchantModel.findByIdAndUpdate(
-        userId,
+        { userId: new Types.ObjectId(userId) },
         dto,
         { new: true },
       );
