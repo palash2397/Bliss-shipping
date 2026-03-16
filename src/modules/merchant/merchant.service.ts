@@ -51,10 +51,12 @@ export class MerchantService {
       const merchant = await this.merchantModel
         .findOne({ userId: new Types.ObjectId(id) })
         .populate('userId', 'name email phone');
+
+      console.log('Merchant:', merchant);
       if (!merchant) {
-        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+        return new ApiResponse(200, { isMerchant: false }, Msg.MERCHANT_NOT_FOUND);
       }
-      return new ApiResponse(200, merchant, Msg.MERCHANT_PROFILE_FETCHED);
+      return new ApiResponse(200, { isMerchant: true, merchant }, Msg.MERCHANT_PROFILE_FETCHED);
     } catch (error) {
       console.log(`error getting merchant profile: ${error.message}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
