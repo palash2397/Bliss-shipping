@@ -23,7 +23,10 @@ export class DispatcherService {
           dispatchStatus: DELIVERY_STATUS.CREATED,
           isDeleted: false,
         })
-        .sort({ createdAt: -1 });
+        .populate('merchantId', 'contactName')
+        .populate('statusHistory.updatedBy', 'name')
+        .sort({ createdAt: -1 })
+        .lean();
       if (!data || data.length === 0) {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
       }
