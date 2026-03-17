@@ -16,8 +16,19 @@ export class DispatcherService {
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
   ) {}
 
-  allOrders() {
+  async allOrders() {
     try {
+      const data = await this.orderModel
+        .find({
+          dispatchStatus: DELIVERY_STATUS.CREATED,
+          isDeleted: false,
+        })
+        .sort({ createdAt: -1 });
+      if (!data || data.length === 0) {
+        return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
+      }
+
+      return new ApiResponse(200, data, Msg.ORDERS_FETCHED);
     } catch (error) {
       console.log(`Error in allOrders by dispatcher: `, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
