@@ -109,6 +109,12 @@ export const Msg = {
   // Import History
   IMPORT_HISTORY_FETCHED: `Import history fetched successfully`,
   IMPORT_HISTORY_NOT_FOUND: `Import history not found`,
+
+
+  // Drivers
+  DRIVERS_FETCHED: `Drivers fetched successfully`,
+  DRIVER_NOT_FOUND: `Driver not found`,
+  DRIVER_ACTIVE: `Driver is active`,
  
 
  

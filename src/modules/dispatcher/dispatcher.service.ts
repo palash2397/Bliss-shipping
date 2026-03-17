@@ -4,8 +4,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { Order, OrderDocument } from '../orders/schemas/order.schema';
+import { User, UserDocument } from '../user/schemas/user.schema';
 import { AssignDriverDto } from './dto/assign-driver.dto';
 import { DELIVERY_STATUS } from '../../common/enums/delivery-status.enum';
+import { Role } from 'src/common/enums/role.enum';
 
 import { ApiResponse } from 'src/utils/helpers/ApiResponse';
 import { Msg } from 'src/utils/helpers/responseMsg';
@@ -14,6 +16,7 @@ import { Msg } from 'src/utils/helpers/responseMsg';
 export class DispatcherService {
   constructor(
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
 
   async allOrders() {
@@ -38,9 +41,17 @@ export class DispatcherService {
     }
   }
 
-  async allDrivers(){
+  async allDrivers() {
     try {
-        
+      const user = await this.userModel
+        .find({ role: Role.DRIVER, isActive: true })
+        .lean();
+
+      if (!user || user.length === 0) {
+        return new ApiResponse(404, {}, Msg.DRIVER_NOT_FOUND);
+      }
+
+      return new ApiResponse(200, user, Msg.DRIVERS_FETCHED);
     } catch (error) {
       console.log(`Error in allDrivers by dispatcher: `, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
