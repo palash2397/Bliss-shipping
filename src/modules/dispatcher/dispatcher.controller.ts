@@ -26,4 +26,11 @@ export class DispatcherController {
   getOrders() {
     return this.dispatcherService.allOrders();
   }
+
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN, Role.DISPATCHER)
+  @Get('drivers')
+  getDrivers() {
+    return this.dispatcherService.allDrivers();
+  }
 }
