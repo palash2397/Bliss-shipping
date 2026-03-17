@@ -37,4 +37,13 @@ export class DispatcherService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+
+  async allDrivers(){
+    try {
+        
+    } catch (error) {
+      console.log(`Error in allDrivers by dispatcher: `, error);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
 }
