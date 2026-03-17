@@ -15,6 +15,7 @@ import { RoleGuard } from 'src/modules/auth/roles/roles.guard';
 import { Role } from 'src/common/enums/role.enum';
 import { Roles } from 'src/modules/auth/roles/roles.decorator';
 import { JwtAuthGuard } from 'src/modules/auth/jwt/jwt.guard';
+import { AssignDriverDto } from './dto/assign-driver.dto';
 
 @Controller('dispatcher')
 export class DispatcherController {
@@ -32,5 +33,12 @@ export class DispatcherController {
   @Get('drivers')
   getDrivers() {
     return this.dispatcherService.allDrivers();
+  }
+
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN, Role.DISPATCHER)
+  @Patch('assign/driver')
+  assignDriver(@Body() dto: AssignDriverDto, @Req() req: any) {
+    return this.dispatcherService.assignDriver(dto, req.user.id);
   }
 }

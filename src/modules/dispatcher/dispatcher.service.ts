@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 import { Order, OrderDocument } from '../orders/schemas/order.schema';
 import { User, UserDocument } from '../user/schemas/user.schema';
-import { AssignDriverDto } from './dto/assign-driver.dto';
 import { DELIVERY_STATUS } from '../../common/enums/delivery-status.enum';
 import { Role } from 'src/common/enums/role.enum';
 
 import { ApiResponse } from 'src/utils/helpers/ApiResponse';
 import { Msg } from 'src/utils/helpers/responseMsg';
 
+import { AssignDriverDto } from './dto/assign-driver.dto';
 @Injectable()
 export class DispatcherService {
   constructor(
@@ -54,6 +54,53 @@ export class DispatcherService {
       return new ApiResponse(200, user, Msg.DRIVERS_FETCHED);
     } catch (error) {
       console.log(`Error in allDrivers by dispatcher: `, error);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+  async assignDriver(dto: AssignDriverDto, userId: string) {
+    try {
+      const { driverId, orderIds } = dto;
+
+      const driver = await this.userModel.findById(driverId);
+      if (!driver) {
+        return new ApiResponse(404, {}, Msg.DRIVER_NOT_FOUND);
+      }
+
+      const now = new Date();
+
+      const orders = await this.orderModel.find({
+        _id: { $in: orderIds },
+        dispatchStatus: DELIVERY_STATUS.CREATED,
+      });
+
+      if (!orders || orders.length === 0) {
+        return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
+      }
+
+
+     const assign =  await this.orderModel.updateMany(
+        {
+          _id: { $in: orderIds },
+          dispatchStatus: DELIVERY_STATUS.CREATED,
+        },
+        {
+          assignedDriverId: new Types.ObjectId(driverId),
+          dispatchStatus: DELIVERY_STATUS.ASSIGNED,
+          dispatchStatusDate: now,
+          $push: {
+            statusHistory: {
+              status: DELIVERY_STATUS.ASSIGNED,
+              time: now,
+              updatedBy: new Types.ObjectId(userId),
+            },
+          },
+        },
+      );
+
+      return new ApiResponse(200, {assign}, Msg.DRIVER_ASSIGNED_SUCCESSFULLY);
+    } catch (error) {
+      console.log(`Error in assignDriver by dispatcher: `, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
