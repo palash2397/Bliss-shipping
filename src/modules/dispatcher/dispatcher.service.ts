@@ -12,17 +12,15 @@ import { Msg } from 'src/utils/helpers/responseMsg';
 
 @Injectable()
 export class DispatcherService {
-    constructor(
-        @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
-    ) {}
+  constructor(
+    @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
+  ) {}
 
-    allOrders(){
-        try {
-            
-        } catch (error) {
-            
-        }
+  allOrders() {
+    try {
+    } catch (error) {
+      console.log(`Error in allOrders by dispatcher: `, error);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
-    
-
+  }
 }
