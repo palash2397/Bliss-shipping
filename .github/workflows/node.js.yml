@@ -38,3 +38,4 @@ jobs:
         run: |
           pm2 delete bliss-backend || true
           pm2 start dist/main.js --name bliss-backend
+          pm2 save
