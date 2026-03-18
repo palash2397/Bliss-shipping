@@ -37,7 +37,7 @@ export class VehicleService {
 
   async allVehicles() {
     try {
-      const vehicles = await this.vehicleModel.find();
+      const vehicles = await this.vehicleModel.find({ isActive: true });
       if (!vehicles || vehicles.length === 0) {
         return new ApiResponse(404, {}, Msg.VEHICLES_NOT_FOUND);
       }
@@ -47,4 +47,14 @@ export class VehicleService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+
+//   async assignVehicle(driverId: string, vehicleId: string) {
+    
+//     await this.driverVehicleModel.updateMany({ driverId }, { isActive: false });
+
+//     return this.driverVehicleModel.create({
+//       driverId,
+//       vehicleId,
+//     });
+//   }
 }
