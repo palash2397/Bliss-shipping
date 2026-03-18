@@ -8,6 +8,8 @@ import { OrdersModule } from './modules/orders/orders.module';
 
 import { AppController } from './app.controller';
 import { DispatcherModule } from './modules/dispatcher/dispatcher.module';
+import { DriverModule } from './modules/driver/driver.module';
+import { VehicleModule } from './modules/vehicle/vehicle.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { DispatcherModule } from './modules/dispatcher/dispatcher.module';
     MerchantModule,
     OrdersModule,
     DispatcherModule,
+    DriverModule,
+    VehicleModule,
   ],
   controllers: [AppController],
   providers: [],
