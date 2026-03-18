@@ -38,4 +38,11 @@ export class VehicleController {
     return this.vehicleService.allVehicles();
   }
 
+  @Post('assign/driver')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN, Role.DRIVER)
+  assignVehicle(@Req() req: any, @Body() dto: AssignVehicleDto) {
+    return this.vehicleService.assignVehicle(req.user.id, dto);
+  }
+
 }
