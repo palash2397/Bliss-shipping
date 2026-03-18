@@ -21,7 +21,7 @@ import { RoleGuard } from 'src/modules/auth/roles/roles.guard';
 import { Role } from 'src/common/enums/role.enum';
 import { Roles } from 'src/modules/auth/roles/roles.decorator';
 
-
+import { DeclineOrderDto } from './dto/order-decline.dto';
 
 @Controller('driver')
 export class DriverController {
@@ -40,5 +40,12 @@ export class DriverController {
   @Roles(Role.DRIVER)
   acceptOrder(@Req() req: any, @Param('id') orderId: string) {
     return this.driverService.acceptOrder(orderId, req.user.id);
+  }
+
+  @Patch('decline/order/:id')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.DRIVER)
+  declineOrder(@Req() req: any, @Body() dto: DeclineOrderDto) {
+    return this.driverService.declineOrder(dto.orderId, req.user.id, dto.reason);
   }
 }
