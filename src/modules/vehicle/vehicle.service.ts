@@ -61,12 +61,13 @@ export class VehicleService {
       }
 
       await this.driverVehicleModel.updateMany(
-        { driverId },
+        { driverId: new Types.ObjectId(driverId) },
         { isActive: false },
       );
 
       const data = await this.driverVehicleModel.create({
-        driverId
+        driverId: new Types.ObjectId(driverId),
+        vehicleId: new Types.ObjectId(dto.vehicleId),
       });
 
       return new ApiResponse(201, data, Msg.VEHICLE_ASSIGNED);
