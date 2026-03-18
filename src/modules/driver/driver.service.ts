@@ -75,32 +75,37 @@ export class DriverService {
 
   async acceptOrder(orderId: string, driverId: string) {
     try {
+    //   console.log('orderId', orderId);
+    //   console.log('driverId', driverId);
       const order = await this.orderModel.findOne({
-        _id: orderId,
-        assignedDriverId: driverId,
+        _id: new Types.ObjectId(orderId),
+        assignedDriverId: new Types.ObjectId(driverId),
         isDeleted: false,
+       
       });
+
+      console.log('order', order);
 
       if (!order) {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
       }
 
-      if (order.dispatchStatus !== DELIVERY_STATUS.ASSIGNED) {
-        return new ApiResponse(400, {}, Msg.ORDER_CANNOT_BE_ACCEPTED);
-      }
+    //   if (order.dispatchStatus !== DELIVERY_STATUS.ASSIGNED) {
+    //     return new ApiResponse(400, {}, Msg.ORDER_CANNOT_BE_ACCEPTED);
+    //   }
 
-      const now = new Date();
+    //   const now = new Date();
 
-      order.dispatchStatus = DELIVERY_STATUS.ACCEPTED;
-      order.dispatchStatusDate = now;
+    //   order.dispatchStatus = DELIVERY_STATUS.ACCEPTED;
+    //   order.dispatchStatusDate = now;
 
-      order.statusHistory.push({
-        status: DELIVERY_STATUS.ACCEPTED,
-        time: now,
-        updatedBy: driverId,
-      });
+    //   order.statusHistory.push({
+    //     status: DELIVERY_STATUS.ACCEPTED,
+    //     time: now,
+    //     updatedBy: driverId,
+    //   });
 
-      await order.save();
+    //   await order.save();
 
       return new ApiResponse(200, {}, Msg.ORDER_ACCEPTED);
     } catch (error) {

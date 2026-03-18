@@ -33,4 +33,12 @@ export class DriverController {
   getTasks(@Req() req: any, @Query('tab') tab: string) {
     return this.driverService.getDriverTasks(req.user.id, tab);
   }
+
+
+  @Patch('accept/order/:id')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.DRIVER)
+  acceptOrder(@Req() req: any, @Param('id') orderId: string) {
+    return this.driverService.acceptOrder(orderId, req.user.id);
+  }
 }
