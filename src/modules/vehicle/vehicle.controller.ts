@@ -53,4 +53,11 @@ export class VehicleController {
     return this.vehicleService.myAssignVehicle(req.user.id);
   }
 
+  @Get('history')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN, Role.DRIVER)
+  vehicleHistory(@Req() req: any) {
+    return this.vehicleService.vehicleHistory(req.user.id);
+  }
+
 }
