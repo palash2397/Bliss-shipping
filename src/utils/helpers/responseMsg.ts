@@ -104,6 +104,8 @@ export const Msg = {
   ORDER_CANCELLED: `Order cancelled successfully`,
   ORDER_CANNOT_BE_CANCELLED: `Order cannot be cancelled after dispatch`,
   ORDER_ALREADY_CANCELLED: `Order is already cancelled`,
+  ORDER_CANNOT_BE_ACCEPTED: `Order cannot be accepted`,
+  ORDER_ACCEPTED: `Order accepted successfully`,
 
 
   // Import History

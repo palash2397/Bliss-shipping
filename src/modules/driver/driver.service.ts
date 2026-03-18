@@ -72,4 +72,40 @@ export class DriverService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+
+  async acceptOrder(orderId: string, driverId: string) {
+    try {
+      const order = await this.orderModel.findOne({
+        _id: orderId,
+        assignedDriverId: driverId,
+        isDeleted: false,
+      });
+
+      if (!order) {
+        return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
+      }
+
+      if (order.dispatchStatus !== DELIVERY_STATUS.ASSIGNED) {
+        return new ApiResponse(400, {}, Msg.ORDER_CANNOT_BE_ACCEPTED);
+      }
+
+      const now = new Date();
+
+      order.dispatchStatus = DELIVERY_STATUS.ACCEPTED;
+      order.dispatchStatusDate = now;
+
+      order.statusHistory.push({
+        status: DELIVERY_STATUS.ACCEPTED,
+        time: now,
+        updatedBy: driverId,
+      });
+
+      await order.save();
+
+      return new ApiResponse(200, {}, Msg.ORDER_ACCEPTED);
+    } catch (error) {
+      console.log(`error while accepting order:`, error);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
 }
