@@ -7,20 +7,12 @@ export type VehicleDocument = Vehicle & Document;
 @Schema({ timestamps: true })
 export class Vehicle {
 
-  @Prop({
-    type: Types.ObjectId,
-    ref: 'User',
-    required: true,
-    index: true,
-  })
-  driverId: Types.ObjectId;
 
-  @Prop({
-    type: Types.ObjectId,
-    ref: 'Vehicle',
-    required: true,
-  })
-  vehicleId: Types.ObjectId;
+  @Prop({ required: true })
+  name: string; // Car, SUV, Truck
+
+  @Prop()
+  description: string;
 
   @Prop({ default: true })
   isActive: boolean;
