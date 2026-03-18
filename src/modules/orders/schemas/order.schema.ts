@@ -72,7 +72,7 @@ export class Order {
     default: null,
     index: true,
   })
-  assignedDriverId: Types.ObjectId;
+  assignedDriverId: Types.ObjectId | null;
 
   @Prop({ default: null })
   dispatchStatusDate: Date;
