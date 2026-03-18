@@ -24,7 +24,7 @@ export class DriverService {
       }
 
       const baseFilter: any = {
-        assignedDriverId: driverId,
+        assignedDriverId: new Types.ObjectId(driverId),
         isDeleted: false,
       };
 
@@ -60,6 +60,10 @@ export class DriverService {
         })
         .sort({ dispatchStatusDate: -1 })
         .lean();
+
+      if (!orders || orders.length === 0) {
+        return new ApiResponse(200, {}, Msg.ORDER_NOT_FOUND);
+      }
 
       return new ApiResponse(200, orders, Msg.ORDERS_FETCHED);
     } catch (error) {
