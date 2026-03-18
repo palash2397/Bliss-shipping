@@ -65,7 +65,7 @@ export class VehicleController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.ADMIN)
   deleteVehicle(@Param('id') id: string) {
-    // return this.vehicleService.deleteVehicle(id);
+    return this.vehicleService.deleteVehicle(id);
   }
 
 }
