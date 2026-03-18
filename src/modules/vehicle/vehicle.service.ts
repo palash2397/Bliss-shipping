@@ -16,6 +16,8 @@ import { Msg } from 'src/utils/helpers/responseMsg';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { AssignVehicleDto } from './dto/assign-vehicle.dto';
 
+import { Role } from 'src/common/enums/role.enum';
+
 @Injectable()
 export class VehicleService {
   constructor(
@@ -51,8 +53,8 @@ export class VehicleService {
   async assignVehicle(driverId: string, dto: AssignVehicleDto) {
     try {
       const driver = await this.userModel.findOne({
-        _id: new Types.ObjectId(driverId)
-    
+        _id: new Types.ObjectId(driverId),
+        role: Role.DRIVER,
       });
       if (!driver) {
         return new ApiResponse(404, {}, Msg.DRIVER_NOT_FOUND);
