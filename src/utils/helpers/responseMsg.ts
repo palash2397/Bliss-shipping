@@ -107,6 +107,7 @@ export const Msg = {
   ORDER_CANNOT_BE_ACCEPTED: `Order cannot be accepted`,
   ORDER_CANNOT_BE_DECLINED: `Order cannot be declined`,
   ORDER_ACCEPTED: `Order accepted successfully`,
+  ORDER_DECLINED: `Order declined successfully`,
 
 
   // Import History
