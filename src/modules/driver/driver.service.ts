@@ -36,7 +36,7 @@ export class DriverService {
           break;
 
         case 'pickup':
-          statusFilter = 'ACCEPTED';
+          statusFilter = DELIVERY_STATUS.ACCEPTED;
           break;
 
         case 'delivering':
