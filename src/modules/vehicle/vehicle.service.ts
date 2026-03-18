@@ -91,7 +91,7 @@ export class VehicleService {
       const driverVehicle = await this.driverVehicleModel.findOne({
         driverId: new Types.ObjectId(driverId),
         isActive: true,
-      })
+      }).populate('vehicleId')
       
       if (!driverVehicle) {
         return new ApiResponse(404, {}, Msg.ASSIGNED_VEHICLES_NOT_FOUND);
