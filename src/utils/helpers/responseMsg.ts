@@ -119,6 +119,8 @@ export const Msg = {
 
   ASSIGNED_ORDERS_FETCHED: `Assigned orders fetched successfully`,
   ASSIGNED_ORDERS_NOT_FOUND: `No assigned orders found`,
+  ASSIGNED_VEHICLES_FETCHED: `Assigned vehicles fetched successfully`,
+  ASSIGNED_VEHICLES_NOT_FOUND: `No assigned vehicles found`,
 
 
 
