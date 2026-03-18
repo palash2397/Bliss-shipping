@@ -1,11 +1,7 @@
 import {
-  IsEmail,
   IsNotEmpty,
   IsOptional,
-  IsString,
-  MinLength,
-  MaxLength,
-
+  IsString
 } from 'class-validator';
 
 export class CreateVehicleDto {
