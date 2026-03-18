@@ -48,13 +48,23 @@ export class VehicleService {
     }
   }
 
-//   async assignVehicle(driverId: string, vehicleId: string) {
-    
-//     await this.driverVehicleModel.updateMany({ driverId }, { isActive: false });
+  async assignVehicle(driverId: string, vehicleId: string) {
+    try {
+      // deactivate old vehicle
+      await this.driverVehicleModel.updateMany(
+        { driverId },
+        { isActive: false },
+      );
 
-//     return this.driverVehicleModel.create({
-//       driverId,
-//       vehicleId,
-//     });
-//   }
+      const data = await this.driverVehicleModel.create({
+        driverId,
+        vehicleId,
+      });
+
+      return new ApiResponse(201, data, Msg.VEHICLE_ASSIGNED);
+    } catch (error) {
+      console.log(`Error assigning vehicle: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
 }
