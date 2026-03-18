@@ -223,6 +223,7 @@ export class DriverService {
       );
 
       if (!hasArrived) {
+        return new ApiResponse(400, {}, Msg.ORDER_CAN_ONLY_BE_MARKED_AS_ARRIVED_AFTER_ACCEPTING);
       
       }
 
@@ -234,14 +235,12 @@ export class DriverService {
       order.statusHistory.push({
         status: DELIVERY_STATUS.OUT_FOR_DELIVERY,
         time: now,
-        updatedBy: 'DRIVER',
+        updatedBy: driverId,
       });
 
       await order.save();
 
-      return {
-        message: 'Delivery started successfully',
-      };
+      return new ApiResponse(200, {}, Msg.DELIVERY_STARTED_SUCCESSFULLY);
     } catch (error) {
       console.log(`error while starting delivery:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);

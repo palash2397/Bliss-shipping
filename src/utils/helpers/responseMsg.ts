@@ -131,6 +131,7 @@ export const Msg = {
   
   // Driver
   ARRIVAL_CONFIRMED: `Arrival confirmed successfully`,
+  DELIVERY_STARTED_SUCCESSFULLY: `Delivery started successfully`,
 
   // Vehicle
   VEHICLE_CREATED: `Vehicle created successfully`,
