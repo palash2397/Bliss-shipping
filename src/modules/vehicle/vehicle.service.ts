@@ -76,6 +76,41 @@ export class VehicleService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+  
 
+  async myAssignVehicle(driverId: string) {
+    try {
+      const driver = await this.userModel.findOne({
+        _id: new Types.ObjectId(driverId),
+        role: Role.DRIVER,
+      });
+      if (!driver) {
+        return new ApiResponse(404, {}, Msg.DRIVER_NOT_FOUND);
+      }
+      
+      const driverVehicle = await this.driverVehicleModel.findOne({
+        driverId: new Types.ObjectId(driverId),
+        isActive: true,
+      })
+      
+      if (!driverVehicle) {
+        return new ApiResponse(404, {}, Msg.ASSIGNED_VEHICLES_NOT_FOUND);
+      }
+      
+    //   const vehicle = await this.vehicleModel.findOne({
+    //     _id: new Types.ObjectId(driverVehicle.vehicleId),
+    //     isActive: true,
+    //   });
+      
+    //   if (!vehicle) {
+    //     return new ApiResponse(404, {}, Msg.VEHICLE_NOT_FOUND);
+    //   }
+      
+      return new ApiResponse(200, driverVehicle, Msg.VEHICLE_FETCHED);
+    } catch (error) {
+      console.log(`Error fetching assigned vehicle: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
   
 }
