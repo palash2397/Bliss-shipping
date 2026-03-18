@@ -2,9 +2,17 @@ import { Injectable } from '@nestjs/common';
 
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+
 import { Vehicle, VehicleDocument } from './schemas/vehicle.schema';
 import { DriverVehicle, DriverVehicleDocument } from './schemas/driver-vehicle.schema';
 import { User, UserDocument } from '../user/schemas/user.schema';
+
+import { ApiResponse } from 'src/utils/helpers/ApiResponse';
+import { Msg } from 'src/utils/helpers/responseMsg';
+
+
+import { CreateVehicleDto } from './dto/create-vehicle.dto';
+import { AssignVehicleDto } from './dto/assign-vehicle.dto';
 
 @Injectable()
 export class VehicleService {
@@ -13,4 +21,9 @@ export class VehicleService {
     @InjectModel(DriverVehicle.name) private driverVehicleModel: Model<DriverVehicleDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
+
+  async createVehicle(dto: CreateVehicleDto) {
+     const vehicle = await this.vehicleModel.create(dto);
+     
+  }
 }
