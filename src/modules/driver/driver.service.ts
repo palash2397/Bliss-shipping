@@ -59,9 +59,9 @@ export class DriverService {
           dispatchStatus: statusFilter,
         })
         .sort({ dispatchStatusDate: -1 })
-        .populate('merchantId', 'firstName lastName phone')
-        .populate('assignedDriverId', 'firstName lastName phone')
-        .populate('statusHistory.updatedBy', 'firstName lastName phone')
+        .populate('merchantId', 'name')
+        .populate('assignedDriverId', 'name')
+        .populate('statusHistory.updatedBy', 'name')
         .lean();
 
       if (!orders || orders.length === 0) {
@@ -113,5 +113,42 @@ export class DriverService {
       console.log(`error while accepting order:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
+  }
+
+  async declineOrder(orderId: string, driverId: string, reason: string) {
+    const order = await this.orderModel.findOne({
+      _id: new Types.ObjectId(orderId),
+      assignedDriverId: new Types.ObjectId(driverId),
+      isDeleted: false,
+    });
+
+    if (!order) {
+      return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
+    }
+
+    if (order.dispatchStatus !== DELIVERY_STATUS.ASSIGNED) {
+      return new ApiResponse(400, {}, Msg.ORDER_CANNOT_BE_DECLINED);
+    }
+
+    const now = new Date();
+
+    // Unassign driver
+    // order.assignedDriverId = null;
+
+    // Move back to pool
+    order.dispatchStatus = DELIVERY_STATUS.CREATED;
+    order.dispatchStatusDate = now;
+
+    order.statusHistory.push({
+      status: DELIVERY_STATUS.DECLINED,
+      time: now,
+      updatedBy: driverId,
+    });
+
+    await order.save();
+
+    return {
+      message: 'Order declined successfully',
+    };
   }
 }
