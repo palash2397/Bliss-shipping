@@ -60,6 +60,8 @@ export class DriverService {
         })
         .sort({ dispatchStatusDate: -1 })
         .populate('merchantId', 'firstName lastName phone')
+        .populate('assignedDriverId', 'firstName lastName phone')
+        .populate('statusHistory.updatedBy', 'firstName lastName phone')
         .lean();
 
       if (!orders || orders.length === 0) {
