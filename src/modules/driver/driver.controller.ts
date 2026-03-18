@@ -45,7 +45,14 @@ export class DriverController {
   @Patch('decline/order/:id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.DRIVER)
-  declineOrder(@Req() req: any, @Body() dto: DeclineOrderDto) {
-    return this.driverService.declineOrder(dto.orderId, req.user.id, dto.reason);
+  declineOrder(@Req() req: any, @Param('id') orderId: string) {
+    return this.driverService.declineOrder(orderId, req.user.id);
+  } 
+
+  @Patch('orders/arrived/:id')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.DRIVER)
+  markArrived(@Req() req: any, @Param('id') orderId: string) {
+    return this.driverService.markArrived(orderId, req.user.id);
   }
 }

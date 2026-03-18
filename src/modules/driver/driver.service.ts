@@ -157,8 +157,8 @@ export class DriverService {
   async markArrived(orderId: string, driverId: string) {
     try {
       const order = await this.orderModel.findOne({
-        _id: orderId,
-        assignedDriverId: driverId,
+        _id: new Types.ObjectId(orderId),
+        assignedDriverId: new Types.ObjectId(driverId),
         isDeleted: false,
       });
 
@@ -196,6 +196,54 @@ export class DriverService {
       return new ApiResponse(200, {}, Msg.ARRIVAL_CONFIRMED);
     } catch (error) {
       console.log(`error while marking arrived:`, error);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+  async startDelivery(orderId: string, driverId: string) {
+    try {
+      const order = await this.orderModel.findOne({
+        _id: new Types.ObjectId(orderId),
+        assignedDriverId: new Types.ObjectId(driverId),
+        isDeleted: false,
+      });
+
+      if (!order) {
+        return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
+      }
+
+      // must be accepted
+      if (order.dispatchStatus !== 'ACCEPTED') {
+        return new ApiResponse(400, {}, Msg.ORDER_MUST_BE_ACCEPTED_BEFORE_STARTING_DELIVERY);
+      }
+
+      // must be arrived first
+      const hasArrived = order.statusHistory.some(
+        (s) => s.status === DELIVERY_STATUS.ARRIVED,
+      );
+
+      if (!hasArrived) {
+      
+      }
+
+      const now = new Date();
+
+      order.dispatchStatus = DELIVERY_STATUS.OUT_FOR_DELIVERY;
+      order.dispatchStatusDate = now;
+
+      order.statusHistory.push({
+        status: DELIVERY_STATUS.OUT_FOR_DELIVERY,
+        time: now,
+        updatedBy: 'DRIVER',
+      });
+
+      await order.save();
+
+      return {
+        message: 'Delivery started successfully',
+      };
+    } catch (error) {
+      console.log(`error while starting delivery:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
