@@ -9,6 +9,7 @@ import {
   Req,
   Get,
   Patch,
+  Delete,
 } from '@nestjs/common';
 
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
@@ -58,6 +59,13 @@ export class VehicleController {
   @Roles(Role.ADMIN, Role.DRIVER)
   vehicleHistory(@Req() req: any) {
     return this.vehicleService.vehicleHistory(req.user.id);
+  }
+
+  @Delete('delete/:id')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN)
+  deleteVehicle(@Param('id') id: string) {
+    // return this.vehicleService.deleteVehicle(id);
   }
 
 }

@@ -34,7 +34,6 @@ export class DriverController {
     return this.driverService.getDriverTasks(req.user.id, tab);
   }
 
-
   @Patch('accept/order/:id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.DRIVER)
@@ -47,12 +46,19 @@ export class DriverController {
   @Roles(Role.DRIVER)
   declineOrder(@Req() req: any, @Param('id') orderId: string) {
     return this.driverService.declineOrder(orderId, req.user.id);
-  } 
+  }
 
-  @Patch('orders/arrived/:id')
+  @Patch('arrived/order/:id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.DRIVER)
   markArrived(@Req() req: any, @Param('id') orderId: string) {
     return this.driverService.markArrived(orderId, req.user.id);
+  }
+
+  @Patch('delivered/order/:id')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.DRIVER)
+  startDelivery(@Req() req: any, @Param('id') orderId: string) {
+    return this.driverService.startDelivery(orderId, req.user.id);  
   }
 }
