@@ -106,4 +106,25 @@ export class DispatcherService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+
+  async assignedOrders(userId: string) {
+    try {
+      const orders = await this.orderModel.find({
+        assignedDriverId: new Types.ObjectId(userId),
+        dispatchStatus: DELIVERY_STATUS.ASSIGNED,
+      }).lean();
+
+      if (!orders || orders.length === 0) {
+        return new ApiResponse(404, {}, Msg.ASSIGNED_ORDERS_NOT_FOUND);
+      }
+
+      return new ApiResponse(200, orders, Msg.ASSIGNED_ORDERS_FETCHED);
+    } catch (error) {
+      console.log(`Error in assignedOrders by dispatcher: `, error);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+
+  // async assign
 }

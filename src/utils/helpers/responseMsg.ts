@@ -116,6 +116,9 @@ export const Msg = {
   DRIVER_NOT_FOUND: `Driver not found`,
   DRIVER_ACTIVE: `Driver is active`,
   DRIVER_ASSIGNED_SUCCESSFULLY: `Driver assigned successfully`,
+
+  ASSIGNED_ORDERS_FETCHED: `Assigned orders fetched successfully`,
+  ASSIGNED_ORDERS_NOT_FOUND: `No assigned orders found`,
  
 
  
