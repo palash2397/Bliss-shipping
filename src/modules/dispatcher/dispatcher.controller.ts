@@ -41,4 +41,11 @@ export class DispatcherController {
   assignDriver(@Body() dto: AssignDriverDto, @Req() req: any) {
     return this.dispatcherService.assignDriver(dto, req.user.id);
   }
+
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN, Role.DISPATCHER)
+  @Get('assigned/orders')
+  getAssignedOrders(@Req() req: any) {
+    return this.dispatcherService.assignedOrders(req.user.id);
+  }
 }
