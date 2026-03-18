@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 import { Vehicle, VehicleDocument } from './schemas/vehicle.schema';
 import {
@@ -48,17 +48,23 @@ export class VehicleService {
     }
   }
 
-  async assignVehicle(driverId: string, vehicleId: string) {
+  async assignVehicle(driverId: string, dto: AssignVehicleDto) {
     try {
-      // deactivate old vehicle
+      const driver = await this.userModel.findOne({
+        _id: new Types.ObjectId(driverId)
+    
+      });
+      if (!driver) {
+        return new ApiResponse(404, {}, Msg.DRIVER_NOT_FOUND);
+      }
+
       await this.driverVehicleModel.updateMany(
         { driverId },
         { isActive: false },
       );
 
       const data = await this.driverVehicleModel.create({
-        driverId,
-        vehicleId,
+        driverId
       });
 
       return new ApiResponse(201, data, Msg.VEHICLE_ASSIGNED);
