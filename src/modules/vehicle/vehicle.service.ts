@@ -92,6 +92,7 @@ export class VehicleService {
         driverId: new Types.ObjectId(driverId),
         isActive: true,
       }).populate('vehicleId')
+        .populate('driverId');
       
       if (!driverVehicle) {
         return new ApiResponse(404, {}, Msg.ASSIGNED_VEHICLES_NOT_FOUND);
