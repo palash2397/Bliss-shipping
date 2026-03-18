@@ -115,7 +115,7 @@ export class DriverService {
     }
   }
 
-  async declineOrder(orderId: string, driverId: string, reason: string) {
+  async declineOrder(orderId: string, driverId: string) {
     try {
       const order = await this.orderModel.findOne({
         _id: new Types.ObjectId(orderId),
@@ -150,6 +150,52 @@ export class DriverService {
       return new ApiResponse(200, {}, Msg.ORDER_DECLINED);
     } catch (error) {
       console.log(`error while declining order:`, error);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+  async markArrived(orderId: string, driverId: string) {
+    try {
+      const order = await this.orderModel.findOne({
+        _id: orderId,
+        assignedDriverId: driverId,
+        isDeleted: false,
+      });
+
+      if (!order) {
+        return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
+      }
+
+      if (order.dispatchStatus !== DELIVERY_STATUS.ACCEPTED) {
+        return new ApiResponse(
+          400,
+          {},
+          Msg.ORDER_CAN_ONLY_BE_MARKED_AS_ARRIVED_AFTER_ACCEPTING,
+        );
+      }
+
+      const now = new Date();
+
+      // prevent duplicate ARRIVED
+      const alreadyArrived = order.statusHistory.find(
+        (s) => s.status === DELIVERY_STATUS.ARRIVED,
+      );
+
+      if (alreadyArrived) {
+        return new ApiResponse(400, {}, Msg.ORDER_ALREADY_MARKED_AS_ARRIVED);
+      }
+
+      order.statusHistory.push({
+        status: DELIVERY_STATUS.ARRIVED,
+        time: now,
+        updatedBy: driverId,
+      });
+
+      await order.save();
+
+      return new ApiResponse(200, {}, Msg.ARRIVAL_CONFIRMED);
+    } catch (error) {
+      console.log(`error while marking arrived:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }

@@ -108,6 +108,8 @@ export const Msg = {
   ORDER_CANNOT_BE_DECLINED: `Order cannot be declined`,
   ORDER_ACCEPTED: `Order accepted successfully`,
   ORDER_DECLINED: `Order declined successfully`,
+  ORDER_ALREADY_MARKED_AS_ARRIVED: `Order already marked as arrived`,
+  ORDER_CAN_ONLY_BE_MARKED_AS_ARRIVED_AFTER_ACCEPTING: `You can only mark arrived after accepting the order`,
 
 
   // Import History
@@ -126,7 +128,9 @@ export const Msg = {
   ASSIGNED_VEHICLES_FETCHED: `Assigned vehicles fetched successfully`,
   ASSIGNED_VEHICLES_NOT_FOUND: `No assigned vehicles found`,
 
-
+  
+  // Driver
+  ARRIVAL_CONFIRMED: `Arrival confirmed successfully`,
 
   // Vehicle
   VEHICLE_CREATED: `Vehicle created successfully`,
