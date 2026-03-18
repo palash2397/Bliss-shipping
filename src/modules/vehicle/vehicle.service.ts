@@ -35,5 +35,16 @@ export class VehicleService {
     }
   }
 
-
+  async allVehicles() {
+    try {
+      const vehicles = await this.vehicleModel.find();
+      if (!vehicles || vehicles.length === 0) {
+        return new ApiResponse(404, {}, Msg.VEHICLES_NOT_FOUND);
+      }
+      return new ApiResponse(200, vehicles, Msg.VEHICLES_FETCHED);
+    } catch (error) {
+      console.log(`Error fetching vehicles: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
 }

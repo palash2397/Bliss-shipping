@@ -129,6 +129,7 @@ export const Msg = {
   VEHICLE_DELETED: `Vehicle deleted successfully`,
   VEHICLE_FETCHED: `Vehicle fetched successfully`,
   VEHICLES_FETCHED: `Vehicles fetched successfully`,
+  VEHICLES_NOT_FOUND: `Vehicles not found`,
  
 
  
