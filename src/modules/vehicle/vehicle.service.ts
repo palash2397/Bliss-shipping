@@ -4,12 +4,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { Vehicle, VehicleDocument } from './schemas/vehicle.schema';
-import { DriverVehicle, DriverVehicleDocument } from './schemas/driver-vehicle.schema';
+import {
+  DriverVehicle,
+  DriverVehicleDocument,
+} from './schemas/driver-vehicle.schema';
 import { User, UserDocument } from '../user/schemas/user.schema';
 
 import { ApiResponse } from 'src/utils/helpers/ApiResponse';
 import { Msg } from 'src/utils/helpers/responseMsg';
-
 
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { AssignVehicleDto } from './dto/assign-vehicle.dto';
@@ -18,12 +20,20 @@ import { AssignVehicleDto } from './dto/assign-vehicle.dto';
 export class VehicleService {
   constructor(
     @InjectModel(Vehicle.name) private vehicleModel: Model<VehicleDocument>,
-    @InjectModel(DriverVehicle.name) private driverVehicleModel: Model<DriverVehicleDocument>,
+    @InjectModel(DriverVehicle.name)
+    private driverVehicleModel: Model<DriverVehicleDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
 
   async createVehicle(dto: CreateVehicleDto) {
-     const vehicle = await this.vehicleModel.create(dto);
-     
+    try {
+      const vehicle = await this.vehicleModel.create(dto);
+      return new ApiResponse(201, vehicle, Msg.VEHICLE_CREATED);
+    } catch (error) {
+      console.log(`Error creating vehicle: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
   }
+
+
 }
