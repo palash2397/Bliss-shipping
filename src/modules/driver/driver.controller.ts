@@ -22,12 +22,15 @@ import { Role } from 'src/common/enums/role.enum';
 import { Roles } from 'src/modules/auth/roles/roles.decorator';
 
 
-import { ApiResponse } from 'src/utils/helpers/ApiResponse';
-import { Msg } from 'src/utils/helpers/responseMsg';
 
 @Controller('driver')
 export class DriverController {
   constructor(private readonly driverService: DriverService) {}
 
-  
+  @Get('tasks')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.DRIVER)
+  getTasks(@Req() req: any, @Query('tab') tab: string) {
+    return this.driverService.getDriverTasks(req.user.id, tab);
+  }
 }
