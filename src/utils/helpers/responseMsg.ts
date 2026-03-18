@@ -135,6 +135,7 @@ export const Msg = {
   VEHICLE_ASSIGNED: `Vehicle assigned successfully`,
  
 
- 
+ // INVALID
+ INVALID_TAB: `Invalid tab value`,
 
 };
