@@ -61,7 +61,7 @@ export class VehicleController {
     return this.vehicleService.vehicleHistory(req.user.id);
   }
 
-  @Delete('delete/:id')
+  @Delete(':id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.ADMIN)
   deleteVehicle(@Param('id') id: string) {
