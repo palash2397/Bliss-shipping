@@ -231,6 +231,7 @@ export class OrdersService {
           })
           .populate('merchantId', 'contactName')
           .populate('statusHistory.updatedBy', 'name')
+          .populate('assignedDriverId', 'name phone')
           .sort({ createdAt: -1 })
           .skip(skip)
           .limit(limit)
@@ -261,6 +262,7 @@ export class OrdersService {
         .findOne({ _id: new Types.ObjectId(orderId), merchantId: merchant._id })
         .populate('merchantId', 'contactName')
         .populate('statusHistory.updatedBy', 'name')
+        .populate('assignedDriverId', 'name phone')
         .lean();
       if (!order) {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
