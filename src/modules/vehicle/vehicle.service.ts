@@ -113,5 +113,31 @@ export class VehicleService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+
+  async vehicleHistory(driverId: string) {
+    try {
+      const driver = await this.userModel.findOne({
+        _id: new Types.ObjectId(driverId),
+        role: Role.DRIVER,
+      });
+      if (!driver) {
+        return new ApiResponse(404, {}, Msg.DRIVER_NOT_FOUND);
+      }
+      
+      const driverVehicles = await this.driverVehicleModel.find({
+        driverId: new Types.ObjectId(driverId),
+      }).populate('vehicleId')
+        .populate('driverId');
+      
+      if (!driverVehicles || driverVehicles.length === 0) {
+        return new ApiResponse(404, {}, Msg.ASSIGNED_VEHICLES_NOT_FOUND);
+      }
+      
+      return new ApiResponse(200, driverVehicles, Msg.VEHICLE_FETCHED);
+    } catch (error) {
+      console.log(`Error fetching vehicle history: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
   
 }
