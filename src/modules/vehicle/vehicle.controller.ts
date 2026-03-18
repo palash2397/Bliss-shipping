@@ -31,4 +31,11 @@ export class VehicleController {
     return this.vehicleService.createVehicle(createVehicleDto);
   }
 
+  @Get('all')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN, Role.DRIVER)
+  findAll() {
+    return this.vehicleService.allVehicles();
+  }
+
 }
