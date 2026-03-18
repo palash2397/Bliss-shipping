@@ -74,6 +74,8 @@ export class DispatcherService {
         dispatchStatus: DELIVERY_STATUS.CREATED,
       });
 
+      console.log('orders', orders);
+
       if (!orders || orders.length === 0) {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
       }
