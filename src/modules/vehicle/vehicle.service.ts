@@ -139,5 +139,18 @@ export class VehicleService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+
+  async deleteVehicle(id: string) {
+    try {
+      const vehicle = await this.vehicleModel.findByIdAndDelete(id);
+      if (!vehicle) {
+        return new ApiResponse(404, {}, Msg.VEHICLE_NOT_FOUND);
+      }
+      return new ApiResponse(200, {}, Msg.VEHICLE_DELETED);
+    } catch (error) {
+      console.log(`Error deleting vehicle: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
   
 }
