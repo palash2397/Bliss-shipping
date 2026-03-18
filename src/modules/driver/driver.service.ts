@@ -59,6 +59,7 @@ export class DriverService {
           dispatchStatus: statusFilter,
         })
         .sort({ dispatchStatusDate: -1 })
+        .populate('merchantId', 'firstName lastName phone')
         .lean();
 
       if (!orders || orders.length === 0) {
