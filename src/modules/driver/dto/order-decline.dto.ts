@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsMongoId } from 'class-validator';
+import { IsString, IsNotEmpty, IsMongoId, IsEmpty } from 'class-validator';
 
 export class DeclineOrderDto {
   @IsMongoId()
@@ -6,6 +6,6 @@ export class DeclineOrderDto {
   orderId: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsEmpty()
   reason: string;
 }

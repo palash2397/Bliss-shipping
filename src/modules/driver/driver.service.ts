@@ -214,7 +214,11 @@ export class DriverService {
 
       // must be accepted
       if (order.dispatchStatus !== 'ACCEPTED') {
-        return new ApiResponse(400, {}, Msg.ORDER_MUST_BE_ACCEPTED_BEFORE_STARTING_DELIVERY);
+        return new ApiResponse(
+          400,
+          {},
+          Msg.ORDER_MUST_BE_ACCEPTED_BEFORE_STARTING_DELIVERY,
+        );
       }
 
       // must be arrived first
@@ -223,8 +227,11 @@ export class DriverService {
       );
 
       if (!hasArrived) {
-        return new ApiResponse(400, {}, Msg.ORDER_CAN_ONLY_BE_MARKED_AS_ARRIVED_AFTER_ACCEPTING);
-      
+        return new ApiResponse(
+          400,
+          {},
+          Msg.ORDER_CAN_ONLY_BE_MARKED_AS_ARRIVED_AFTER_ACCEPTING,
+        );
       }
 
       const now = new Date();
