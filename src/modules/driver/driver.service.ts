@@ -253,4 +253,47 @@ export class DriverService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+
+  async completeDelivery(orderId: string, driverId: string, file: Express.Multer.File ) {
+    const order = await this.orderModel.findOne({
+      _id: orderId,
+      assignedDriverId: driverId,
+      isDeleted: false,
+    });
+
+    if (!order) {
+      return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
+    }
+
+    // must be in delivery
+    if (order.dispatchStatus !== DELIVERY_STATUS.OUT_FOR_DELIVERY) {
+      return new ApiResponse(400, {}, Msg.ORDER_IS_NOT_IN_DELIVERY_STATE);
+    }
+
+    
+    
+
+    // POD validation
+    if (!order.podImage) {
+      return new ApiResponse(400, {}, 'Proof of Delivery (POD) is required');
+    }
+
+    const now = new Date();
+
+    order.dispatchStatus = DELIVERY_STATUS.DELIVERED;
+    order.dispatchStatusDate = now;
+
+    // store POD
+    order.podImage = file ? file.path : null;
+
+    order.statusHistory.push({
+      status: DELIVERY_STATUS.DELIVERED,
+      time: now,
+      updatedBy: driverId,
+    });
+
+    await order.save();
+
+    return new ApiResponse(200, {}, Msg.ORDER_DELIVERED_SUCCESSFULLY);
+  }
 }

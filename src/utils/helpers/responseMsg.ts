@@ -111,6 +111,8 @@ export const Msg = {
   ORDER_ALREADY_MARKED_AS_ARRIVED: `Order already marked as arrived`,
   ORDER_CAN_ONLY_BE_MARKED_AS_ARRIVED_AFTER_ACCEPTING: `You can only mark arrived after accepting the order`,
   ORDER_MUST_BE_ACCEPTED_BEFORE_STARTING_DELIVERY: `Order must be accepted before starting delivery`,
+  ORDER_DELIVERED_SUCCESSFULLY: `Order delivered successfully`,
+  ORDER_IS_NOT_IN_DELIVERY_STATE: `Order is not in delivery state`,
 
   // Import History
   IMPORT_HISTORY_FETCHED: `Import history fetched successfully`,

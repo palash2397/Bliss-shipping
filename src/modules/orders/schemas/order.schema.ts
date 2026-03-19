@@ -93,6 +93,9 @@ export class Order {
     updatedBy: string;
   }[];
 
+  @Prop({ type: String, default: null })
+  podImage: string | null;
+
   @Prop({ default: null })
   failedReason: string;
 
