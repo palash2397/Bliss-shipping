@@ -22,6 +22,7 @@ import { Role } from 'src/common/enums/role.enum';
 import { Roles } from 'src/modules/auth/roles/roles.decorator';
 
 import { DeclineOrderDto } from './dto/order-decline.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('driver')
 export class DriverController {
@@ -60,5 +61,13 @@ export class DriverController {
   @Roles(Role.DRIVER)
   startDelivery(@Req() req: any, @Param('id') orderId: string) {
     return this.driverService.startDelivery(orderId, req.user.id);  
+  }
+
+  @Post('complete/order/:id')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.DRIVER)
+  @UseInterceptors(FileInterceptor('file'))
+  uploadEvidence(@Req() req: any, @Param('id') orderId: string, @UploadedFile() file: Express.Multer.File) {
+    return this.driverService.completeDelivery(orderId, req.user.id, file);
   }
 }

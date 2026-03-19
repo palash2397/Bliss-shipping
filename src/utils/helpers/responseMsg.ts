@@ -1,3 +1,5 @@
+import { FILE } from "dns";
+
 export const Msg = {
   // General
   SERVER_ERROR: `Internal server error`,
@@ -144,6 +146,18 @@ export const Msg = {
   VEHICLES_FETCHED: `Vehicles fetched successfully`,
   VEHICLES_NOT_FOUND: `Vehicles not found`,
   VEHICLE_ASSIGNED: `Vehicle assigned successfully`,
+
+
+  // Images
+  IMAGE_UPLOADED: `Image uploaded successfully`,
+  IMAGE_DELETED: `Image deleted successfully`,
+
+
+  // file
+  FILE_UPLOADED: `File uploaded successfully`,
+  FILE_DELETED: `File deleted successfully`,
+  FILE_NOT_FOUND: `File not found`,
+  FILE_REQUIRED: `File is required`,
  
 
  // INVALID
