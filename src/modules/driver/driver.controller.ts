@@ -17,6 +17,8 @@ import {
 
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 
+import { multerConfig } from 'src/common/middleware/multer';
+
 import { RoleGuard } from 'src/modules/auth/roles/roles.guard';
 import { Role } from 'src/common/enums/role.enum';
 import { Roles } from 'src/modules/auth/roles/roles.decorator';
@@ -63,10 +65,10 @@ export class DriverController {
     return this.driverService.startDelivery(orderId, req.user.id);  
   }
 
-  @Post('complete/order/:id')
+  @Patch('complete/order/:id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.DRIVER)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file', multerConfig("pod")))
   uploadEvidence(@Req() req: any, @Param('id') orderId: string, @UploadedFile() file: Express.Multer.File) {
     return this.driverService.completeDelivery(orderId, req.user.id, file);
   }

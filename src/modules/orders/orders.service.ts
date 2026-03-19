@@ -237,6 +237,9 @@ export class OrdersService {
           .limit(limit)
           .lean(),
 
+
+        
+
         this.orderModel.countDocuments({
           merchantId: merchant._id,
           isDeleted: false,
@@ -267,6 +270,8 @@ export class OrdersService {
       if (!order) {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
       }
+
+      order.podImage = order.podImage ? `${process.env.BASE_URL}/uploads/pod/${order.podImage}` : null;
       return new ApiResponse(200, order, Msg.ORDER_FETCHED);
     } catch (error) {
       console.log(`Error finding order by id: ${error}`);

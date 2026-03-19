@@ -261,10 +261,12 @@ export class DriverService {
   ) {
   try {
       const order = await this.orderModel.findOne({
-        _id: orderId,
-        assignedDriverId: driverId,
+        _id: new Types.ObjectId(orderId),
+        assignedDriverId: new Types.ObjectId(driverId),
         isDeleted: false,
       });
+
+      console.log("file", file);
   
       if (!order) {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
@@ -275,9 +277,13 @@ export class DriverService {
         return new ApiResponse(400, {}, Msg.ORDER_IS_NOT_IN_DELIVERY_STATE);
       }
   
-      // POD validation
-      if (!order.podImage) {
-        return new ApiResponse(400, {}, 'Proof of Delivery (POD) is required');
+      // // POD validation
+      // if (order.podImage) {
+      //   return new ApiResponse(400, {}, 'Proof of Delivery (POD) is required');
+      // }
+
+      if (!file) {
+        return new ApiResponse(400, {}, 'Proof of Delivery (POD) image is required');
       }
   
       const now = new Date();
@@ -286,7 +292,7 @@ export class DriverService {
       order.dispatchStatusDate = now;
   
       // store POD
-      order.podImage = file ? file.path : null;
+      order.podImage = file ? file.filename : null;
   
       order.statusHistory.push({
         status: DELIVERY_STATUS.DELIVERED,
