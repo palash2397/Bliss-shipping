@@ -117,10 +117,19 @@ export class FeedbackService {
         };
       }
 
-      return {
-        avgRating: Number(result[0].avgRating.toFixed(1)),
-        totalRatings: result[0].totalRatings,
-      };
+      //   return {
+      //     avgRating: Number(result[0].avgRating.toFixed(1)),
+      //     totalRatings: result[0].totalRatings,
+      //   };
+
+      return new ApiResponse(
+        200,
+        {
+          avgRating: Number(result[0].avgRating.toFixed(1)),
+          totalRatings: result[0].totalRatings,
+        },
+        Msg.RATING_FETCHED,
+      );
     } catch (error) {
       console.log(`error while fetching driver average rating`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);

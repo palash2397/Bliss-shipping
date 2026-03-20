@@ -1,4 +1,12 @@
-import { Controller, Post, Param, Body, Req, UseGuards, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Param,
+  Body,
+  Req,
+  UseGuards,
+  Get,
+} from '@nestjs/common';
 import { FeedbackService } from './feedback.service';
 
 import { RoleGuard } from 'src/modules/auth/roles/roles.guard';
@@ -20,9 +28,16 @@ export class FeedbackController {
   }
 
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Roles(Role.ADMIN, Role.MERCHANT)
+  @Roles(Role.ADMIN, Role.MERCHANT, Role.DRIVER)
   @Get('order/rating/:orderId')
   ratingByOrder(@Param('orderId') orderId: string, @Req() req: any) {
     return this.feedbackService.ratingByOrder(orderId, req.user.id);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN, Role.DRIVER)
+  @Get('driver/rating')
+  driverAverageRating(@Req() req: any) {
+    return this.feedbackService.driverAverageRating(req.user.id);
   }
 }
