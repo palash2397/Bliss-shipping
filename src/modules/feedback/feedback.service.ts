@@ -84,7 +84,9 @@ export class FeedbackService {
       const rating = await this.ratingModel
         .findOne({ orderId, userId })
         .populate('driverId', 'name email')
-        .populate('userId', 'name email');
+        .populate('userId', 'name email')
+        .populate('orderId', 'orderNumber recipientName recipientPhone')
+        .select('-__v  -updatedAt');
       if (!rating) {
         return new ApiResponse(404, {}, Msg.RATING_ALREADY_NOT_EXIST_FOR_ORDER);
       }
