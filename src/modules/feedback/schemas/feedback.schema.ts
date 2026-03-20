@@ -18,7 +18,7 @@ export class Rating {
     ref: 'User',
     required: true,
   })
-  driverId: string;
+  driverId: string ;
 
   @Prop({
     type: Types.ObjectId,

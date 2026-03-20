@@ -15,7 +15,7 @@ export class CreateRatingDto {
   @IsOptional()
   @IsString()
   @IsMongoId()
-  userId?: string;
+  driverId?: string;
 
   @IsInt()
   @Min(1)
