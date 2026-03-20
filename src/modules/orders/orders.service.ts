@@ -260,9 +260,9 @@ export class OrdersService {
       }
       const order = await this.orderModel
         .findOne({ _id: new Types.ObjectId(orderId), merchantId: merchant._id })
-        .populate('merchantId', 'contactName')
-        .populate('statusHistory.updatedBy', 'name')
-        .populate('assignedDriverId', 'name phone')
+        .populate('assignedDriverId', 'name phoneNumber')
+        .populate('merchantId', 'companyName contactName receiverPhone')
+        .populate('statusHistory.updatedBy', 'name phoneNumber')
         .lean();
       if (!order) {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
