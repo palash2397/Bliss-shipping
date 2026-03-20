@@ -30,13 +30,14 @@ export class FeedbackService {
       }
 
       if (order?.dispatchStatus !== DELIVERY_STATUS.DELIVERED) {
-        //  return new ApiResponse(400, {}, Msg.ORDER_NOT_DELIVERED);
+          return new ApiResponse(400, {}, Msg.ORDER_NOT_DELIVERED);
       }
 
      
       const existingRating = await this.ratingModel.findOne({ orderId });
 
       if (existingRating) {
+        return new ApiResponse(400, {}, Msg.RATING_ALREADY_EXISTS_FOR_ORDER);
       }
 
       // 5️⃣ Create rating
@@ -48,10 +49,7 @@ export class FeedbackService {
         feedback: dto.feedback,
       });
 
-      return {
-        message: 'Rating submitted successfully',
-        data: rating,
-      };
+     return new ApiResponse(201, rating, Msg.RATING_CREATED);
     } catch (error) {
       console.log(`error while submiting review`, error);
       return new ApiResponse(500,{}, Msg.SERVER_ERROR);
