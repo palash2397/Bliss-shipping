@@ -12,6 +12,8 @@ import { Order, OrderDocument } from '../orders/schemas/order.schema';
 import { CreateMerchantDto } from './dto/create-profile.dto';
 import { UpdateMerchantDto } from './dto/update-profile.dto';
 
+import { DELIVERY_STATUS } from 'src/common/enums/delivery-status.enum';
+
 @Injectable()
 export class MerchantService {
   constructor(
@@ -56,9 +58,17 @@ export class MerchantService {
 
       console.log('Merchant:', merchant);
       if (!merchant) {
-        return new ApiResponse(200, { isMerchant: false }, Msg.MERCHANT_NOT_FOUND);
+        return new ApiResponse(
+          200,
+          { isMerchant: false },
+          Msg.MERCHANT_NOT_FOUND,
+        );
       }
-      return new ApiResponse(200, { isMerchant: true, merchant }, Msg.MERCHANT_PROFILE_FETCHED);
+      return new ApiResponse(
+        200,
+        { isMerchant: true, merchant },
+        Msg.MERCHANT_PROFILE_FETCHED,
+      );
     } catch (error) {
       console.log(`error getting merchant profile: ${error.message}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
@@ -84,6 +94,82 @@ export class MerchantService {
       return new ApiResponse(200, updateMerchant, Msg.MERCHANT_UPDATED);
     } catch (error) {
       console.log(`error updating merchant profile: ${error.message}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+  async orderStats(userId: string) {
+    try {
+      const merchant = await this.merchantModel.findOne({ userId });
+
+      if (!merchant) {
+        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      }
+
+      const merchantId = merchant._id;
+
+      const stats = await this.orderModel.aggregate([
+        {
+          $match: {
+            merchantId,
+            isDeleted: false,
+          },
+        },
+        {
+          $group: {
+            _id: '$dispatchStatus',
+            count: { $sum: 1 },
+          },
+        },
+      ]);
+
+      // default structure
+      const result = {
+        total: 0,
+        created: 0,
+        assigned: 0,
+        accepted: 0,
+        outForDelivery: 0,
+        delivered: 0,
+        failed: 0,
+      };
+
+      stats.forEach((item) => {
+        const status = item._id;
+        const count = item.count;
+
+        result.total += count;
+
+        switch (status) {
+          case DELIVERY_STATUS.CREATED:
+            result.created = count;
+            break;
+
+          case DELIVERY_STATUS.ASSIGNED:
+            result.assigned = count;
+            break;
+
+          case DELIVERY_STATUS.ACCEPTED:
+            result.accepted = count;
+            break;
+
+          case DELIVERY_STATUS.OUT_FOR_DELIVERY:
+            result.outForDelivery = count;
+            break;
+
+          case DELIVERY_STATUS.DELIVERED:
+            result.delivered = count;
+            break;
+
+          case DELIVERY_STATUS.FAILED:
+            result.failed = count;
+            break;
+        }
+      });
+
+      return result;
+    } catch (error) {
+      console.log(`error getting merchant order stats: ${error.message}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }

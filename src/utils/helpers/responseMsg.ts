@@ -118,6 +118,7 @@ export const Msg = {
   ORDER_IS_NOT_IN_DELIVERY_STATE: `Order is not in delivery state`,
   ORDER_NOT_DELIVERED: `Order is not delivered Yet`,
   PROOF_OF_DELIVERY_REQUIRED: `Proof of delivery is required`,
+  ORDER_STATS_FETCHED: `Order stats fetched successfully`,
 
   // Import History
   IMPORT_HISTORY_FETCHED: `Import history fetched successfully`,
