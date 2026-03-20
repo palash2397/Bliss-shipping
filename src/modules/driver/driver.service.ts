@@ -9,6 +9,7 @@ import { DELIVERY_STATUS } from 'src/common/enums/delivery-status.enum';
 
 import { User, UserDocument } from '../user/schemas/user.schema';
 import { Order, OrderDocument } from '../orders/schemas/order.schema';
+import { Vehicle, VehicleDocument } from '../vehicle/schemas/vehicle.schema';
 
 import { FailDeliveryDto } from './dto/fail-delivery.dto';
 
@@ -17,6 +18,7 @@ export class DriverService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     @InjectModel(Order.name) private readonly orderModel: Model<OrderDocument>,
+    @InjectModel(Vehicle.name) private readonly vehicleModel: Model<VehicleDocument>,
   ) {}
 
   async getDriverTasks(driverId: string, tab: string) {
@@ -388,5 +390,56 @@ export class DriverService {
       console.log(`error while getting order detail:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
+  }
+
+  // async getNextStop(driverId: string) {
+  //   const order = await this.orderModel
+  //     .findOne({
+  //       assignedDriverId: driverId,
+  //       isDeleted: false,
+  //       dispatchStatus: {
+  //         $in: ['ACCEPTED', DELIVERY_STATUS.OUT_FOR_DELIVERY],
+  //       },
+  //     })
+  //     .sort({ dispatchStatusDate: 1 }) // oldest first
+  //     .lean();
+
+  //   if (!order) {
+  //     return {
+  //       message: 'No pending deliveries',
+  //       data: null,
+  //     };
+  //   }
+
+  //   return {
+  //     orderId: order._id,
+  //     orderNumber: order.orderNumber,
+  //     recipientName: order.recipientName,
+  //     recipientPhone: order.recipientPhone,
+  //     dropAddress: order.dropAddress,
+  //     dropLat: order.dropLat,
+  //     dropLng: order.dropLng,
+  //     status: order.dispatchStatus,
+  //   };
+  // }
+
+  async getDriverProfile(driverId: string) {
+
+    const user = await this.userModel.findById(driverId).lean();
+
+    if (!user) {
+      return new ApiResponse(404, {}, Msg.DRIVER_NOT_FOUND);
+    }
+
+ 
+    const driverVehicle = await this.vehicleModel
+      .findOne({
+        driverId: new Types.ObjectId(driverId),
+        isActive: true,
+      })
+    console.log('driverVehicle', driverVehicle);
+
+
+    return new ApiResponse(200, driverVehicle, Msg.DRIVERS_FETCHED);
   }
 }

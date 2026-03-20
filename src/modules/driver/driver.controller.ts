@@ -97,4 +97,11 @@ export class DriverController {
   getOrderDetail(@Req() req: any, @Param('id') orderId: string) {
     return this.driverService.getOrderDetail(orderId, req.user.id);
   }
+
+  @Get('profile')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.DRIVER)
+  getProfile(@Req() req: any) {
+    return this.driverService.getDriverProfile(req.user.id);
+  }
 }
