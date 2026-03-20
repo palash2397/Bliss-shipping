@@ -341,7 +341,7 @@ export class DriverService {
       order.dispatchStatus = DELIVERY_STATUS.FAILED;
       order.dispatchStatusDate = now;
 
-      // store failure reason
+      
       order.failedReason = dto.reason;
       order.podImage = file ? file.filename : null;
 
