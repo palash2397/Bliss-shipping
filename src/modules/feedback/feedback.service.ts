@@ -20,10 +20,10 @@ export class FeedbackService {
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
   ) {}
 
-  async createRating(orderId: string, userId: string, dto: CreateRatingDto) {
+  async createRating( userId: string, dto: CreateRatingDto) {
     try {
       // 1️⃣ Check order exists
-      const order = await this.orderModel.findById(orderId);
+      const order = await this.orderModel.findById(dto.orderId);
 
       if (!order) {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
@@ -33,7 +33,7 @@ export class FeedbackService {
         return new ApiResponse(400, {}, Msg.ORDER_NOT_DELIVERED);
       }
 
-      const existingRating = await this.ratingModel.findOne({ orderId });
+      const existingRating = await this.ratingModel.findOne({ orderId: dto.orderId });
 
       if (existingRating) {
         return new ApiResponse(400, {}, Msg.RATING_ALREADY_EXISTS_FOR_ORDER);
@@ -41,7 +41,7 @@ export class FeedbackService {
 
       // 5️⃣ Create rating
       const rating = await this.ratingModel.create({
-        orderId,
+        orderId: dto.orderId,
         driverId: dto.driverId,
         userId,
         rating: dto.rating,
