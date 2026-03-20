@@ -74,16 +74,20 @@ export class FeedbackService {
 
   async ratingByOrder(orderId: string, userId: string) {
     try {
-      const order = await this.orderModel.findById(orderId);
+      const order = await this.orderModel
+        .findById(orderId)
+
       if (!order) {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
       }
 
-      const rating = await this.ratingModel.findOne({ orderId, userId });
+      const rating = await this.ratingModel
+        .findOne({ orderId, userId })
+        .populate('driverId', 'name email')
+        .populate('userId', 'name email');
       if (!rating) {
         return new ApiResponse(404, {}, Msg.RATING_ALREADY_NOT_EXIST_FOR_ORDER);
       }
-      
 
       return new ApiResponse(200, rating, Msg.RATING_FETCHED);
     } catch (error) {
