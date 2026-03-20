@@ -71,4 +71,21 @@ export class FeedbackService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+
+  async ratingByOrder(orderId: string, userId: string) {
+    try {
+      const order = await this.orderModel.findById(orderId);
+      if (!order) {
+        return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
+      }
+
+      const rating = await this.ratingModel.findOne({ orderId, userId });
+ 
+
+      return new ApiResponse(200, rating, Msg.RATING_FETCHED);
+    } catch (error) {
+      console.log(`error while fetching rating`, error);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
 }
