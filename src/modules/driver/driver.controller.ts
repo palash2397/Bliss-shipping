@@ -89,4 +89,12 @@ export class DriverController {
   ) {
     return this.driverService.failDelivery(req.user.id, dto, file);
   }
+
+
+  @Get('order/:id')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.DRIVER)
+  getOrderDetail(@Req() req: any, @Param('id') orderId: string) {
+    return this.driverService.getOrderDetail(orderId, req.user.id);
+  }
 }
