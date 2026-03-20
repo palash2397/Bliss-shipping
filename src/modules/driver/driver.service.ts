@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 import { Msg } from '../../utils/helpers/responseMsg';
 import { ApiResponse } from '../../utils/helpers/ApiResponse';
@@ -8,7 +9,8 @@ import { DELIVERY_STATUS } from 'src/common/enums/delivery-status.enum';
 
 import { User, UserDocument } from '../user/schemas/user.schema';
 import { Order, OrderDocument } from '../orders/schemas/order.schema';
-import { InjectModel } from '@nestjs/mongoose';
+
+import { FailDeliveryDto } from './dto/fail-delivery.dto';
 
 @Injectable()
 export class DriverService {
@@ -259,52 +261,96 @@ export class DriverService {
     driverId: string,
     file: Express.Multer.File,
   ) {
-  try {
+    try {
       const order = await this.orderModel.findOne({
         _id: new Types.ObjectId(orderId),
         assignedDriverId: new Types.ObjectId(driverId),
         isDeleted: false,
       });
 
-      console.log("file", file);
-  
+      console.log('file', file);
+
       if (!order) {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
       }
-  
+
       // must be in delivery
       if (order.dispatchStatus !== DELIVERY_STATUS.OUT_FOR_DELIVERY) {
         return new ApiResponse(400, {}, Msg.ORDER_IS_NOT_IN_DELIVERY_STATE);
       }
-  
+
       // // POD validation
       // if (order.podImage) {
       //   return new ApiResponse(400, {}, 'Proof of Delivery (POD) is required');
       // }
 
       if (!file) {
-        return new ApiResponse(400, {}, 'Proof of Delivery (POD) image is required');
+        return new ApiResponse(
+          400,
+          {},
+          'Proof of Delivery (POD) image is required',
+        );
       }
-  
+
       const now = new Date();
-  
+
       order.dispatchStatus = DELIVERY_STATUS.DELIVERED;
       order.dispatchStatusDate = now;
-  
+
       // store POD
       order.podImage = file ? file.filename : null;
-  
+
       order.statusHistory.push({
         status: DELIVERY_STATUS.DELIVERED,
         time: now,
         updatedBy: driverId,
       });
-  
+
       await order.save();
-  
+
       return new ApiResponse(200, {}, Msg.ORDER_DELIVERED_SUCCESSFULLY);
     } catch (error) {
       console.log(`error while completing delivery:`, error);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+  async failDelivery(driverId: string, dto: FailDeliveryDto) {
+    try {
+      const order = await this.orderModel.findOne({
+        _id: new Types.ObjectId(dto.orderId),
+        assignedDriverId: new Types.ObjectId(driverId),
+        isDeleted: false,
+      });
+
+      if (!order) {
+        return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
+      }
+
+      // must be in delivery
+      if (order.dispatchStatus !== DELIVERY_STATUS.OUT_FOR_DELIVERY) {
+        return new ApiResponse(400, {}, Msg.ORDER_IS_NOT_IN_DELIVERY_STATE);
+      }
+
+      const now = new Date();
+
+      order.dispatchStatus = DELIVERY_STATUS.FAILED;
+      order.dispatchStatusDate = now;
+
+      // store failure reason
+      order.failedReason = dto.reason;
+
+      order.statusHistory.push({
+        status: DELIVERY_STATUS.FAILED,
+        time: now,
+        updatedBy: driverId,
+      });
+
+      await order.save();
+
+      return new ApiResponse(200, {}, Msg.ORDER_FAILED_SUCCESSFULLY);
+    } catch (error) {
+      console.log(`error while failing delivery:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }

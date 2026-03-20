@@ -5,7 +5,5 @@ export class CompleteDeliveryDto {
   @IsNotEmpty()
   orderId: string;
 
-  @IsString()
-  @IsNotEmpty()
-  podImage: string;
+
 }
