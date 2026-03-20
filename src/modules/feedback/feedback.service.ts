@@ -11,6 +11,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CreateRatingDto } from './dto/create-feedback.dto';
 
 import { DELIVERY_STATUS } from 'src/common/enums/delivery-status.enum';
+import { Role } from 'src/common/enums/role.enum';
 
 @Injectable()
 export class FeedbackService {
@@ -20,7 +21,7 @@ export class FeedbackService {
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
   ) {}
 
-  async createRating( userId: string, dto: CreateRatingDto) {
+  async createRating(userId: string, dto: CreateRatingDto) {
     try {
       // 1️⃣ Check order exists
       const order = await this.orderModel.findById(dto.orderId);
@@ -33,11 +34,23 @@ export class FeedbackService {
         return new ApiResponse(400, {}, Msg.ORDER_NOT_DELIVERED);
       }
 
-      if (order.assignedDriverId && order.assignedDriverId.toString() !== dto.driverId) {
+      const findDriver = await this.userModel.findById(dto.driverId);
+      if (!findDriver || findDriver.role !== Role.DRIVER) {
+        return new ApiResponse(404, {}, Msg.DRIVER_NOT_FOUND);
+      }
+
+      const driverId = new Types.ObjectId(dto.driverId);
+
+      if (
+        order.assignedDriverId &&
+        order.assignedDriverId.toString() !== driverId.toString()
+      ) {
         return new ApiResponse(400, {}, Msg.DRIVER_NOT_ASSIGNED_TO_ORDER);
       }
 
-      const existingRating = await this.ratingModel.findOne({ orderId: dto.orderId });
+      const existingRating = await this.ratingModel.findOne({
+        orderId: dto.orderId,
+      });
 
       if (existingRating) {
         return new ApiResponse(400, {}, Msg.RATING_ALREADY_EXISTS_FOR_ORDER);
