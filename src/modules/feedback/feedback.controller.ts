@@ -1,4 +1,4 @@
-import { Controller, Post, Param, Body, Req, UseGuards } from '@nestjs/common';
+import { Controller, Post, Param, Body, Req, UseGuards, Get } from '@nestjs/common';
 import { FeedbackService } from './feedback.service';
 
 import { RoleGuard } from 'src/modules/auth/roles/roles.guard';
@@ -17,5 +17,12 @@ export class FeedbackController {
   @Post('order/rating')
   createRating(@Body() dto: CreateRatingDto, @Req() req: any) {
     return this.feedbackService.createRating(req.user.id, dto);
+  }
+
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN, Role.MERCHANT)
+  @Get('order/rating/:orderId')
+  ratingByOrder(@Param('orderId') orderId: string, @Req() req: any) {
+    return this.feedbackService.ratingByOrder(orderId, req.user.id);
   }
 }
