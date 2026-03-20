@@ -285,11 +285,7 @@ export class DriverService {
       // }
 
       if (!file) {
-        return new ApiResponse(
-          400,
-          {},
-          'Proof of Delivery (POD) image is required',
-        );
+        return new ApiResponse(400, {}, Msg.PROOF_OF_DELIVERY_REQUIRED);
       }
 
       const now = new Date();
@@ -315,7 +311,11 @@ export class DriverService {
     }
   }
 
-  async failDelivery(driverId: string, dto: FailDeliveryDto) {
+  async failDelivery(
+    driverId: string,
+    dto: FailDeliveryDto,
+    file: Express.Multer.File,
+  ) {
     try {
       const order = await this.orderModel.findOne({
         _id: new Types.ObjectId(dto.orderId),
@@ -325,6 +325,10 @@ export class DriverService {
 
       if (!order) {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
+      }
+
+      if (!file) {
+        return new ApiResponse(400, {}, Msg.PROOF_OF_DELIVERY_REQUIRED);
       }
 
       // must be in delivery
@@ -339,6 +343,7 @@ export class DriverService {
 
       // store failure reason
       order.failedReason = dto.reason;
+      order.podImage = file ? file.filename : null;
 
       order.statusHistory.push({
         status: DELIVERY_STATUS.FAILED,
