@@ -361,6 +361,7 @@ export class DriverService {
 
   async getOrderDetail(orderId: string, driverId: string) {
     try {
+      let folderName: string;
       const order = await this.orderModel
         .findOne({
           _id: new Types.ObjectId(orderId),
@@ -375,6 +376,12 @@ export class DriverService {
       if (!order) {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
       }
+
+      folderName =
+        order.dispatchStatus === DELIVERY_STATUS.FAILED ? `failed` : `pod`;
+      order.podImage = order.podImage
+        ? `${process.env.BASE_URL}/uploads/${folderName}/${order.podImage}`
+        : null;
 
       return new ApiResponse(200, order, Msg.ORDER_FETCHED);
     } catch (error) {
