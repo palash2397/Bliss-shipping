@@ -5,7 +5,6 @@ import { Model, Types, Connection } from 'mongoose';
 import { InjectConnection } from '@nestjs/mongoose';
 import { parse } from 'csv-parse';
 
-
 import { Msg } from '../../utils/helpers/responseMsg';
 import { ApiResponse } from '../../utils/helpers/ApiResponse';
 
@@ -237,9 +236,6 @@ export class OrdersService {
           .limit(limit)
           .lean(),
 
-
-        
-
         this.orderModel.countDocuments({
           merchantId: merchant._id,
           isDeleted: false,
@@ -255,6 +251,7 @@ export class OrdersService {
 
   async findOrderById(orderId: string, userId: string) {
     try {
+      let folderName = 'pod';
       const merchant = await this.merchantModel.findOne({
         userId: new Types.ObjectId(userId),
       });
@@ -271,7 +268,13 @@ export class OrdersService {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
       }
 
-      order.podImage = order.podImage ? `${process.env.BASE_URL}/uploads/pod/${order.podImage}` : null;
+      if (order.dispatchStatus === 'FAILED') {
+        folderName = 'failed';
+      }
+
+      order.podImage = order.podImage
+        ? `${process.env.BASE_URL}/uploads/${folderName}/${order.podImage}`
+        : null;
       return new ApiResponse(200, order, Msg.ORDER_FETCHED);
     } catch (error) {
       console.log(`Error finding order by id: ${error}`);
