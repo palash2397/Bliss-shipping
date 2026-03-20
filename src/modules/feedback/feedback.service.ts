@@ -74,8 +74,7 @@ export class FeedbackService {
 
   async ratingByOrder(orderId: string, userId: string) {
     try {
-      const order = await this.orderModel
-        .findById(orderId)
+      const order = await this.orderModel.findById(orderId);
 
       if (!order) {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
@@ -96,5 +95,30 @@ export class FeedbackService {
       console.log(`error while fetching rating`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
+  }
+
+  async driverAverageRating(driverId: string) {
+    const result = await this.ratingModel.aggregate([
+      { $match: { driverId } },
+      {
+        $group: {
+          _id: '$driverId',
+          avgRating: { $avg: '$rating' },
+          totalRatings: { $sum: 1 },
+        },
+      },
+    ]);
+
+    if (!result.length) {
+      return {
+        avgRating: 0,
+        totalRatings: 0,
+      };
+    }
+
+    return {
+      avgRating: Number(result[0].avgRating.toFixed(1)),
+      totalRatings: result[0].totalRatings,
+    };
   }
 }
