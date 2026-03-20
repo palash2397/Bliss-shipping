@@ -24,6 +24,7 @@ import { Role } from 'src/common/enums/role.enum';
 import { Roles } from 'src/modules/auth/roles/roles.decorator';
 
 import { DeclineOrderDto } from './dto/order-decline.dto';
+import { FailDeliveryDto } from './dto/fail-delivery.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('driver')
@@ -62,14 +63,30 @@ export class DriverController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.DRIVER)
   startDelivery(@Req() req: any, @Param('id') orderId: string) {
-    return this.driverService.startDelivery(orderId, req.user.id);  
+    return this.driverService.startDelivery(orderId, req.user.id);
   }
 
   @Patch('complete/order/:id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.DRIVER)
-  @UseInterceptors(FileInterceptor('file', multerConfig("pod")))
-  uploadEvidence(@Req() req: any, @Param('id') orderId: string, @UploadedFile() file: Express.Multer.File) {
+  @UseInterceptors(FileInterceptor('file', multerConfig('pod')))
+  uploadEvidence(
+    @Req() req: any,
+    @Param('id') orderId: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
     return this.driverService.completeDelivery(orderId, req.user.id, file);
+  }
+
+  @Patch('fail/delivery')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.DRIVER)
+  @UseInterceptors(FileInterceptor('file', multerConfig('failed')))
+  failDelivery(
+    @Req() req: any,
+    @Body() dto: FailDeliveryDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.driverService.failDelivery(req.user.id, dto, file);
   }
 }

@@ -110,7 +110,7 @@ export class DriverService {
 
       await order.save();
 
-      return new ApiResponse(200, {}, Msg.ORDER_ACCEPTED);
+      return new ApiResponse(200, {order}, Msg.ORDER_ACCEPTED);
     } catch (error) {
       console.log(`error while accepting order:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
@@ -149,7 +149,7 @@ export class DriverService {
       });
 
       await order.save();
-      return new ApiResponse(200, {}, Msg.ORDER_DECLINED);
+      return new ApiResponse(200, {order}, Msg.ORDER_DECLINED);
     } catch (error) {
       console.log(`error while declining order:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
@@ -195,7 +195,7 @@ export class DriverService {
 
       await order.save();
 
-      return new ApiResponse(200, {}, Msg.ARRIVAL_CONFIRMED);
+      return new ApiResponse(200, {order}, Msg.ARRIVAL_CONFIRMED);
     } catch (error) {
       console.log(`error while marking arrived:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
@@ -249,7 +249,7 @@ export class DriverService {
 
       await order.save();
 
-      return new ApiResponse(200, {}, Msg.DELIVERY_STARTED_SUCCESSFULLY);
+      return new ApiResponse(200, {order}, Msg.DELIVERY_STARTED_SUCCESSFULLY);
     } catch (error) {
       console.log(`error while starting delivery:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
@@ -304,7 +304,7 @@ export class DriverService {
 
       await order.save();
 
-      return new ApiResponse(200, {}, Msg.ORDER_DELIVERED_SUCCESSFULLY);
+      return new ApiResponse(200, {order}, Msg.ORDER_DELIVERED_SUCCESSFULLY);
     } catch (error) {
       console.log(`error while completing delivery:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
@@ -353,7 +353,7 @@ export class DriverService {
 
       await order.save();
 
-      return new ApiResponse(200, {}, Msg.ORDER_FAILED_SUCCESSFULLY);
+      return new ApiResponse(200, {order}, Msg.ORDER_FAILED_SUCCESSFULLY);
     } catch (error) {
       console.log(`error while failing delivery:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
