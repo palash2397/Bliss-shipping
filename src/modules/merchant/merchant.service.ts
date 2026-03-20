@@ -7,6 +7,7 @@ import { ApiResponse } from '../../utils/helpers/ApiResponse';
 
 import { User, UserDocument } from '../user/schemas/user.schema';
 import { Merchant, MerchantDocument } from './schemas/merchant-profile.schema';
+import { Order, OrderDocument } from '../orders/schemas/order.schema';
 
 import { CreateMerchantDto } from './dto/create-profile.dto';
 import { UpdateMerchantDto } from './dto/update-profile.dto';
@@ -16,6 +17,7 @@ export class MerchantService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Merchant.name) private merchantModel: Model<MerchantDocument>,
+    @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
   ) {}
 
   async createProfile(dto: CreateMerchantDto) {
