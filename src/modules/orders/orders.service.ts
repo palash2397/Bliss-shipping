@@ -268,7 +268,7 @@ export class OrdersService {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
       }
 
-      if (order.dispatchStatus === 'FAILED') {
+      if (order.dispatchStatus == DELIVERY_STATUS.FAILED) {
         folderName = 'failed';
       }
 
