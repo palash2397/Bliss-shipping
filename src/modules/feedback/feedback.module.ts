@@ -5,6 +5,7 @@ import { FeedbackController } from './feedback.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Rating, RatingSchema } from './schemas/feedback.schema';
 import { User, UserSchema } from '../user/schemas/user.schema';
+import { Order, OrderSchema } from '../orders/schemas/order.schema';
 
 @Module({
   imports: [
