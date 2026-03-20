@@ -367,6 +367,9 @@ export class DriverService {
           assignedDriverId: new Types.ObjectId(driverId),
           isDeleted: false,
         })
+        .populate('assignedDriverId', 'name phoneNumber')
+        .populate('merchantId', 'companyName contactName receiverPhone')
+        .populate('statusHistory.updatedBy', 'name phoneNumber')
         .lean();
 
       if (!order) {
