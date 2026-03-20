@@ -115,6 +115,7 @@ export const Msg = {
   ORDER_MUST_BE_ACCEPTED_BEFORE_STARTING_DELIVERY: `Order must be accepted before starting delivery`,
   ORDER_DELIVERED_SUCCESSFULLY: `Order delivered successfully`,
   ORDER_IS_NOT_IN_DELIVERY_STATE: `Order is not in delivery state`,
+  ORDER_NOT_DELIVERED: `Order is not delivered Yet`,
 
   // Import History
   IMPORT_HISTORY_FETCHED: `Import history fetched successfully`,
@@ -160,7 +161,16 @@ export const Msg = {
   FILE_REQUIRED: `File is required`,
  
 
- // INVALID
- INVALID_TAB: `Invalid tab value`,
+  // INVALID
+  INVALID_TAB: `Invalid tab value`,
+
+
+  // Rating
+  RATING_CREATED: `Rating created successfully`,
+  RATING_UPDATED: `Rating updated successfully`,
+  RATING_DELETED: `Rating deleted successfully`,
+  RATING_FETCHED: `Rating fetched successfully`,
+  RATING_NOT_FOUND: `Rating not found`,
+  RATING_ALREADY_EXISTS_FOR_ORDER: `Rating already exists for this order`,
 
 };

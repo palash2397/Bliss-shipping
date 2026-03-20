@@ -33,7 +33,7 @@ export class FeedbackService {
         //  return new ApiResponse(400, {}, Msg.ORDER_NOT_DELIVERED);
       }
 
-      // 4️⃣ Check duplicate rating
+     
       const existingRating = await this.ratingModel.findOne({ orderId });
 
       if (existingRating) {
