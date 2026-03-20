@@ -98,27 +98,32 @@ export class FeedbackService {
   }
 
   async driverAverageRating(driverId: string) {
-    const result = await this.ratingModel.aggregate([
-      { $match: { driverId } },
-      {
-        $group: {
-          _id: '$driverId',
-          avgRating: { $avg: '$rating' },
-          totalRatings: { $sum: 1 },
+    try {
+      const result = await this.ratingModel.aggregate([
+        { $match: { driverId } },
+        {
+          $group: {
+            _id: '$driverId',
+            avgRating: { $avg: '$rating' },
+            totalRatings: { $sum: 1 },
+          },
         },
-      },
-    ]);
+      ]);
 
-    if (!result.length) {
+      if (!result.length) {
+        return {
+          avgRating: 0,
+          totalRatings: 0,
+        };
+      }
+
       return {
-        avgRating: 0,
-        totalRatings: 0,
+        avgRating: Number(result[0].avgRating.toFixed(1)),
+        totalRatings: result[0].totalRatings,
       };
+    } catch (error) {
+      console.log(`error while fetching driver average rating`, error);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
-
-    return {
-      avgRating: Number(result[0].avgRating.toFixed(1)),
-      totalRatings: result[0].totalRatings,
-    };
   }
 }
