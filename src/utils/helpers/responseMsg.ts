@@ -171,7 +171,9 @@ export const Msg = {
   RATING_DELETED: `Rating deleted successfully`,
   RATING_FETCHED: `Rating fetched successfully`,
   RATING_NOT_FOUND: `Rating not found`,
+  RATING_ALREADY_EXISTS: `Rating already exists`,
   RATING_ALREADY_EXISTS_FOR_ORDER: `Rating already exists for this order`,
+  RATING_ALREADY_NOT_EXIST_FOR_ORDER: `Rating does not exist for this order`,
 
 
   // Driver

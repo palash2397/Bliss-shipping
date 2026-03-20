@@ -80,7 +80,7 @@ export class FeedbackService {
       }
 
       const rating = await this.ratingModel.findOne({ orderId, userId });
- 
+      
 
       return new ApiResponse(200, rating, Msg.RATING_FETCHED);
     } catch (error) {
