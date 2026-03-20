@@ -26,14 +26,13 @@ export class FeedbackService {
       const order = await this.orderModel.findById(orderId);
 
       if (!order) {
-         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
+        return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
       }
 
       if (order?.dispatchStatus !== DELIVERY_STATUS.DELIVERED) {
-          return new ApiResponse(400, {}, Msg.ORDER_NOT_DELIVERED);
+        return new ApiResponse(400, {}, Msg.ORDER_NOT_DELIVERED);
       }
 
-     
       const existingRating = await this.ratingModel.findOne({ orderId });
 
       if (existingRating) {
@@ -44,15 +43,15 @@ export class FeedbackService {
       const rating = await this.ratingModel.create({
         orderId,
         driverId: dto.driverId,
-        userId,                                                         
+        userId,
         rating: dto.rating,
         feedback: dto.feedback,
       });
 
-     return new ApiResponse(201, rating, Msg.RATING_CREATED);
+      return new ApiResponse(201, rating, Msg.RATING_CREATED);
     } catch (error) {
       console.log(`error while submiting review`, error);
-      return new ApiResponse(500,{}, Msg.SERVER_ERROR);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
 }
