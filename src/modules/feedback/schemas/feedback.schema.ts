@@ -13,10 +13,18 @@ export class Rating {
   })
   orderId: string;
 
-  @Prop({ required: true })
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'User',
+    required: true,
+  })
   driverId: string;
 
-  @Prop({ required: true })
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'User',
+    required: true,
+  })
   userId: string;
 
   @Prop({ required: true, min: 1, max: 5 })
