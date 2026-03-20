@@ -15,8 +15,8 @@ export class MerchantController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('/profile')
   @Roles(Role.MERCHANT)
-  create(@Body() dto: CreateMerchantDto) {
-    return this.merchantService.createProfile(dto);
+  create(@Body() dto: CreateMerchantDto, @Req() req: any) {
+    return this.merchantService.createProfile(req.user.id, dto);
   }
 
   @UseGuards(JwtAuthGuard, RoleGuard)

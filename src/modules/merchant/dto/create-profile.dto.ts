@@ -8,10 +8,6 @@ import {
 
 export class CreateMerchantDto {
    
-  @IsMongoId()
-  @IsNotEmpty()
-  merchantId: string;
-  
   @IsString()
   @IsNotEmpty()
   companyName: string;

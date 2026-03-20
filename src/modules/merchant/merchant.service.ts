@@ -22,15 +22,15 @@ export class MerchantService {
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
   ) {}
 
-  async createProfile(dto: CreateMerchantDto) {
+  async createProfile(userId: string, dto: CreateMerchantDto) {
     try {
-      const user = await this.userModel.findById(dto.merchantId);
+      const user = await this.userModel.findById(userId);
       if (!user) {
         return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
       }
 
       const merchant = await this.merchantModel.findOne({
-        merchantId: dto.merchantId,
+        userId: new Types.ObjectId(userId),
       });
       if (merchant) {
         return new ApiResponse(400, {}, Msg.MERCHANT_ALREADY_EXISTS);
@@ -38,7 +38,7 @@ export class MerchantService {
 
       const obj = {
         ...dto,
-        userId: new Types.ObjectId(dto.merchantId),
+        userId: new Types.ObjectId(userId),
       };
 
       const newMerchant = await this.merchantModel.create(obj);
@@ -100,13 +100,17 @@ export class MerchantService {
 
   async orderStats(userId: string) {
     try {
-      const merchant = await this.merchantModel.findOne({ userId });
+      const merchant = await this.merchantModel.findOne({
+        userId: new Types.ObjectId(userId),
+      });
 
       if (!merchant) {
         return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
       }
 
       const merchantId = merchant._id;
+
+
 
       const stats = await this.orderModel.aggregate([
         {
@@ -128,9 +132,12 @@ export class MerchantService {
         total: 0,
         created: 0,
         assigned: 0,
+        decline: 0,
+        rejected: 0,
         accepted: 0,
         outForDelivery: 0,
         delivered: 0,
+        cancelled: 0,
         failed: 0,
       };
 
@@ -153,12 +160,23 @@ export class MerchantService {
             result.accepted = count;
             break;
 
+          case DELIVERY_STATUS.DECLINED:
+            result.decline = count;
+            break;
+
+          case DELIVERY_STATUS.REJECTED:
+            result.rejected = count;
+            break;
+
           case DELIVERY_STATUS.OUT_FOR_DELIVERY:
             result.outForDelivery = count;
             break;
 
           case DELIVERY_STATUS.DELIVERED:
             result.delivered = count;
+            break;
+          case DELIVERY_STATUS.CANCELLED:
+            result.cancelled = count;
             break;
 
           case DELIVERY_STATUS.FAILED:
@@ -167,7 +185,12 @@ export class MerchantService {
         }
       });
 
-      return new ApiResponse(200, {result}, Msg.ORDER_STATS_FETCHED);
+      // const all = await this.orderModel.find({
+      //   merchantId,
+      //   isDeleted: false,
+      // }).lean();
+
+      return new ApiResponse(200, { result }, Msg.ORDER_STATS_FETCHED);
     } catch (error) {
       console.log(`error getting merchant order stats: ${error.message}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
