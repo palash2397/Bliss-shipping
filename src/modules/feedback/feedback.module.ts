@@ -12,6 +12,7 @@ import { Order, OrderSchema } from '../orders/schemas/order.schema';
     MongooseModule.forFeature([
       { name: Rating.name, schema: RatingSchema },
       { name: User.name, schema: UserSchema },
+      { name: Order.name, schema: OrderSchema },
     ]),
   ],
   controllers: [FeedbackController],
