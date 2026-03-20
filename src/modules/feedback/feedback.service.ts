@@ -33,6 +33,10 @@ export class FeedbackService {
         return new ApiResponse(400, {}, Msg.ORDER_NOT_DELIVERED);
       }
 
+      if (order.assignedDriverId && order.assignedDriverId.toString() !== dto.driverId) {
+        return new ApiResponse(400, {}, Msg.DRIVER_NOT_ASSIGNED_TO_ORDER);
+      }
+
       const existingRating = await this.ratingModel.findOne({ orderId: dto.orderId });
 
       if (existingRating) {

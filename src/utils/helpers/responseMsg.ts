@@ -173,4 +173,8 @@ export const Msg = {
   RATING_NOT_FOUND: `Rating not found`,
   RATING_ALREADY_EXISTS_FOR_ORDER: `Rating already exists for this order`,
 
+
+  // Driver
+  DRIVER_NOT_ASSIGNED_TO_ORDER: `Driver is not assigned to this order`,
+
 };
