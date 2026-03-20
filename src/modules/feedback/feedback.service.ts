@@ -80,6 +80,9 @@ export class FeedbackService {
       }
 
       const rating = await this.ratingModel.findOne({ orderId, userId });
+      if (!rating) {
+        return new ApiResponse(404, {}, Msg.RATING_ALREADY_NOT_EXIST_FOR_ORDER);
+      }
       
 
       return new ApiResponse(200, rating, Msg.RATING_FETCHED);
