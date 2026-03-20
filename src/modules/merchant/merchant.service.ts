@@ -167,7 +167,7 @@ export class MerchantService {
         }
       });
 
-      return result;
+      return new ApiResponse(200, {result}, Msg.ORDER_STATS_FETCHED);
     } catch (error) {
       console.log(`error getting merchant order stats: ${error.message}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);

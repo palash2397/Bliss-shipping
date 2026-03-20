@@ -33,4 +33,12 @@ export class MerchantController {
     return this.merchantService.update(dto, req.user.id);
   }
 
+
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Get('order/stats')
+  @Roles(Role.MERCHANT, Role.ADMIN)
+  orderStats(@Req() req: any) {
+    return this.merchantService.orderStats(req.user.id);
+  }
+
 }
