@@ -360,4 +360,21 @@ export class DriverService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+
+  async getOrderDetail(orderId: string, driverId: string) {
+
+  const order = await this.orderModel.findOne({
+    _id: orderId,
+    assignedDriverId: driverId,
+    isDeleted: false,
+  }).lean();
+
+  if (!order) {
+    
+  }
+
+  return {
+    
+  };
+}
 }
