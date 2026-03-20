@@ -10,7 +10,6 @@ import { DELIVERY_STATUS } from 'src/common/enums/delivery-status.enum';
 import { User, UserDocument } from '../user/schemas/user.schema';
 import { Order, OrderDocument } from '../orders/schemas/order.schema';
 
-
 import { FailDeliveryDto } from './dto/fail-delivery.dto';
 
 @Injectable()
@@ -111,7 +110,7 @@ export class DriverService {
 
       await order.save();
 
-      return new ApiResponse(200, {order}, Msg.ORDER_ACCEPTED);
+      return new ApiResponse(200, { order }, Msg.ORDER_ACCEPTED);
     } catch (error) {
       console.log(`error while accepting order:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
@@ -150,7 +149,7 @@ export class DriverService {
       });
 
       await order.save();
-      return new ApiResponse(200, {order}, Msg.ORDER_DECLINED);
+      return new ApiResponse(200, { order }, Msg.ORDER_DECLINED);
     } catch (error) {
       console.log(`error while declining order:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
@@ -196,7 +195,7 @@ export class DriverService {
 
       await order.save();
 
-      return new ApiResponse(200, {order}, Msg.ARRIVAL_CONFIRMED);
+      return new ApiResponse(200, { order }, Msg.ARRIVAL_CONFIRMED);
     } catch (error) {
       console.log(`error while marking arrived:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
@@ -250,7 +249,7 @@ export class DriverService {
 
       await order.save();
 
-      return new ApiResponse(200, {order}, Msg.DELIVERY_STARTED_SUCCESSFULLY);
+      return new ApiResponse(200, { order }, Msg.DELIVERY_STARTED_SUCCESSFULLY);
     } catch (error) {
       console.log(`error while starting delivery:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
@@ -305,7 +304,7 @@ export class DriverService {
 
       await order.save();
 
-      return new ApiResponse(200, {order}, Msg.ORDER_DELIVERED_SUCCESSFULLY);
+      return new ApiResponse(200, { order }, Msg.ORDER_DELIVERED_SUCCESSFULLY);
     } catch (error) {
       console.log(`error while completing delivery:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
@@ -342,7 +341,6 @@ export class DriverService {
       order.dispatchStatus = DELIVERY_STATUS.FAILED;
       order.dispatchStatusDate = now;
 
-      
       order.failedReason = dto.reason;
       order.podImage = file ? file.filename : null;
 
@@ -354,7 +352,7 @@ export class DriverService {
 
       await order.save();
 
-      return new ApiResponse(200, {order}, Msg.ORDER_FAILED_SUCCESSFULLY);
+      return new ApiResponse(200, { order }, Msg.ORDER_FAILED_SUCCESSFULLY);
     } catch (error) {
       console.log(`error while failing delivery:`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
@@ -362,19 +360,23 @@ export class DriverService {
   }
 
   async getOrderDetail(orderId: string, driverId: string) {
+    try {
+      const order = await this.orderModel
+        .findOne({
+          _id: new Types.ObjectId(orderId),
+          assignedDriverId: new Types.ObjectId(driverId),
+          isDeleted: false,
+        })
+        .lean();
 
-  const order = await this.orderModel.findOne({
-    _id: orderId,
-    assignedDriverId: driverId,
-    isDeleted: false,
-  }).lean();
+      if (!order) {
+        return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
+      }
 
-  if (!order) {
-    
+      return new ApiResponse(200, order, Msg.ORDER_FETCHED);
+    } catch (error) {
+      console.log(`error while getting order detail:`, error);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
   }
-
-  return {
-    
-  };
-}
 }
