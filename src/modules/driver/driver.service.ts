@@ -10,6 +10,10 @@ import { DELIVERY_STATUS } from 'src/common/enums/delivery-status.enum';
 import { User, UserDocument } from '../user/schemas/user.schema';
 import { Order, OrderDocument } from '../orders/schemas/order.schema';
 import { Vehicle, VehicleDocument } from '../vehicle/schemas/vehicle.schema';
+import {
+  DriverVehicle,
+  DriverVehicleDocument,
+} from '../vehicle/schemas/driver-vehicle.schema';
 
 import { FailDeliveryDto } from './dto/fail-delivery.dto';
 
@@ -18,7 +22,10 @@ export class DriverService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     @InjectModel(Order.name) private readonly orderModel: Model<OrderDocument>,
-    @InjectModel(Vehicle.name) private readonly vehicleModel: Model<VehicleDocument>,
+    @InjectModel(Vehicle.name)
+    private readonly vehicleModel: Model<VehicleDocument>,
+    @InjectModel(DriverVehicle.name)
+    private readonly driverVehicleModel: Model<DriverVehicleDocument>,
   ) {}
 
   async getDriverTasks(driverId: string, tab: string) {
@@ -424,22 +431,46 @@ export class DriverService {
   // }
 
   async getDriverProfile(driverId: string) {
+    try {
+      const user = await this.userModel.findById(driverId).lean();
 
-    const user = await this.userModel.findById(driverId).lean();
+      if (!user) {
+        return new ApiResponse(404, {}, Msg.DRIVER_NOT_FOUND);
+      }
 
-    if (!user) {
-      return new ApiResponse(404, {}, Msg.DRIVER_NOT_FOUND);
+      const driverVehicle = await this.driverVehicleModel
+        .findOne({
+          driverId: new Types.ObjectId(driverId),
+          isActive: true,
+        })
+        .populate('vehicleId', 'name description')
+        .lean();
+
+      console.log('driverVehicle', driverVehicle);
+
+      const vehicle = driverVehicle?.vehicleId as any as {
+        _id: Types.ObjectId;
+        name: string;
+        description: string;
+      };
+
+      const data = {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        vehicle: driverVehicle
+          ? {
+              id: vehicle._id,
+              name: vehicle.name,
+              description: vehicle.description,
+            }
+          : null,
+      };
+
+      return new ApiResponse(200, data, Msg.DRIVER_FETCHED);
+    } catch (error) {
+      console.log('error while getting driver profile:', error);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
-
- 
-    const driverVehicle = await this.vehicleModel
-      .findOne({
-        driverId: new Types.ObjectId(driverId),
-        isActive: true,
-      })
-    console.log('driverVehicle', driverVehicle);
-
-
-    return new ApiResponse(200, driverVehicle, Msg.DRIVERS_FETCHED);
   }
 }
