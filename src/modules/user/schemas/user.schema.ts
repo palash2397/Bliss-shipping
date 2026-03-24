@@ -5,7 +5,6 @@ import { Role } from '../../../common/enums/role.enum';
 
 export type UserDocument = HydratedDocument<User>;
 
-
 @Schema({ timestamps: true })
 export class User {
   @Prop({
@@ -32,21 +31,24 @@ export class User {
   })
   role: Role;
 
-
   @Prop({
     default: true,
   })
   isActive: boolean;
 
   @Prop({
+    type: String,
+    required: false,
     default: null,
   })
-  otp: string | null;
+  otp?: string;
 
   @Prop({
+    type: Date,
+    required: false,
     default: null,
   })
-  otpExpires: Date | null;
+  otpExpiresAt: Date | null;
 
   // 👇 instance method typing
   //   isPasswordCorrect?: (
