@@ -38,6 +38,16 @@ export class User {
   })
   isActive: boolean;
 
+  @Prop({
+    default: null,
+  })
+  otp: string | null;
+
+  @Prop({
+    default: null,
+  })
+  otpExpires: Date | null;
+
   // 👇 instance method typing
   //   isPasswordCorrect?: (
   //     candidatePassword: string,
