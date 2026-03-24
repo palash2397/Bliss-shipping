@@ -6,6 +6,8 @@ import jwt from 'jsonwebtoken';
 import { Msg } from '../../utils/helpers/responseMsg';
 import { ApiResponse } from '../../utils/helpers/ApiResponse';
 
+import { generateOtp, getExpirationTime } from '../../utils/helpers';
+
 import { UserDocument, User } from './schemas/user.schema';
 import {
   MerchantDocument,
