@@ -18,6 +18,11 @@ export class User {
   })
   email: string;
 
+  @Prop({
+    required: false,
+    default: null,
+  })
+  phone: string;
 
   @Prop({
     required: [true, 'Password is required'],
