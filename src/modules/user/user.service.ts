@@ -101,4 +101,13 @@ export class UserService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+
+  async sendOtp(){
+    try {
+      
+    } catch (error) {
+      console.log(`error while sending otp: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
 }
