@@ -102,8 +102,12 @@ export class UserService {
     }
   }
 
-  async sendOtp(){
+  async sendOtp(phone: string){
     try {
+      const user = await this.userModel.findOne({ phone });
+      if (!user) {
+        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
+      }
       
     } catch (error) {
       console.log(`error while sending otp: ${error}`);

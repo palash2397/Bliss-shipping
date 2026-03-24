@@ -20,6 +20,9 @@ export class CreateUserDto {
   @IsEmail({}, { message: 'Invalid email address' })
   email: string;
 
+  @IsOptional()
+  phone: string;
+
 
   @IsNotEmpty()
   @MinLength(8, {
