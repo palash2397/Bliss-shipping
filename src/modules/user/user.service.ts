@@ -67,6 +67,12 @@ export class UserService {
         return new ApiResponse(401, {}, Msg.USER_INACTIVE);
       }
 
+      if (user.role == Role.USER) {
+        if (!user.isVerified) {
+          return new ApiResponse(401, {}, Msg.USER_NOT_VERIFIED);
+        }
+      }
+
       const token = jwt.sign(
         { id: user._id, role: user.role },
         process.env.JWT_SECRET!,

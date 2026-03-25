@@ -41,4 +41,9 @@ export class UserController {
     return this.userService.verifyOtp(dto);
   }
 
+  @Patch('resend-otp')
+  async resendOtp(@Body() dto: VerifyOtpDto) {
+    return this.userService.resendOtp(dto.email);
+  }
+
 }
