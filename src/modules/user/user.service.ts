@@ -45,10 +45,13 @@ export class UserService {
   async login(dto: LoginUserDto) {
     try {
       const { email, password } = dto;
+ 
       const user = await this.userModel.findOne({ email }).select('+password');
       if (!user) {
         return new ApiResponse(404, {}, Msg.INVALID_CREDENTIALS);
       }
+
+      console.log('user', user);
 
       if (!user.isActive) {
         return new ApiResponse(401, {}, Msg.USER_INACTIVE);
@@ -58,7 +61,11 @@ export class UserService {
       //   return new ApiResponse(401, {}, Msg.INVALID_CREDENTIALS);
       // }
 
+      console.log('password', typeof password);
+      console.log('user.password', typeof user.password);
+
       const isPasswordValid = await bcrypt.compare(password, user.password);
+      console.log('isPasswordValid', isPasswordValid);
       if (!isPasswordValid) {
         return new ApiResponse(401, {}, Msg.INVALID_CREDENTIALS);
       }
@@ -140,16 +147,16 @@ export class UserService {
       const otp = generateOtp();
       const otpExpiresAt = getExpirationTime(); // 10 minutes
 
-      const hashedPassword = await bcrypt.hash(password, 10);
+
 
       console.log('OTP:', otp);
       console.log('OTP Expiration:', otpExpiresAt);
-      console.log('Hashed Password:', hashedPassword);
+
 
       await this.userModel.create({
         name,
         email,
-        password: hashedPassword,
+        password,
         countryCode,
         phone,
         otp,

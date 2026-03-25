@@ -43,17 +43,17 @@ export class OrdersService {
 
   async createOrder(dto: CreateOrderDto, userId: string) {
     try {
-      const merchant = await this.merchantModel.findOne({
-        userId: new Types.ObjectId(userId),
+      const user = await this.userModel.findOne({
+        _id: new Types.ObjectId(userId),
       });
-      if (!merchant) {
-        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      if (!user) {
+        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
       }
       const orderNumber = `BS-${Date.now()}`;
 
       const order = await this.orderModel.create({
         ...dto,
-        merchantId: merchant._id,
+        userId: user._id,
         orderNumber,
         dispatchStatus: 'CREATED',
         paymentStatus: 'PENDING',

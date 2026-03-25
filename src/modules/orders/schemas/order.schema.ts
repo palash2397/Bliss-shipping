@@ -9,11 +9,11 @@ export type OrderDocument = Order & Document;
 export class Order {
   @Prop({
     type: Types.ObjectId,
-    ref: 'Merchant',
+    ref: 'User',
     required: true,
     index: true,
   })
-  merchantId: Types.ObjectId;
+  userId: Types.ObjectId;
 
   @Prop({
     required: true,
