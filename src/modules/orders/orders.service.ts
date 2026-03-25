@@ -83,8 +83,6 @@ export class OrdersService {
       };
     }
 
-
-
     const session = await this.connection.startSession();
     session.startTransaction();
 
@@ -213,7 +211,7 @@ export class OrdersService {
 
   async findAllOrders(userId: string, page: number, limit: number) {
     try {
-     const user = await this.userModel.findOne({
+      const user = await this.userModel.findOne({
         _id: new Types.ObjectId(userId),
       });
       if (!user) {
@@ -251,16 +249,16 @@ export class OrdersService {
   async findOrderById(orderId: string, userId: string) {
     try {
       let folderName = 'pod';
-      const merchant = await this.merchantModel.findOne({
-        userId: new Types.ObjectId(userId),
+      const user = await this.userModel.findOne({
+        _id: new Types.ObjectId(userId),
       });
-      if (!merchant) {
-        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      if (!user) {
+        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
       }
       const order = await this.orderModel
-        .findOne({ _id: new Types.ObjectId(orderId), merchantId: merchant._id })
+        .findOne({ _id: new Types.ObjectId(orderId), userId: user._id })
         .populate('assignedDriverId', 'name phoneNumber')
-        .populate('merchantId', 'companyName contactName receiverPhone')
+        .populate('userId', 'name email')
         .populate('statusHistory.updatedBy', 'name phoneNumber')
         .lean();
       if (!order) {
@@ -283,12 +281,11 @@ export class OrdersService {
 
   async filterOrders(userId: string, query: FilterOrdersDto) {
     try {
-      const merchant = await this.merchantModel.findOne({
-        userId: new Types.ObjectId(userId),
+      const user = await this.userModel.findOne({
+        _id: new Types.ObjectId(userId),
       });
-
-      if (!merchant) {
-        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      if (!user) {
+        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
       }
 
       const {
@@ -301,7 +298,7 @@ export class OrdersService {
       } = query;
 
       const filter: any = {
-        merchantId: merchant._id,
+        userId: user._id,
         isDeleted: false,
       };
 
@@ -343,38 +340,36 @@ export class OrdersService {
     }
   }
 
-  async merchantSummary(userId: string) {
+  async merchantSummary(id: string) {
     try {
-      const merchant = await this.merchantModel.findOne({
-        userId: new Types.ObjectId(userId),
+       const user = await this.userModel.findOne({
+        _id: new Types.ObjectId(id),
       });
-
-      if (!merchant) {
-        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      if (!user) {
+        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
       }
-
-      const merchantId = merchant._id;
+      const userId = user._id;
 
       const [total, delivered, inTransit, failed] = await Promise.all([
         this.orderModel.countDocuments({
-          merchantId,
+          userId,
           isDeleted: false,
         }),
 
         this.orderModel.countDocuments({
-          merchantId,
+          userId,
           dispatchStatus: DELIVERY_STATUS.DELIVERED,
           isDeleted: false,
         }),
 
         this.orderModel.countDocuments({
-          merchantId,
+          userId,
           dispatchStatus: DELIVERY_STATUS.OUT_FOR_DELIVERY,
           isDeleted: false,
         }),
 
         this.orderModel.countDocuments({
-          merchantId,
+          userId,
           dispatchStatus: DELIVERY_STATUS.FAILED,
           isDeleted: false,
         }),
@@ -399,15 +394,15 @@ export class OrdersService {
 
   async recentOrders(userId: string, type: string) {
     try {
-      const merchant = await this.merchantModel.findOne({
-        userId: new Types.ObjectId(userId),
+      const user = await this.userModel.findOne({
+        _id: new Types.ObjectId(userId),
       });
 
-      if (!merchant) {
-        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      if (!user) {
+        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
       }
 
-      const merchantId = merchant._id;
+      const userIdd = user._id;
 
       const todayStart = new Date();
       todayStart.setHours(0, 0, 0, 0);
@@ -419,7 +414,7 @@ export class OrdersService {
       tomorrowEnd.setDate(tomorrowStart.getDate() + 1);
 
       let filter: any = {
-        merchantId,
+        userId: userIdd,
         isDeleted: false,
       };
 
@@ -452,12 +447,12 @@ export class OrdersService {
 
   async cancelOrder(userId: string, orderId: string) {
     try {
-      const merchant = await this.merchantModel.findOne({
-        userId: new Types.ObjectId(userId),
+      const user = await this.userModel.findOne({
+        _id: new Types.ObjectId(userId),
       });
-      console.log('merchant', merchant);
-      if (!merchant) {
-        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      console.log('user', user);
+      if (!user) {
+        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
       }
 
       const order = await this.orderModel.findById(orderId);
@@ -494,18 +489,18 @@ export class OrdersService {
 
   async importHistory(userId: string) {
     try {
-      const merchant = await this.merchantModel.findOne({
-        userId: new Types.ObjectId(userId),
+      const user = await this.userModel.findOne({
+        _id: new Types.ObjectId(userId),
       });
 
-      console.log('merchant', merchant);
+      console.log('user', user);
 
-      if (!merchant) {
-        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      if (!user) {
+        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
       }
 
       const data = await this.importHistoryModel
-        .find({ merchantId: merchant._id })
+        .find({ userId: user._id })
         .sort({ createdAt: -1 })
         .limit(20)
         .lean();
