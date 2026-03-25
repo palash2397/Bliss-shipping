@@ -255,6 +255,7 @@ export class UserService {
         }
 
         user.profilePic = file.filename;
+        await user.save();
       }
 
       await this.userModel.findByIdAndUpdate(

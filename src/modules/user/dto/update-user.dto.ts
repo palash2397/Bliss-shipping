@@ -7,10 +7,11 @@ import {
   MaxLength,
 
 } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
 
 import { RegisterUserDto } from './register-user.dto';
 
-export class UpdateUserDto extends RegisterUserDto {
+export class UpdateUserDto extends PartialType(RegisterUserDto) {
  
 
 
