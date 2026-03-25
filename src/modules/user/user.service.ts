@@ -16,6 +16,8 @@ import {
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { RegisterUserDto } from './dto/register-user.dto';
+
 import { Role } from '../../common/enums/role.enum';
 
 @Injectable()
@@ -23,6 +25,7 @@ export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Merchant.name) private merchantModel: Model<MerchantDocument>,
+    
   ) {}
 
   async createUser(dto: CreateUserDto) {
