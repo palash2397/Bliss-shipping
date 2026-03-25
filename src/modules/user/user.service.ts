@@ -182,4 +182,32 @@ export class UserService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+
+  async resendOtp(email: string) {
+    try {
+      const user = await this.userModel.findOne({ email });
+      if (!user) {
+        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
+      }
+
+      if (user.isVerified) {
+        return new ApiResponse(400, {}, Msg.USER_ALREADY_VERIFIED);
+      }
+
+      const otp = generateOtp();
+      const otpExpiresAt = getExpirationTime(); 
+
+      user.otp = otp;
+      user.otpExpiresAt = otpExpiresAt;
+      await user.save();
+
+      console.log('OTP:', otp);
+      console.log('OTP Expiration:', otpExpiresAt);
+
+      return new ApiResponse(200, { otp: otp }, Msg.OTP_RESENT);
+    } catch (error) {
+      console.log(`error while resending otp: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
 }
