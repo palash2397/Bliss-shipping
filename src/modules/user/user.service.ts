@@ -131,17 +131,28 @@ export class UserService {
       }
 
       const otp = generateOtp();
-      const otpExpiration = getExpirationTime(); // 10 minutes
+      const otpExpiresAt = getExpirationTime(); // 10 minutes
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
       console.log('OTP:', otp);
-      console.log('OTP Expiration:', otpExpiration);
+      console.log('OTP Expiration:', otpExpiresAt);
+      console.log('Hashed Password:', hashedPassword);
+
+      await this.userModel.create({
+        name,
+        email,
+        password: hashedPassword,
+        countryCode,
+        phone,
+        otp,
+        otpExpiresAt,
+      });
 
 
 
    
-      // return new ApiResponse(201, user, Msg.USER_CREATED);
+      return new ApiResponse(201, {otp: otp}, Msg.OTP_SENT);
     } catch (error) {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
