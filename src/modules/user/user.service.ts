@@ -157,4 +157,17 @@ export class UserService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+
+
+  async verifyOtp(otp: string) {
+    try {
+      const user = await this.userModel.findOne({ otp });
+      if (!user) {
+        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
+      }
+      return new ApiResponse(200, {}, Msg.OTP_VERIFIED);
+    } catch (error) {
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
 }
