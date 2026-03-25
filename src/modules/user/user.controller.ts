@@ -1,19 +1,23 @@
-import { Body, Controller, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from 'src/modules/auth/jwt/jwt.guard';
 import { RoleGuard } from 'src/modules/auth/roles/roles.guard';
-
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 
-
 import { Role } from 'src/common/enums/role.enum';
 import { Roles } from 'src/modules/auth/roles/roles.decorator';
-
-
 
 @Controller('user')
 export class UserController {
@@ -46,4 +50,9 @@ export class UserController {
     return this.userService.resendOtp(dto.email);
   }
 
+  @Get('profile')
+  @UseGuards(JwtAuthGuard)
+  async getProfile(@Req() req: any) {
+    return this.userService.profile(req.user.id);
+  }
 }
