@@ -102,16 +102,31 @@ export class UserService {
     }
   }
 
-  async sendOtp(phone: string){
-    try {
-      const user = await this.userModel.findOne({ phone });
-      if (!user) {
-        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
-      }
+  // async sendOtp(phone: string){
+  //   try {
+  //     const user = await this.userModel.findOne({ phone });
+  //     if (!user) {
+  //       return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
+  //     }
       
-    } catch (error) {
-      console.log(`error while sending otp: ${error}`);
-      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
-    }
-  }
+  //   } catch (error) {
+  //     console.log(`error while sending otp: ${error}`);
+  //     return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+  //   }
+  // }
+
+  // async userRegister(dto: CreateUserDto) {
+  //   try {
+  //     const { name, email, password } = dto;
+  //     const user = await this.userModel.create({
+  //       name,
+  //       email,
+  //       password,
+  //       role,
+  //     });
+  //     return new ApiResponse(201, user, Msg.USER_CREATED);
+  //   } catch (error) {
+  //     return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+  //   }
+  // }
 }
