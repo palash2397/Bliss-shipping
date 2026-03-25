@@ -45,7 +45,7 @@ export class UserService {
   async login(dto: LoginUserDto) {
     try {
       const { email, password } = dto;
- 
+
       const user = await this.userModel.findOne({ email }).select('+password');
       if (!user) {
         return new ApiResponse(404, {}, Msg.INVALID_CREDENTIALS);
@@ -147,11 +147,8 @@ export class UserService {
       const otp = generateOtp();
       const otpExpiresAt = getExpirationTime(); // 10 minutes
 
-
-
       console.log('OTP:', otp);
       console.log('OTP Expiration:', otpExpiresAt);
-
 
       await this.userModel.create({
         name,
@@ -188,7 +185,7 @@ export class UserService {
       user.otpExpiresAt = null;
       user.isVerified = true;
       await user.save();
-      
+
       return new ApiResponse(200, {}, Msg.OTP_VERIFIED);
     } catch (error) {
       console.log(`error while verifying otp: ${error}`);
@@ -208,7 +205,7 @@ export class UserService {
       }
 
       const otp = generateOtp();
-      const otpExpiresAt = getExpirationTime(); 
+      const otpExpiresAt = getExpirationTime();
 
       user.otp = otp;
       user.otpExpiresAt = otpExpiresAt;
@@ -220,6 +217,21 @@ export class UserService {
       return new ApiResponse(200, { otp: otp }, Msg.OTP_RESENT);
     } catch (error) {
       console.log(`error while resending otp: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+  async profile(userId: string) {
+    try {
+      const user = await this.userModel
+        .findById(userId)
+        .select('-otp -otpExpiresAt');
+      if (!user) {
+        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
+      }
+      return new ApiResponse(200, user, Msg.USER_FETCHED);
+    } catch (error) {
+      console.log(`error while fetching user profile: ${error}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
