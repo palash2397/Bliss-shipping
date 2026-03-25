@@ -225,10 +225,14 @@ export class UserService {
     try {
       const user = await this.userModel
         .findById(userId)
-        .select('-otp -otpExpiresAt');
+        .select('-otp -otpExpiresAt -password');
       if (!user) {
         return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
       }
+
+      user.profilePic = user.profilePic
+        ? `${process.env.BASE_URL}/uploads/profile/${user.profilePic}`
+        : null;
       return new ApiResponse(200, user, Msg.USER_FETCHED);
     } catch (error) {
       console.log(`error while fetching user profile: ${error}`);

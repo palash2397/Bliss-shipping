@@ -79,10 +79,7 @@ export class User {
 
 
 
-  // 👇 instance method typing
-  //   isPasswordCorrect?: (
-  //     candidatePassword: string,
-  //   ) => Promise<boolean>;
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
