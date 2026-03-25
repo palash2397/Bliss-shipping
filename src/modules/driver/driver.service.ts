@@ -71,7 +71,7 @@ export class DriverService {
         })
         .sort({ dispatchStatusDate: -1 })
         .populate('assignedDriverId', 'name phoneNumber')
-        .populate('merchantId', 'companyName contactName receiverPhone')
+        .populate('userId', 'name email')
         .populate('statusHistory.updatedBy', 'name phoneNumber')
         .lean();
 
@@ -378,7 +378,7 @@ export class DriverService {
           isDeleted: false,
         })
         .populate('assignedDriverId', 'name phoneNumber')
-        .populate('merchantId', 'companyName contactName receiverPhone')
+        .populate('userId', 'name email')
         .populate('statusHistory.updatedBy', 'name phoneNumber')
         .lean();
 

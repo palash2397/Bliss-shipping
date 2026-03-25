@@ -26,7 +26,7 @@ export class DispatcherService {
           dispatchStatus: DELIVERY_STATUS.CREATED,
           isDeleted: false,
         })
-        .populate('merchantId', 'contactName')
+        .populate('userId', 'name email')
         .populate('statusHistory.updatedBy', 'name')
         .sort({ createdAt: -1 })
         .lean();

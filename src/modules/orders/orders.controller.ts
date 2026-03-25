@@ -26,7 +26,7 @@ import { ApiResponse } from 'src/utils/helpers/ApiResponse';
 import { Msg } from 'src/utils/helpers/responseMsg';
 
 @UseGuards(JwtAuthGuard, RoleGuard)
-@Roles(Role.MERCHANT, Role.ADMIN)
+@Roles(Role.USER, Role.ADMIN, Role.MERCHANT)
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
