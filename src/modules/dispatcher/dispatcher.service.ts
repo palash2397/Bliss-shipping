@@ -80,8 +80,7 @@ export class DispatcherService {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
       }
 
-
-     const assign =  await this.orderModel.updateMany(
+      const assign = await this.orderModel.updateMany(
         {
           _id: { $in: orderIds },
           dispatchStatus: DELIVERY_STATUS.CREATED,
@@ -100,7 +99,7 @@ export class DispatcherService {
         },
       );
 
-      return new ApiResponse(200, {assign}, Msg.DRIVER_ASSIGNED_SUCCESSFULLY);
+      return new ApiResponse(200, { assign }, Msg.DRIVER_ASSIGNED_SUCCESSFULLY);
     } catch (error) {
       console.log(`Error in assignDriver by dispatcher: `, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
@@ -109,10 +108,12 @@ export class DispatcherService {
 
   async assignedOrders(userId: string) {
     try {
-      const orders = await this.orderModel.find({
-        assignedDriverId: new Types.ObjectId(userId),
-        dispatchStatus: DELIVERY_STATUS.ASSIGNED,
-      }).lean();
+      const orders = await this.orderModel
+        .find({
+          assignedDriverId: new Types.ObjectId(userId),
+          dispatchStatus: DELIVERY_STATUS.ASSIGNED,
+        })
+        .lean();
 
       if (!orders || orders.length === 0) {
         return new ApiResponse(404, {}, Msg.ASSIGNED_ORDERS_NOT_FOUND);
@@ -124,7 +125,6 @@ export class DispatcherService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
-
 
   // async assign
 }

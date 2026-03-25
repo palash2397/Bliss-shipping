@@ -97,7 +97,7 @@ export class OrdersController {
   }
 
   @Patch('/:id/cancel')
-  @Roles(Role.MERCHANT, Role.ADMIN)
+  @Roles(Role.USER, Role.ADMIN)
   cancelOrder(@Req() req: any, @Param('id') id: string) {
     return this.ordersService.cancelOrder(req.user.id, id);
   }
