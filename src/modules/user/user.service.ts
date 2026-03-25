@@ -18,6 +18,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 import { Role } from '../../common/enums/role.enum';
 
@@ -240,5 +241,17 @@ export class UserService {
     }
   }
 
-  // async update
+   async update(dto: UpdateUserDto) {
+     try {
+
+      
+     } catch (error) {
+      console.log(`error while updating user: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+     }
+    
+   }
 }
+
+    
+  
