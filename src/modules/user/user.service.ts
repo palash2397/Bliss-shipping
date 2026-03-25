@@ -241,8 +241,13 @@ export class UserService {
     }
   }
 
-   async update(dto: UpdateUserDto) {
+   async update(dto: UpdateUserDto, userId: string, file: Express.Multer.File,) {
      try {
+
+      const user = await this.userModel.findById(userId);
+      if (!user) {
+        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
+      }
 
       
      } catch (error) {
