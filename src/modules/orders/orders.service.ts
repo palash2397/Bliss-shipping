@@ -73,24 +73,23 @@ export class OrdersService {
     importedCount: number;
     failedRows: { rowNumber: number; error: string }[];
   }> {
-    const merchant = await this.merchantModel.findOne({
-      userId: new Types.ObjectId(userId),
+    const user = await this.userModel.findOne({
+      _id: new Types.ObjectId(userId),
     });
-
-    console.log('merchant', merchant);
-
-    if (!merchant) {
+    if (!user) {
       return {
         importedCount: 0,
-        failedRows: [{ rowNumber: 0, error: Msg.MERCHANT_NOT_FOUND }],
+        failedRows: [{ rowNumber: 0, error: Msg.USER_NOT_FOUND }],
       };
     }
+
+
 
     const session = await this.connection.startSession();
     session.startTransaction();
 
     type OrderInsertType = {
-      merchantId: Types.ObjectId;
+      userId: Types.ObjectId;
       orderNumber: string;
       externalOrderId: string;
       recipientName: string;
@@ -130,7 +129,7 @@ export class OrdersService {
         }
 
         const existing = await this.orderModel.findOne({
-          merchantId: merchant._id,
+          userId: user._id,
           externalOrderId: row.externalOrderId,
         });
 
@@ -153,7 +152,7 @@ export class OrdersService {
         }
 
         records.push({
-          merchantId: merchant._id as Types.ObjectId,
+          userId: user._id,
           orderNumber: `BS-${Date.now()}-${rowNumber}`,
           externalOrderId: row.externalOrderId,
           recipientName: row.recipientName,
@@ -169,7 +168,7 @@ export class OrdersService {
         });
 
         await this.importHistoryModel.create({
-          merchantId: merchant._id,
+          userId: user._id,
           fileName: 'orders_upload.csv',
           totalRows: records.length + failedRows.length,
           successRows: records.length,
@@ -214,21 +213,21 @@ export class OrdersService {
 
   async findAllOrders(userId: string, page: number, limit: number) {
     try {
-      const merchant = await this.merchantModel.findOne({
-        userId: new Types.ObjectId(userId),
+     const user = await this.userModel.findOne({
+        _id: new Types.ObjectId(userId),
       });
-      if (!merchant) {
-        return new ApiResponse(404, {}, Msg.MERCHANT_NOT_FOUND);
+      if (!user) {
+        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
       }
       const skip = (page - 1) * limit;
 
       const [orders, total] = await Promise.all([
         this.orderModel
           .find({
-            merchantId: merchant._id,
+            userId: user._id,
             isDeleted: false,
           })
-          .populate('merchantId', 'contactName')
+          .populate('userId', 'name email')
           .populate('statusHistory.updatedBy', 'name')
           .populate('assignedDriverId', 'name phone')
           .sort({ createdAt: -1 })
@@ -237,7 +236,7 @@ export class OrdersService {
           .lean(),
 
         this.orderModel.countDocuments({
-          merchantId: merchant._id,
+          userId: user._id,
           isDeleted: false,
         }),
       ]);
