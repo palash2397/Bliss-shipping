@@ -21,6 +21,7 @@ import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 import { Role } from '../../common/enums/role.enum';
+import { deleteOldFile } from 'src/utils/helpers/index';
 
 @Injectable()
 export class UserService {
@@ -241,22 +242,31 @@ export class UserService {
     }
   }
 
-   async update(dto: UpdateUserDto, userId: string, file: Express.Multer.File,) {
-     try {
-
+  async update(dto: UpdateUserDto, userId: string, file: Express.Multer.File) {
+    try {
       const user = await this.userModel.findById(userId);
       if (!user) {
         return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
       }
 
-      
-     } catch (error) {
+      if (file) {
+        if (user.profilePic) {
+          await deleteOldFile(user.profilePic);
+        }
+
+        user.profilePic = file.filename;
+      }
+
+      await this.userModel.findByIdAndUpdate(
+        userId,
+        { $set: dto },
+        { new: true, runValidators: true },
+      );
+
+      return new ApiResponse(200, {}, Msg.USER_UPDATED);
+    } catch (error) {
       console.log(`error while updating user: ${error}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
-     }
-    
-   }
+    }
+  }
 }
-
-    
-  
