@@ -17,6 +17,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
 
 import { Role } from '../../common/enums/role.enum';
 
@@ -149,24 +150,35 @@ export class UserService {
         otpExpiresAt,
       });
 
-
-
-   
-      return new ApiResponse(201, {otp: otp}, Msg.OTP_SENT);
+      return new ApiResponse(201, { otp: otp }, Msg.OTP_SENT);
     } catch (error) {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
 
-
-  async verifyOtp(otp: string) {
+  async verifyOtp(dto: VerifyOtpDto) {
     try {
-      const user = await this.userModel.findOne({ otp });
+      const user = await this.userModel.findOne({ email: dto.email });
       if (!user) {
         return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
       }
+
+      if (!user.otp || !user.otpExpiresAt) {
+        return new ApiResponse(400, {}, Msg.OTP_NOT_FOUND);
+      }
+
+      if (user.otp !== dto.otp || new Date() > user.otpExpiresAt) {
+        return new ApiResponse(400, {}, Msg.OTP_INVALID);
+      }
+
+      user.otp = null;
+      user.otpExpiresAt = null;
+      user.isVerified = true;
+      await user.save();
+      
       return new ApiResponse(200, {}, Msg.OTP_VERIFIED);
     } catch (error) {
+      console.log(`error while verifying otp: ${error}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }

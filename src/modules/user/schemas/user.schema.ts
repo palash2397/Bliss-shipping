@@ -53,7 +53,7 @@ export class User {
     required: false,
     default: null,
   })
-  otp?: string;
+  otp?: string | null;
 
   @Prop({
     type: Date,
@@ -61,6 +61,16 @@ export class User {
     default: null,
   })
   otpExpiresAt: Date | null;
+
+  @Prop({
+    type: Boolean,
+    required: false,
+    default: false,
+  })
+  isVerified: boolean;
+
+
+
 
   // 👇 instance method typing
   //   isPasswordCorrect?: (
