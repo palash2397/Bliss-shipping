@@ -43,4 +43,18 @@ export class ServiceTypeService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+
+  async findOne(id: string) {
+    try {
+      const serviceType = await this.serviceTypeModel.findById(id);
+      if (!serviceType) {
+        return new ApiResponse(404, {}, Msg.SERVICE_TYPE_NOT_FOUND);
+      }
+
+      return new ApiResponse(200, serviceType, Msg.SERVICE_TYPE_FETCHED);
+    } catch (error) {
+      console.log(`error while fetching service type: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
 }
