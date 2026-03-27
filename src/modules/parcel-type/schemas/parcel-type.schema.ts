@@ -17,6 +17,9 @@ export class ParcelType {
   @Prop({ required: true })
   priceMultiplier: number; // 1x, 1.5x, 2x
 
+  @Prop()
+  description: string;
+
   @Prop({ default: true })
   isActive: boolean;
 }
