@@ -13,6 +13,7 @@ import { VehicleModule } from './modules/vehicle/vehicle.module';
 import { FeedbackModule } from './modules/feedback/feedback.module';
 import { ServiceTypeModule } from './modules/service-type/service-type.module';
 import { ItemCategoryModule } from './modules/item-category/item-category.module';
+import { ParcelTypeModule } from './modules/parcel-type/parcel-type.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ItemCategoryModule } from './modules/item-category/item-category.module
     FeedbackModule,
     ServiceTypeModule,
     ItemCategoryModule,
+    ParcelTypeModule,
   ],
   controllers: [AppController],
   providers: [],
