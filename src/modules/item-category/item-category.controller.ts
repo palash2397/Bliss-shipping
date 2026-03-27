@@ -17,6 +17,8 @@ import { Role } from 'src/common/enums/role.enum';
 import { Roles } from 'src/modules/auth/roles/roles.decorator';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 
+import { CreateItemCategoryDto } from './dto/create-item-category.dto';
+
 
 @UseGuards(JwtAuthGuard, RoleGuard)
 @Controller('item-category')
@@ -25,7 +27,19 @@ export class ItemCategoryController {
 
   @Post('create')
   @Roles(Role.ADMIN)
-  create(@Body() dto: any) {
+  create(@Body() dto: CreateItemCategoryDto) {
     return this.itemCategoryService.create(dto);
+  }
+
+  @Get('all')
+  @Roles(Role.ADMIN, Role.DRIVER)
+  findAll() {
+    return this.itemCategoryService.findAll();
+  }
+
+  @Get('find/:id')
+  @Roles(Role.ADMIN, Role.DRIVER)
+  findOne(@Param('id') id: string) {
+    return this.itemCategoryService.findOne(id);
   }
 }
