@@ -204,4 +204,14 @@ export const Msg = {
   ITEM_CATEGORIES_FETCHED: `Item categories fetched successfully`,
   ITEM_CATEGORIES_NOT_FOUND: `Item categories not found`,
 
+
+  // Parcel Type
+  PARCEL_TYPE_CREATED: `Parcel type created successfully`,
+  PARCEL_TYPE_NOT_FOUND: `Parcel type not found`,
+  PARCEL_TYPE_UPDATED: `Parcel type updated successfully`,
+  PARCEL_TYPE_DELETED: `Parcel type deleted successfully`,
+  PARCEL_TYPE_FETCHED: `Parcel type fetched successfully`,
+  PARCEL_TYPES_FETCHED: `Parcel types fetched successfully`,
+  PARCEL_TYPES_NOT_FOUND: `Parcel types not found`,
+
 };

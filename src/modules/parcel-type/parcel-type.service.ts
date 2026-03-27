@@ -16,27 +16,44 @@ export class ParcelTypeService {
   ) {}
 
   async create(createParcelTypeDto: CreateParcelTypeDto) {
-   try {
-     const parcelType = new this.parcelTypeModel(createParcelTypeDto);
-     await parcelType.save();
-   } catch (error) {
-    
-   }
+    try {
+      const parcelType = new this.parcelTypeModel(createParcelTypeDto);
+      await parcelType.save();
+
+      return new ApiResponse(201, parcelType, Msg.PARCEL_TYPE_CREATED);
+    } catch (error) {
+      console.log(`error creating parcel type: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
   }
 
   async findAll() {
-    return this.parcelTypeModel.find().exec();
+    try {
+      const parcelTypes = await this.parcelTypeModel.find().exec();
+      if (!parcelTypes || parcelTypes.length === 0) {
+        return new ApiResponse(404, {}, Msg.PARCEL_TYPES_NOT_FOUND);
+      }
+      return new ApiResponse(200, parcelTypes, Msg.PARCEL_TYPES_FETCHED);
+    } catch (error) {
+      console.log(`error fetching parcel types: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
   }
 
   async findOne(id: string) {
-    return this.parcelTypeModel.findById(id).exec();
+    try {
+      const parcelType = await this.parcelTypeModel.findById(id).exec();
+      if (!parcelType) {
+        return new ApiResponse(404, {}, Msg.PARCEL_TYPE_NOT_FOUND);
+      }
+      return new ApiResponse(200, parcelType, Msg.PARCEL_TYPE_FETCHED);
+    } catch (error) {
+      console.log(`error fetching parcel type: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
   }
 
-  async update(id: string, updateParcelTypeDto: any) {
-    return this.parcelTypeModel.findByIdAndUpdate(id, updateParcelTypeDto, { new: true }).exec();
-  }
-
-  async remove(id: string) {
-    return this.parcelTypeModel.findByIdAndDelete(id).exec();
-  }
+  //   async update(id: string, updateParcelTypeDto: any) {
+  //     return this.parcelTypeModel.findByIdAndUpdate(id, updateParcelTypeDto, { new: true }).exec();
+  //   }
 }
