@@ -47,4 +47,17 @@ export class ItemCategoryService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+
+  async findOne(id: string) {
+    try {
+      const itemCategory = await this.itemCategoryModel.findById(id);
+      if (!itemCategory) {
+        return new ApiResponse(404, {}, Msg.ITEM_CATEGORY_NOT_FOUND);
+      }
+      return new ApiResponse(200, itemCategory, Msg.ITEM_CATEGORY_FETCHED);
+    } catch (error) {
+      console.log(`Error fetching item category: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
 }
