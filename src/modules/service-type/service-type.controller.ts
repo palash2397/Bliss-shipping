@@ -36,4 +36,10 @@ export class ServiceTypeController {
   findAll() {
     return this.serviceTypeService.findAll();
   }
+
+  @Get('find/:id')
+  @Roles(Role.ADMIN, Role.DRIVER)
+  findOne(@Param('id') id: string) {
+    return this.serviceTypeService.findOne(id);
+  }
 }
