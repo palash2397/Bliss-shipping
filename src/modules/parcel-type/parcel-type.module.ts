@@ -13,5 +13,11 @@ import { ParcelType, ParcelTypeSchema } from './schemas/parcel-type.schema';
   ],
   controllers: [ParcelTypeController],
   providers: [ParcelTypeService],
+  exports: [
+    ParcelTypeService,
+    MongooseModule.forFeature([
+      { name: ParcelType.name, schema: ParcelTypeSchema },
+    ]),
+  ],
 })
 export class ParcelTypeModule {}
