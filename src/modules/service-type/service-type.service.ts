@@ -30,17 +30,17 @@ export class ServiceTypeService {
     }
   }
 
-//   async findAll() {
-//     try {
-//       const serviceTypes = await this.serviceTypeModel.find();
-//       if (!) {
-        
-//       }
+  async findAll() {
+    try {
+      const serviceTypes = await this.serviceTypeModel.find();
+      if (!serviceTypes || serviceTypes.length === 0) {
+        return new ApiResponse(404, {}, Msg.SERVICE_TYPES_NOT_FOUND);
+      }
 
-//       return new ApiResponse(200, serviceTypes, Msg.SERVICE_TYPES_FETCHED);
-//     } catch (error) {
-//       console.log(`error while fetching service types: ${error}`);
-//       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
-//     }
-//   }
+      return new ApiResponse(200, serviceTypes, Msg.SERVICE_TYPES_FETCHED);
+    } catch (error) {
+      console.log(`error while fetching service types: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
 }
