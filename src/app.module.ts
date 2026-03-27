@@ -11,6 +11,7 @@ import { DispatcherModule } from './modules/dispatcher/dispatcher.module';
 import { DriverModule } from './modules/driver/driver.module';
 import { VehicleModule } from './modules/vehicle/vehicle.module';
 import { FeedbackModule } from './modules/feedback/feedback.module';
+import { ServiceTypeModule } from './modules/service-type/service-type.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { FeedbackModule } from './modules/feedback/feedback.module';
     DriverModule,
     VehicleModule,
     FeedbackModule,
+    ServiceTypeModule,
   ],
   controllers: [AppController],
   providers: [],
