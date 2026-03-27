@@ -12,6 +12,7 @@ import { DriverModule } from './modules/driver/driver.module';
 import { VehicleModule } from './modules/vehicle/vehicle.module';
 import { FeedbackModule } from './modules/feedback/feedback.module';
 import { ServiceTypeModule } from './modules/service-type/service-type.module';
+import { ItemCategoryModule } from './modules/item-category/item-category.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ServiceTypeModule } from './modules/service-type/service-type.module';
     VehicleModule,
     FeedbackModule,
     ServiceTypeModule,
+    ItemCategoryModule,
   ],
   controllers: [AppController],
   providers: [],
