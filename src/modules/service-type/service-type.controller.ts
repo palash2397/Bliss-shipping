@@ -30,4 +30,10 @@ export class ServiceTypeController {
   create(@Body() dto: CreateServiceTypeDto) {
     return this.serviceTypeService.create(dto);
   }
+  
+  @Get('all')
+  @Roles(Role.ADMIN, Role.DRIVER)
+  findAll() {
+    return this.serviceTypeService.findAll();
+  }
 }
