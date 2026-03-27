@@ -32,13 +32,13 @@ export class ServiceTypeController {
   }
   
   @Get('all')
-  @Roles(Role.ADMIN, Role.DRIVER)
+  @Roles(Role.ADMIN, Role.USER, Role.DRIVER)
   findAll() {
     return this.serviceTypeService.findAll();
   }
 
   @Get('find/:id')
-  @Roles(Role.ADMIN, Role.DRIVER)
+  @Roles(Role.ADMIN, Role.USER, Role.DRIVER)
   findOne(@Param('id') id: string) {
     return this.serviceTypeService.findOne(id);
   }
