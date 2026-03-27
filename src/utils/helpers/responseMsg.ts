@@ -194,4 +194,14 @@ export const Msg = {
   SERVICE_TYPES_FETCHED: `Service types fetched successfully`,
   SERVICE_TYPES_NOT_FOUND: `Service types not found`,
 
+
+  // Item Category
+  ITEM_CATEGORY_CREATED: `Item category created successfully`,
+  ITEM_CATEGORY_NOT_FOUND: `Item category not found`,
+  ITEM_CATEGORY_UPDATED: `Item category updated successfully`,
+  ITEM_CATEGORY_DELETED: `Item category deleted successfully`,
+  ITEM_CATEGORY_FETCHED: `Item category fetched successfully`,
+  ITEM_CATEGORIES_FETCHED: `Item categories fetched successfully`,
+  ITEM_CATEGORIES_NOT_FOUND: `Item categories not found`,
+
 };
