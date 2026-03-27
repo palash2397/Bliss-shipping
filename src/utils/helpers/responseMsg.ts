@@ -183,4 +183,15 @@ export const Msg = {
   // Driver
   DRIVER_NOT_ASSIGNED_TO_ORDER: `Driver is not assigned to this order`,
 
+
+
+  // Service Type
+  SERVICE_TYPE_CREATED: `Service type created successfully`,
+  SERVICE_TYPE_NOT_FOUND: `Service type not found`,
+  SERVICE_TYPE_UPDATED: `Service type updated successfully`,
+  SERVICE_TYPE_DELETED: `Service type deleted successfully`,
+  SERVICE_TYPE_FETCHED: `Service type fetched successfully`,
+  SERVICE_TYPES_FETCHED: `Service types fetched successfully`,
+  SERVICE_TYPES_NOT_FOUND: `Service types not found`,
+
 };
