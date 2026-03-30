@@ -145,6 +145,7 @@ export const Msg = {
   // Vehicle
   VEHICLE_CREATED: `Vehicle created successfully`,
   VEHICLE_NOT_FOUND: `Vehicle not found`,
+  VEHICLE_TYPE_NOT_FOUND: `Vehicle type not found`,
   VEHICLE_UPDATED: `Vehicle updated successfully`,
   VEHICLE_DELETED: `Vehicle deleted successfully`,
   VEHICLE_FETCHED: `Vehicle fetched successfully`,

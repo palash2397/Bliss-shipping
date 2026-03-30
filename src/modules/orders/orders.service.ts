@@ -20,10 +20,19 @@ import {
   MerchantDocument,
 } from '../merchant/schemas/merchant-profile.schema';
 
-import { ItemCategory, ItemCategoryDocument } from '../item-category/schemas/item-category.schema';
+import {
+  ItemCategory,
+  ItemCategoryDocument,
+} from '../item-category/schemas/item-category.schema';
 import { Vehicle, VehicleDocument } from '../vehicle/schemas/vehicle.schema';
-import { ParcelType, ParcelTypeDocument } from '../parcel-type/schemas/parcel-type.schema';
-import { ServiceType, ServiceTypeDocument } from '../service-type/schemas/service-type';
+import {
+  ParcelType,
+  ParcelTypeDocument,
+} from '../parcel-type/schemas/parcel-type.schema';
+import {
+  ServiceType,
+  ServiceTypeDocument,
+} from '../service-type/schemas/service-type';
 
 import { DELIVERY_STATUS } from '../../common/enums/delivery-status.enum';
 import { STATUS } from '../../common/enums/status.enum';
@@ -47,7 +56,6 @@ export class OrdersService {
     @InjectModel(ItemCategory.name)
     private readonly itemCategoryModel: Model<ItemCategoryDocument>,
 
-  
     @InjectModel(Vehicle.name)
     private readonly vehicleModel: Model<VehicleDocument>,
 
@@ -362,7 +370,7 @@ export class OrdersService {
 
   async merchantSummary(id: string) {
     try {
-       const user = await this.userModel.findOne({
+      const user = await this.userModel.findOne({
         _id: new Types.ObjectId(id),
       });
       if (!user) {
@@ -536,21 +544,32 @@ export class OrdersService {
     }
   }
 
-
-
-  async createUserOrder(dto: CreateOrderDto, userId: string) {
+  async createUserOrder(dto: CreateUserOrderDto, userId: string) {
     try {
+      const serviceType = await this.serviceTypeModel.findById(dto.serviceType);
+      if (!serviceType) {
+        return new ApiResponse(404, {}, Msg.SERVICE_TYPE_NOT_FOUND);
+      }
+      const parcelType = await this.parcelTypeModel.findById(dto.parcelType);
+      if (!parcelType) {
+        return new ApiResponse(404, {}, Msg.PARCEL_TYPE_NOT_FOUND);
+      }
+      const itemCategory = await this.itemCategoryModel.findById(
+        dto.itemCategory,
+      );
+      if (!itemCategory) {
+        return new ApiResponse(404, {}, Msg.ITEM_CATEGORY_NOT_FOUND);
+      }
+      const vehicleType = await this.vehicleModel.findById(dto.vehicleType);
+      if (!vehicleType) {
+        return new ApiResponse(404, {}, Msg.VEHICLE_TYPE_NOT_FOUND);
+      }
+
       
+
     } catch (error) {
       console.log(`Error creating user order: ${error}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
-    
   }
-
-
-}
-
-
-
 }
