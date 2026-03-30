@@ -20,6 +20,11 @@ import {
   MerchantDocument,
 } from '../merchant/schemas/merchant-profile.schema';
 
+import { ItemCategory, ItemCategoryDocument } from '../item-category/schemas/item-category.schema';
+import { Vehicle, VehicleDocument } from '../vehicle/schemas/vehicle.schema';
+import { ParcelType, ParcelTypeDocument } from '../parcel-type/schemas/parcel-type.schema';
+import { ServiceType, ServiceTypeDocument } from '../service-type/schemas/service-type';
+
 import { DELIVERY_STATUS } from '../../common/enums/delivery-status.enum';
 import { STATUS } from '../../common/enums/status.enum';
 import { CSV_IMPORT_STATUS } from 'src/common/enums/csv-import-history.enum';
@@ -38,6 +43,19 @@ export class OrdersService {
     private readonly merchantModel: Model<MerchantDocument>,
     @InjectModel(ImportHistory.name)
     private readonly importHistoryModel: Model<ImportHistoryDocument>,
+
+    @InjectModel(ItemCategory.name)
+    private readonly itemCategoryModel: Model<ItemCategoryDocument>,
+
+  
+    @InjectModel(Vehicle.name)
+    private readonly vehicleModel: Model<VehicleDocument>,
+
+    @InjectModel(ParcelType.name)
+    private readonly parcelTypeModel: Model<ParcelTypeDocument>,
+
+    @InjectModel(ServiceType.name)
+    private readonly serviceTypeModel: Model<ServiceTypeDocument>,
 
     @InjectConnection()
     private readonly connection: Connection,
@@ -518,6 +536,20 @@ export class OrdersService {
     }
   }
 
+
+
+  async createUserOrder(dto: CreateOrderDto, userId: string) {
+    try {
+      
+    } catch (error) {
+      console.log(`Error creating user order: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+    
+  }
+
+
+}
 
 
 
