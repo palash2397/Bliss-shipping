@@ -129,6 +129,15 @@ export class Order {
     default: null,
   })
   vehicleId: Types.ObjectId | null;
+
+  @Prop({ default: null })
+  note: string;
+
+  @Prop({ default: 0 })
+  basePrice: number;
+
+  @Prop({ default: 0 })
+  totalPrice: number;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
