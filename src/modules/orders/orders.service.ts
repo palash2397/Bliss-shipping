@@ -27,6 +27,8 @@ import { CSV_IMPORT_STATUS } from 'src/common/enums/csv-import-history.enum';
 import { CreateOrderDto } from './dto/create-order';
 import { FilterOrdersDto } from './dto/filter-order.dto';
 
+import { CreateUserOrderDto } from './dto/create-user-order.dto';
+
 @Injectable()
 export class OrdersService {
   constructor(
@@ -518,5 +520,5 @@ export class OrdersService {
 
 
 
-  
+
 }
