@@ -101,9 +101,23 @@ export class Order {
 
   @Prop({ default: false })
   isDeleted: boolean;
+
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'ServiceType',
+    default: null,
+  })
+  serviceTypeId: Types.ObjectId | null;
+
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'ParcelType',
+    default: null,
+  })
+  parcelTypeId: Types.ObjectId | null;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
 
-OrderSchema.index({ merchantId: 1, dispatchStatus: 1 });
+OrderSchema.index({ userId: 1, dispatchStatus: 1 });
 OrderSchema.index({ assignedDriverId: 1, dispatchStatus: 1 });
