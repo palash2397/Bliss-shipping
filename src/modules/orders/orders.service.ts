@@ -83,8 +83,8 @@ export class OrdersService {
         ...dto,
         userId: user._id,
         orderNumber,
-        dispatchStatus: 'CREATED',
-        paymentStatus: 'PENDING',
+        dispatchStatus: DELIVERY_STATUS.CREATED,
+        paymentStatus: STATUS.PENDING,
       });
 
       return new ApiResponse(201, order, Msg.ORDER_CREATED);
@@ -565,8 +565,24 @@ export class OrdersService {
         return new ApiResponse(404, {}, Msg.VEHICLE_TYPE_NOT_FOUND);
       }
 
-      
+      // 2️⃣ Calculate price
+      const basePrice = serviceType.basePrice;
+      const totalPrice = basePrice * parcelType.priceMultiplier;
 
+      const orderNumber = `BS-${Date.now()}`;
+
+      // 3️⃣ Create order
+      const order = await this.orderModel.create({
+        ...dto,
+        userId,
+        orderNumber,
+        basePrice,
+        totalPrice,
+        dispatchStatus: 'CREATED',
+        paymentStatus: 'PENDING',
+      });
+
+      return new ApiResponse(201, order, Msg.ORDER_CREATED);
     } catch (error) {
       console.log(`Error creating user order: ${error}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
