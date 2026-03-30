@@ -115,6 +115,20 @@ export class Order {
     default: null,
   })
   parcelTypeId: Types.ObjectId | null;
+
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'ItemCategory',
+    default: null,
+  })
+  itemCategoryId: Types.ObjectId | null;
+
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'Vehicle',
+    default: null,
+  })
+  vehicleId: Types.ObjectId | null;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
