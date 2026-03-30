@@ -42,6 +42,7 @@ import { CreateOrderDto } from './dto/create-order';
 import { FilterOrdersDto } from './dto/filter-order.dto';
 
 import { CreateUserOrderDto } from './dto/create-user-order.dto';
+import { Role } from 'src/common/enums/role.enum';
 
 @Injectable()
 export class OrdersService {
@@ -245,6 +246,13 @@ export class OrdersService {
       if (!user) {
         return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
       }
+      
+      const order = await this.orderModel.findOne({
+        userId: user._id,
+      });
+
+      console.log(order);
+    
       const skip = (page - 1) * limit;
 
       const [orders, total] = await Promise.all([
@@ -256,6 +264,10 @@ export class OrdersService {
           .populate('userId', 'name email')
           .populate('statusHistory.updatedBy', 'name')
           .populate('assignedDriverId', 'name phone')
+          .populate('serviceTypeId', 'name')
+          .populate('vehicleId', 'name')
+          .populate('itemCategoryId', 'name')
+          .populate('parcelTypeId', 'name')
           .sort({ createdAt: -1 })
           .skip(skip)
           .limit(limit)
@@ -266,6 +278,9 @@ export class OrdersService {
           isDeleted: false,
         }),
       ]);
+
+
+      console.log(orders)
 
       return new ApiResponse(200, { orders, total }, Msg.ORDERS_FETCHED);
     } catch (error) {
@@ -570,16 +585,46 @@ export class OrdersService {
       const totalPrice = basePrice * parcelType.priceMultiplier;
 
       const orderNumber = `BS-${Date.now()}`;
+      const now = new Date();
 
       // 3️⃣ Create order
       const order = await this.orderModel.create({
-        ...dto,
-        userId,
+        userId: new Types.ObjectId(userId),
         orderNumber,
+
+        recipientName: dto.recipientName,
+        recipientPhone: dto.recipientPhone,
+
+        pickupAddress: dto.pickupAddress,
+        pickupLat: dto.pickupLat,
+        pickupLng: dto.pickupLng,
+
+        dropAddress: dto.dropAddress,
+        dropLat: dto.dropLat,
+        dropLng: dto.dropLng,
+
+        serviceTypeId: new Types.ObjectId(dto.serviceType),
+        vehicleId: new Types.ObjectId(dto.vehicleType),
+        itemCategoryId: new Types.ObjectId(dto.itemCategory),
+        parcelTypeId: new Types.ObjectId(dto.parcelType),
+
+        note: dto.note,
+
         basePrice,
         totalPrice,
-        dispatchStatus: 'CREATED',
-        paymentStatus: 'PENDING',
+
+        orderSource: Role.USER,
+
+        dispatchStatus: DELIVERY_STATUS.CREATED,
+        dispatchStatusDate: now,
+
+        statusHistory: [
+          {
+            status: DELIVERY_STATUS.CREATED,
+            time: now,
+            updatedBy: userId,
+          },
+        ],
       });
 
       return new ApiResponse(201, order, Msg.ORDER_CREATED);

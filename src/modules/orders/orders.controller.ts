@@ -25,6 +25,8 @@ import { Roles } from 'src/modules/auth/roles/roles.decorator';
 import { ApiResponse } from 'src/utils/helpers/ApiResponse';
 import { Msg } from 'src/utils/helpers/responseMsg';
 
+import { CreateUserOrderDto } from './dto/create-user-order.dto';
+
 @UseGuards(JwtAuthGuard, RoleGuard)
 @Roles(Role.USER, Role.ADMIN, Role.MERCHANT)
 @Controller('orders')
@@ -106,5 +108,11 @@ export class OrdersController {
   @Get('import/history')
   async getImportHistory(@Req() req: any) {
     return this.ordersService.importHistory(req.user.id);
+  }
+
+
+  @Post('user/create')
+  createUserOrder(@Req() req: any, @Body() dto: CreateUserOrderDto) {
+    return this.ordersService.createUserOrder(dto, req.user.id);
   }
 }

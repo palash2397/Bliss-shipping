@@ -131,8 +131,8 @@ export class Order {
   })
   vehicleId: Types.ObjectId | null;
 
-  @Prop({ default: null })
-  note: string;
+  @Prop({ type: String, default: null })
+  note: string | null;
 
   @Prop({ default: 0 })
   basePrice: number;
