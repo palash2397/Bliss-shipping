@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { DELIVERY_STATUS } from 'src/common/enums/delivery-status.enum';
 import { STATUS } from 'src/common/enums/status.enum';
+import { Role } from 'src/common/enums/role.enum';
 
 export type OrderDocument = Order & Document;
 
@@ -138,6 +139,13 @@ export class Order {
 
   @Prop({ default: 0 })
   totalPrice: number;
+
+  @Prop({
+    enum: Object.values(Role),
+    default: Role.MERCHANT,
+    index: true,
+  })
+  orderSource: string;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
