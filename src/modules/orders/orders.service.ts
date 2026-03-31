@@ -43,6 +43,7 @@ import { FilterOrdersDto } from './dto/filter-order.dto';
 
 import { CreateUserOrderDto } from './dto/create-user-order.dto';
 import { Role } from 'src/common/enums/role.enum';
+import { skip } from 'rxjs';
 
 @Injectable()
 export class OrdersService {
@@ -246,13 +247,13 @@ export class OrdersService {
       if (!user) {
         return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
       }
-      
+
       const order = await this.orderModel.findOne({
         userId: user._id,
       });
 
       console.log(order);
-    
+
       const skip = (page - 1) * limit;
 
       const [orders, total] = await Promise.all([
@@ -279,8 +280,7 @@ export class OrdersService {
         }),
       ]);
 
-
-      console.log(orders)
+      console.log(orders);
 
       return new ApiResponse(200, { orders, total }, Msg.ORDERS_FETCHED);
     } catch (error) {
@@ -300,9 +300,14 @@ export class OrdersService {
       }
       const order = await this.orderModel
         .findOne({ _id: new Types.ObjectId(orderId), userId: user._id })
-        .populate('assignedDriverId', 'name phoneNumber')
         .populate('userId', 'name email')
-        .populate('statusHistory.updatedBy', 'name phoneNumber')
+        .populate('statusHistory.updatedBy', 'name')
+        .populate('assignedDriverId', 'name phone')
+        .populate('serviceTypeId', 'name description basePrice eta')
+        .populate('vehicleId', 'name')
+        .populate('itemCategoryId', 'name description')
+        .populate('parcelTypeId', 'name description')
+        .sort({ createdAt: -1 })
         .lean();
       if (!order) {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
