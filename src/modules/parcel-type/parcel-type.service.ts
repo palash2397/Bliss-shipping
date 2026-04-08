@@ -55,7 +55,10 @@ export class ParcelTypeService {
 
   async findOne(id: string) {
     try {
-      const parcelType = await this.parcelTypeModel.findById(id).exec();
+      const parcelType = await this.parcelTypeModel
+        .findById(id)
+        .populate('recommendedVehicleId', 'name description')
+        .exec();
       if (!parcelType) {
         return new ApiResponse(404, {}, Msg.PARCEL_TYPE_NOT_FOUND);
       }
