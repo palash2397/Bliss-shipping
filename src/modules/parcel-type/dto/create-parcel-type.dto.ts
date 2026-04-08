@@ -1,4 +1,4 @@
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNumber, IsMongoId } from 'class-validator';
 
 export class CreateParcelTypeDto {
   @IsString()
@@ -15,4 +15,8 @@ export class CreateParcelTypeDto {
 
   @IsString()
   description: string;
+  
+  @IsMongoId()
+  @IsString()
+  recommendedVehicleId: string;
 }

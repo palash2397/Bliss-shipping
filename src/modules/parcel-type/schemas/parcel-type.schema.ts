@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Types } from 'mongoose';
 import { Document } from 'mongoose';
 
 export type ParcelTypeDocument = ParcelType & Document;
@@ -19,6 +20,13 @@ export class ParcelType {
 
   @Prop()
   description: string;
+
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'Vehicle',
+    required: true, 
+  })
+  recommendedVehicleId: Types.ObjectId;
 
   @Prop({ default: true })
   isActive: boolean;
