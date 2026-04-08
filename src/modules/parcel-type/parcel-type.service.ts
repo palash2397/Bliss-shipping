@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ParcelType, ParcelTypeDocument } from './schemas/parcel-type.schema';
+import { Vehicle, VehicleDocument } from '../vehicle/schemas/vehicle.schema';
 
 import { ApiResponse } from 'src/utils/helpers/ApiResponse';
 import { Msg } from 'src/utils/helpers/responseMsg';
@@ -13,10 +14,19 @@ export class ParcelTypeService {
   constructor(
     @InjectModel(ParcelType.name)
     private parcelTypeModel: Model<ParcelTypeDocument>,
+    @InjectModel(Vehicle.name)
+    private vehicleModel: Model<VehicleDocument>,
   ) {}
 
   async create(createParcelTypeDto: CreateParcelTypeDto) {
     try {
+      const vehicle = await this.vehicleModel
+        .findById(createParcelTypeDto.recommendedVehicleId)
+        .exec();
+      if (!vehicle) {
+        return new ApiResponse(404, {}, Msg.VEHICLE_NOT_FOUND);
+      }
+
       const parcelType = new this.parcelTypeModel(createParcelTypeDto);
       await parcelType.save();
 
