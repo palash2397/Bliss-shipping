@@ -69,6 +69,7 @@ export class ParcelTypeService {
     }
   }
 
+ 
   //   async update(id: string, updateParcelTypeDto: any) {
   //     return this.parcelTypeModel.findByIdAndUpdate(id, updateParcelTypeDto, { new: true }).exec();
   //   }
