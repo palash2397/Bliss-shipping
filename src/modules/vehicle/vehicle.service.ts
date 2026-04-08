@@ -152,5 +152,15 @@ export class VehicleService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+
+  // async recommendedVechicles(id: string) {
+  //   try {
+  //     const vehicles = await this.vehicleModel.find({ isActive: true });
+  //     return new ApiResponse(200, vehicles, Msg.VEHICLE_FETCHED);
+  //   } catch (error) {
+  //     console.log(`Error fetching recommended vehicles: ${error}`);
+  //     return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+  //   }
+  // }
   
 }

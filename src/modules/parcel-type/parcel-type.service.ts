@@ -57,7 +57,7 @@ export class ParcelTypeService {
     try {
       const parcelType = await this.parcelTypeModel
         .findById(id)
-        .populate('recommendedVehicleId', 'name description')
+        .populate('recommendedVehicleId', 'name description isActive')
         .exec();
       if (!parcelType) {
         return new ApiResponse(404, {}, Msg.PARCEL_TYPE_NOT_FOUND);
