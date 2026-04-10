@@ -50,6 +50,7 @@ export const Msg = {
   DATA_REQUIRED: `Data is required`,
   DATA_ALREADY_EXISTS: `Data  already exists`,
   DATA_IS_CLOSED: `Data is closed`,
+  INVALID_DATA: `Invalid data`,
 
 
   // Id

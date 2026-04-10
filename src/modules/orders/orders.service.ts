@@ -44,7 +44,8 @@ import { PricingPreviewDto } from './dto/pricing-preview.dto';
 
 import { CreateUserOrderDto } from './dto/create-user-order.dto';
 import { Role } from 'src/common/enums/role.enum';
-import { skip } from 'rxjs';
+
+import { calculateDistance } from 'src/utils/helpers';
 
 @Injectable()
 export class OrdersService {
@@ -641,6 +642,71 @@ export class OrdersService {
       return new ApiResponse(201, order, Msg.ORDER_CREATED);
     } catch (error) {
       console.log(`Error creating user order: ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+  async pricingPreview(dto: PricingPreviewDto) {
+    try {
+      // 1️⃣ Fetch configs
+      const serviceType = await this.serviceTypeModel.findById(
+        dto.serviceTypeId,
+      );
+      const parcelType = await this.parcelTypeModel
+        .findById(dto.parcelTypeId)
+        .populate('recommendedVehicleId');
+
+      console.log('parcelType', parcelType);
+
+      if (!serviceType || !parcelType) {
+        return new ApiResponse(400, {}, Msg.INVALID_DATA);
+      }
+
+      // 2️⃣ Distance
+      const distanceKm = calculateDistance(
+        Number(dto.pickupLat),
+        Number(dto.pickupLng),
+        Number(dto.dropLat),
+        Number(dto.dropLng),
+      );
+
+      // 3️⃣ ETA (simple logic)
+      const etaMinutes = distanceKm * 2; // 2 min per km (MVP)
+
+      // 4️⃣ Pricing
+
+      const baseFee = serviceType.basePrice;
+
+      const distanceFee = distanceKm * 1; // ₹1 per km (config later)
+
+      const weightFee = parcelType.priceMultiplier * 2;
+
+      const tax = (baseFee + distanceFee + weightFee) * 0.1;
+
+      const total = baseFee + distanceFee + weightFee + tax;
+
+      const data = {
+        recommendedVehicle: {
+          id: parcelType.recommendedVehicleId._id
+        },
+        distanceKm: Number(distanceKm.toFixed(2)),
+        etaMinutes: Math.round(etaMinutes),
+        price: {
+          baseFee,
+          distanceFee: Number(distanceFee.toFixed(2)),
+          weightFee,
+          tax: Number(tax.toFixed(2)),
+          total: Number(total.toFixed(2)),
+        },
+      };
+
+      return new ApiResponse(
+        200,
+        { distanceKm, etaMinutes, baseFee, distanceFee, weightFee, tax, total },
+        Msg.DATA_FETCHED,
+      );
+    } catch (error) {
+      console.log(`Error in pricing preview: ${error}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
