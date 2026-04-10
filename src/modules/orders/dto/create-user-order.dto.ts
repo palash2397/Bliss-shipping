@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsMongoId, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsMongoId, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateUserOrderDto {
   @IsString()
@@ -52,6 +52,6 @@ export class CreateUserOrderDto {
   vehicleType: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   note: string;
 }
