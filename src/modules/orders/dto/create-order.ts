@@ -5,8 +5,6 @@ import {
 } from 'class-validator';
 
 export class CreateOrderDto {
-
-
   @IsString()
   @IsNotEmpty()
   recipientName: string;

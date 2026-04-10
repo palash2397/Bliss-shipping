@@ -1,12 +1,6 @@
-import {
-  IsString,
-  IsNotEmpty,
-  IsMongoId,
-  IsNumber,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsMongoId, IsNumber } from 'class-validator';
 
 export class CreateUserOrderDto {
-
   @IsString()
   @IsNotEmpty()
   recipientName: string;
@@ -32,7 +26,19 @@ export class CreateUserOrderDto {
 
   @IsString()
   dropLng: string;
- 
+
+  @IsNumber()
+  weight: number;
+
+  @IsNumber()
+  height: number;
+
+  @IsNumber()
+  length: number;
+
+  @IsNumber()
+  width: number;
+
   @IsMongoId()
   serviceType: string;
 
@@ -48,6 +54,4 @@ export class CreateUserOrderDto {
   @IsString()
   @IsNotEmpty()
   note: string;
-
-
 }

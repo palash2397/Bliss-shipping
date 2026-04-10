@@ -604,6 +604,11 @@ export class OrdersService {
         pickupLat: dto.pickupLat,
         pickupLng: dto.pickupLng,
 
+        weight: dto.weight,
+        height: dto.height,
+        length: dto.length,
+        width: dto.width,
+
         dropAddress: dto.dropAddress,
         dropLat: dto.dropLat,
         dropLng: dto.dropLng,
