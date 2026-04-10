@@ -44,6 +44,9 @@ export class Order {
   @Prop({ required: true })
   dropLat: string;
 
+  @Prop({ required: true, default: 0 })
+  weight: number;
+
   @Prop({ required: true })
   dropLng: string;
 
