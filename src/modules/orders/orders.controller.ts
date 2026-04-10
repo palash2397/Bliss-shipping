@@ -26,6 +26,7 @@ import { ApiResponse } from 'src/utils/helpers/ApiResponse';
 import { Msg } from 'src/utils/helpers/responseMsg';
 
 import { CreateUserOrderDto } from './dto/create-user-order.dto';
+import { PricingPreviewDto } from './dto/pricing-preview.dto';
 
 @UseGuards(JwtAuthGuard, RoleGuard)
 @Roles(Role.USER, Role.ADMIN, Role.MERCHANT)
@@ -114,5 +115,11 @@ export class OrdersController {
   @Post('user/create')
   createUserOrder(@Req() req: any, @Body() dto: CreateUserOrderDto) {
     return this.ordersService.createUserOrder(dto, req.user.id);
+  }
+
+
+  @Post('pricing/preview')
+  pricingPreview(@Body() dto: PricingPreviewDto) {
+    return this.ordersService.pricingPreview(dto);
   }
 }

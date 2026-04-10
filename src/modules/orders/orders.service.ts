@@ -702,7 +702,7 @@ export class OrdersService {
 
       return new ApiResponse(
         200,
-        { distanceKm, etaMinutes, baseFee, distanceFee, weightFee, tax, total },
+       data,
         Msg.DATA_FETCHED,
       );
     } catch (error) {
