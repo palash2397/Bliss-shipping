@@ -40,6 +40,7 @@ import { CSV_IMPORT_STATUS } from 'src/common/enums/csv-import-history.enum';
 
 import { CreateOrderDto } from './dto/create-order';
 import { FilterOrdersDto } from './dto/filter-order.dto';
+import { PricingPreviewDto } from './dto/pricing-preview.dto';
 
 import { CreateUserOrderDto } from './dto/create-user-order.dto';
 import { Role } from 'src/common/enums/role.enum';

@@ -9,8 +9,6 @@ export const getExpirationTime = () => {
   return new Date(Date.now() + 5 * 60 * 1000); // Current time + 5 minutes
 };
 
-
-
 export const deleteOldFile = (folder: string, file?: string): void => {
   try {
     if (!file) return;
@@ -28,3 +26,22 @@ export const deleteOldFile = (folder: string, file?: string): void => {
   }
 };
 
+export const calculateDistance = (
+  lat1: any,
+  lon1: any,
+  lat2: any,
+  lon2: any,
+) => {
+  const R = 6371; // km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+};
