@@ -687,7 +687,9 @@ export class OrdersService {
 
       const data = {
         recommendedVehicle: {
-          id: parcelType.recommendedVehicleId._id
+          id: parcelType.recommendedVehicleId._id,
+          name: parcelType.recommendedVehicleId.name,
+          description: parcelType.recommendedVehicleId.description,
         },
         distanceKm: Number(distanceKm.toFixed(2)),
         etaMinutes: Math.round(etaMinutes),
