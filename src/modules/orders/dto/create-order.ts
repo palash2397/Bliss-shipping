@@ -32,4 +32,17 @@ export class CreateOrderDto {
 
   @IsString()
   dropLng: string;
+  
+  @IsNumber()
+  weight: number;
+  
+  @IsNumber()
+  height: number;
+  
+  @IsNumber()
+  length: number;
+  
+  @IsNumber()
+  width: number;
 }
+
