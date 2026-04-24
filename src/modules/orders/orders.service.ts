@@ -764,4 +764,34 @@ export class OrdersService {
       },
     };
   }
+
+  private calculatePricing(data: {
+    deliveryType: string;
+    distanceKm: number;
+    specialHandling: string[];
+  }) {
+    const baseFee = DELIVERY_BASE_PRICING[data.deliveryType];
+
+    const distanceFee = getDistanceFee(data.distanceKm);
+
+    let handlingFee = 0;
+
+    (data.specialHandling || []).forEach((flag) => {
+      if (SPECIAL_HANDLING_CHARGES[flag]) {
+        handlingFee += SPECIAL_HANDLING_CHARGES[flag];
+      }
+    });
+
+    const subtotal = baseFee + distanceFee + handlingFee;
+    const tax = subtotal * 0.1;
+    const total = subtotal + tax;
+
+    return {
+      baseFee,
+      distanceFee,
+      handlingFee,
+      tax,
+      total,
+    };
+  }
 }

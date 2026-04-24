@@ -22,7 +22,7 @@ export class Order {
     unique: true,
     index: true,
   })
-  orderNumber: string; 
+  orderNumber: string;
 
   @Prop({ required: true })
   recipientName: string;
@@ -45,7 +45,6 @@ export class Order {
   @Prop({ required: true })
   dropLat: string;
 
-
   @Prop({ enum: DELIVERY_TYPE, required: true })
   deliveryType: string;
 
@@ -63,6 +62,21 @@ export class Order {
 
   @Prop({ required: true })
   dropLng: string;
+
+  @Prop({ default: 0 })
+  baseFee: number;
+
+  @Prop({ default: 0 })
+  distanceFee: number;
+
+  @Prop({ default: 0 })
+  handlingFee: number;
+
+  @Prop({ default: 0 })
+  tax: number;
+
+  @Prop({ default: 0 })
+  totalPrice: number;
 
   @Prop({
     enum: DELIVERY_STATUS,
@@ -154,8 +168,7 @@ export class Order {
   @Prop({ default: 0 })
   basePrice: number;
 
-  @Prop({ default: 0 })
-  totalPrice: number;
+
 
   @Prop({
     enum: Object.values(Role),
