@@ -46,6 +46,7 @@ import { CreateUserOrderDto } from './dto/create-user-order.dto';
 import { Role } from 'src/common/enums/role.enum';
 
 import { calculateDistance } from 'src/utils/helpers';
+import { SPECIAL_HANDLING_CHARGES } from 'src/common/constants/order.service';
 
 @Injectable()
 export class OrdersService {
@@ -662,7 +663,6 @@ export class OrdersService {
         return new ApiResponse(400, {}, Msg.INVALID_DATA);
       }
 
-      // 2️⃣ Distance
       const distanceKm = calculateDistance(
         Number(dto.pickupLat),
         Number(dto.pickupLng),
@@ -670,10 +670,16 @@ export class OrdersService {
         Number(dto.dropLng),
       );
 
-      // 3️⃣ ETA (simple logic)
-      const etaMinutes = distanceKm * 2; // 2 min per km (MVP)
+      const flags = dto.specialHandling || [];
 
-      // 4️⃣ Pricing
+      let handlingFee = 0;
+
+      flags.forEach((flag) => {
+        if (SPECIAL_HANDLING_CHARGES[flag]) {
+          handlingFee += SPECIAL_HANDLING_CHARGES[flag];
+        }
+      });
+      const etaMinutes = distanceKm * 2; // 2 min per km (MVP)
 
       const baseFee = serviceType.basePrice;
 
@@ -681,9 +687,11 @@ export class OrdersService {
 
       const weightFee = parcelType.priceMultiplier * 2;
 
-      const tax = (baseFee + distanceFee + weightFee) * 0.1;
+      const subtotal = baseFee + distanceFee + weightFee + handlingFee;
 
-      const total = baseFee + distanceFee + weightFee + tax;
+      const tax = subtotal * 0.1;
+
+      const total = subtotal + tax;
 
       const data = {
         recommendedVehicle: {
@@ -695,16 +703,14 @@ export class OrdersService {
           baseFee,
           distanceFee: Number(distanceFee.toFixed(2)),
           weightFee,
+          handlingFee: Number(handlingFee.toFixed(2)),
+          subtotal: Number(subtotal.toFixed(2)),
           tax: Number(tax.toFixed(2)),
           total: Number(total.toFixed(2)),
         },
       };
 
-      return new ApiResponse(
-        200,
-       data,
-        Msg.DATA_FETCHED,
-      );
+      return new ApiResponse(200, data, Msg.DATA_FETCHED);
     } catch (error) {
       console.log(`Error in pricing preview: ${error}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);

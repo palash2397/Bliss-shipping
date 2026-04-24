@@ -1,4 +1,4 @@
-import { IsMongoId, IsString } from 'class-validator';
+import { IsArray, IsMongoId, IsOptional, IsString } from 'class-validator';
 
 export class PricingPreviewDto {
 
@@ -19,4 +19,10 @@ export class PricingPreviewDto {
 
   @IsString()
   dropLng: string;
+
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  specialHandling?: string[];
 }
