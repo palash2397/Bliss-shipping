@@ -22,7 +22,7 @@ export class Order {
     unique: true,
     index: true,
   })
-  orderNumber: string; // internal system ID
+  orderNumber: string; 
 
   @Prop({ required: true })
   recipientName: string;
@@ -46,7 +46,7 @@ export class Order {
   dropLat: string;
 
 
-  @Prop({ type: DELIVERY_TYPE, required: true })
+  @Prop({ enum: DELIVERY_TYPE, required: true })
   deliveryType: string;
 
   @Prop({ required: true, default: 0 })
