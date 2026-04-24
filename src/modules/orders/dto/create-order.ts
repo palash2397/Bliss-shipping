@@ -2,6 +2,8 @@ import {
   IsString,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
+  IsArray,
 } from 'class-validator';
 
 export class CreateOrderDto {
@@ -42,5 +44,11 @@ export class CreateOrderDto {
   
   @IsNumber()
   width: number;
+
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  specialHandling?: string[];
 }
 
