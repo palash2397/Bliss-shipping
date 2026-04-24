@@ -45,3 +45,10 @@ export const calculateDistance = (
 
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 };
+export const getDistanceFee = (distance: number) => {
+  if (distance <= 8) return 0;
+  if (distance <= 15) return 3;
+  if (distance <= 25) return 5;
+  if (distance <= 40) return 10;
+  return 15;
+};
