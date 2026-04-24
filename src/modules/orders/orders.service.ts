@@ -624,6 +624,9 @@ export class OrdersService {
         itemCategoryId: new Types.ObjectId(dto.itemCategory),
         parcelTypeId: new Types.ObjectId(dto.parcelType),
 
+        deliveryType: dto.deliveryType,
+        specialHandling: dto.specialHandling,
+
         note: dto.note,
 
         basePrice,
