@@ -3,6 +3,7 @@ import { Document, Types } from 'mongoose';
 import { DELIVERY_STATUS } from 'src/common/enums/delivery-status.enum';
 import { STATUS } from 'src/common/enums/status.enum';
 import { Role } from 'src/common/enums/role.enum';
+import { DELIVERY_TYPE } from 'src/common/enums/delivery-type.enum';
 
 export type OrderDocument = Order & Document;
 
@@ -43,6 +44,10 @@ export class Order {
 
   @Prop({ required: true })
   dropLat: string;
+
+
+  @Prop({ type: DELIVERY_TYPE, required: true })
+  deliveryType: string;
 
   @Prop({ required: true, default: 0 })
   weight: number;
