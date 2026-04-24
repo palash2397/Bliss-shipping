@@ -25,4 +25,9 @@ export class PricingPreviewDto {
   @IsArray()
   @IsString({ each: true })
   specialHandling?: string[];
+  
+  @IsOptional()
+  @IsString()
+  deliveryType?: string;
 }
+
