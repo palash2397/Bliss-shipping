@@ -158,6 +158,12 @@ export class Order {
     index: true,
   })
   orderSource: string;
+
+  @Prop({
+    type: [String],
+    default: [],
+  })
+  specialHandling: string[];
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
