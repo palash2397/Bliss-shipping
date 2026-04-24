@@ -593,7 +593,9 @@ export class OrdersService {
       }
 
       const vehicleType = await this.vehicleModel.findById(dto.vehicleType);
-      
+      if (!vehicleType) {
+        return new ApiResponse(404, {}, Msg.VEHICLE_TYPE_NOT_FOUND);
+      }
 
       // 2️⃣ Calculate distance
       const distanceKm = calculateDistance(
