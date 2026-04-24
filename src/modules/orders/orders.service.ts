@@ -47,6 +47,9 @@ import { Role } from 'src/common/enums/role.enum';
 
 import { calculateDistance } from 'src/utils/helpers';
 import { SPECIAL_HANDLING_CHARGES } from 'src/common/constants/order.service';
+import { DELIVERY_BASE_PRICING } from 'src/common/constants/delivery-base-pricing';
+
+import { getDistanceFee } from 'src/utils/helpers/index';
 
 @Injectable()
 export class OrdersService {
@@ -647,73 +650,115 @@ export class OrdersService {
     }
   }
 
+  // async pricingPreview(dto: PricingPreviewDto) {
+  //   try {
+  //     // 1️⃣ Fetch configs
+  //     const serviceType = await this.serviceTypeModel.findById(
+  //       dto.serviceTypeId,
+  //     );
+  //     const parcelType = await this.parcelTypeModel
+  //       .findById(dto.parcelTypeId)
+  //       .populate('recommendedVehicleId');
+
+  //     console.log('parcelType', parcelType);
+
+  //     if (!serviceType || !parcelType) {
+  //       return new ApiResponse(400, {}, Msg.INVALID_DATA);
+  //     }
+
+  //     const distanceKm = calculateDistance(
+  //       Number(dto.pickupLat),
+  //       Number(dto.pickupLng),
+  //       Number(dto.dropLat),
+  //       Number(dto.dropLng),
+  //     );
+
+  //     const flags = dto.specialHandling || [];
+
+  //     let handlingFee = 0;
+
+  //     flags.forEach((flag) => {
+  //       if (SPECIAL_HANDLING_CHARGES[flag]) {
+  //         handlingFee += SPECIAL_HANDLING_CHARGES[flag];
+  //       }
+  //     });
+  //     const etaMinutes = distanceKm * 2; // 2 min per km (MVP)
+
+  //     const baseFee = serviceType.basePrice;
+
+  //     const distanceFee = distanceKm * 1; // ₹1 per km (config later)
+
+  //     const weightFee = parcelType.priceMultiplier * 2;
+
+  //     const subtotal = baseFee + distanceFee + weightFee + handlingFee;
+
+  //     const tax = subtotal * 0.1;
+
+  //     const total = subtotal + tax;
+
+  //     const data = {
+  //       recommendedVehicle: {
+  //         id: parcelType.recommendedVehicleId._id,
+  //       },
+  //       distanceKm: Number(distanceKm.toFixed(2)),
+  //       etaMinutes: Math.round(etaMinutes),
+  //       price: {
+  //         baseFee,
+  //         distanceFee: Number(distanceFee.toFixed(2)),
+  //         weightFee,
+  //         handlingFee: Number(handlingFee.toFixed(2)),
+  //         subtotal: Number(subtotal.toFixed(2)),
+  //         tax: Number(tax.toFixed(2)),
+  //         total: Number(total.toFixed(2)),
+  //       },
+  //     };
+
+  //     return new ApiResponse(200, data, Msg.DATA_FETCHED);
+  //   } catch (error) {
+  //     console.log(`Error in pricing preview: ${error}`);
+  //     return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+  //   }
+  // }
+
   async pricingPreview(dto: PricingPreviewDto) {
-    try {
-      // 1️⃣ Fetch configs
-      const serviceType = await this.serviceTypeModel.findById(
-        dto.serviceTypeId,
-      );
-      const parcelType = await this.parcelTypeModel
-        .findById(dto.parcelTypeId)
-        .populate('recommendedVehicleId');
+    const parcelType = await this.parcelTypeModel
+      .findById(dto.parcelTypeId)
+      .populate('recommendedVehicleId');
 
-      console.log('parcelType', parcelType);
+    const distanceKm = calculateDistance(
+      Number(dto.pickupLat),
+      Number(dto.pickupLng),
+      Number(dto.dropLat),
+      Number(dto.dropLng),
+    );
 
-      if (!serviceType || !parcelType) {
-        return new ApiResponse(400, {}, Msg.INVALID_DATA);
+    const baseFee = DELIVERY_BASE_PRICING[dto.deliveryType];
+
+    const distanceFee = getDistanceFee(distanceKm);
+
+    let handlingFee = 0;
+    (dto.specialHandling || []).forEach((flag) => {
+      if (SPECIAL_HANDLING_CHARGES[flag]) {
+        handlingFee += SPECIAL_HANDLING_CHARGES[flag];
       }
+    });
 
-      const distanceKm = calculateDistance(
-        Number(dto.pickupLat),
-        Number(dto.pickupLng),
-        Number(dto.dropLat),
-        Number(dto.dropLng),
-      );
+    const subtotal = baseFee + distanceFee + handlingFee;
+    const tax = subtotal * 0.1;
+    const total = subtotal + tax;
 
-      const flags = dto.specialHandling || [];
-
-      let handlingFee = 0;
-
-      flags.forEach((flag) => {
-        if (SPECIAL_HANDLING_CHARGES[flag]) {
-          handlingFee += SPECIAL_HANDLING_CHARGES[flag];
-        }
-      });
-      const etaMinutes = distanceKm * 2; // 2 min per km (MVP)
-
-      const baseFee = serviceType.basePrice;
-
-      const distanceFee = distanceKm * 1; // ₹1 per km (config later)
-
-      const weightFee = parcelType.priceMultiplier * 2;
-
-      const subtotal = baseFee + distanceFee + weightFee + handlingFee;
-
-      const tax = subtotal * 0.1;
-
-      const total = subtotal + tax;
-
-      const data = {
-        recommendedVehicle: {
-          id: parcelType.recommendedVehicleId._id,
-        },
-        distanceKm: Number(distanceKm.toFixed(2)),
-        etaMinutes: Math.round(etaMinutes),
-        price: {
-          baseFee,
-          distanceFee: Number(distanceFee.toFixed(2)),
-          weightFee,
-          handlingFee: Number(handlingFee.toFixed(2)),
-          subtotal: Number(subtotal.toFixed(2)),
-          tax: Number(tax.toFixed(2)),
-          total: Number(total.toFixed(2)),
-        },
-      };
-
-      return new ApiResponse(200, data, Msg.DATA_FETCHED);
-    } catch (error) {
-      console.log(`Error in pricing preview: ${error}`);
-      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
-    }
+    return {
+      recommendedVehicle: {
+        id: parcelType?.recommendedVehicleId?._id,
+      },
+      distanceKm: Number(distanceKm.toFixed(2)),
+      price: {
+        baseFee,
+        distanceFee,
+        handlingFee,
+        tax: Number(tax.toFixed(2)),
+        total: Number(total.toFixed(2)),
+      },
+    };
   }
 }

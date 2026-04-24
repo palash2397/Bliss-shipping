@@ -26,8 +26,8 @@ export class PricingPreviewDto {
   @IsString({ each: true })
   specialHandling?: string[];
   
-  @IsOptional()
+
   @IsString()
-  deliveryType?: string;
+  deliveryType: string;
 }
 
