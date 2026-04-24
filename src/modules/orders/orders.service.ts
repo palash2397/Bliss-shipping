@@ -576,29 +576,42 @@ export class OrdersService {
       if (!serviceType) {
         return new ApiResponse(404, {}, Msg.SERVICE_TYPE_NOT_FOUND);
       }
-      const parcelType = await this.parcelTypeModel.findById(dto.parcelType);
+
+      const parcelType = await this.parcelTypeModel
+        .findById(dto.parcelType)
+        .populate('recommendedVehicleId');
+
       if (!parcelType) {
         return new ApiResponse(404, {}, Msg.PARCEL_TYPE_NOT_FOUND);
       }
+
       const itemCategory = await this.itemCategoryModel.findById(
         dto.itemCategory,
       );
       if (!itemCategory) {
         return new ApiResponse(404, {}, Msg.ITEM_CATEGORY_NOT_FOUND);
       }
-      const vehicleType = await this.vehicleModel.findById(dto.vehicleType);
-      if (!vehicleType) {
-        return new ApiResponse(404, {}, Msg.VEHICLE_TYPE_NOT_FOUND);
-      }
 
-      // 2️⃣ Calculate price
-      const basePrice = serviceType.basePrice;
-      const totalPrice = basePrice * parcelType.priceMultiplier;
+      const vehicleType = await this.vehicleModel.findById(dto.vehicleType);
+      
+
+      // 2️⃣ Calculate distance
+      const distanceKm = calculateDistance(
+        Number(dto.pickupLat),
+        Number(dto.pickupLng),
+        Number(dto.dropLat),
+        Number(dto.dropLng),
+      );
+
+      const pricing = this.calculatePricing({
+        deliveryType: dto.deliveryType,
+        distanceKm,
+        specialHandling: dto.specialHandling || [],
+      });
 
       const orderNumber = `BS-${Date.now()}`;
       const now = new Date();
 
-      // 3️⃣ Create order
       const order = await this.orderModel.create({
         userId: new Types.ObjectId(userId),
         orderNumber,
@@ -610,29 +623,32 @@ export class OrdersService {
         pickupLat: dto.pickupLat,
         pickupLng: dto.pickupLng,
 
+        dropAddress: dto.dropAddress,
+        dropLat: dto.dropLat,
+        dropLng: dto.dropLng,
+
         weight: dto.weight,
         height: dto.height,
         length: dto.length,
         width: dto.width,
 
-        dropAddress: dto.dropAddress,
-        dropLat: dto.dropLat,
-        dropLng: dto.dropLng,
-
         serviceTypeId: new Types.ObjectId(dto.serviceType),
-        vehicleId: new Types.ObjectId(dto.vehicleType),
         itemCategoryId: new Types.ObjectId(dto.itemCategory),
         parcelTypeId: new Types.ObjectId(dto.parcelType),
 
-        deliveryType: dto.deliveryType,
-        specialHandling: dto.specialHandling,
+        vehicleId: new Types.ObjectId(dto.vehicleType),
 
+        deliveryType: dto.deliveryType,
+        specialHandling: dto.specialHandling || [],
         note: dto.note,
 
-        basePrice,
-        totalPrice,
+        baseFee: pricing.baseFee,
+        distanceFee: pricing.distanceFee,
+        handlingFee: pricing.handlingFee,
+        tax: pricing.tax,
+        totalPrice: pricing.total,
 
-        orderSource: Role.USER,
+        orderSource: 'USER',
 
         dispatchStatus: DELIVERY_STATUS.CREATED,
         dispatchStatusDate: now,
@@ -719,6 +735,89 @@ export class OrdersService {
   //     return new ApiResponse(200, data, Msg.DATA_FETCHED);
   //   } catch (error) {
   //     console.log(`Error in pricing preview: ${error}`);
+  //     return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+  //   }
+  // }
+
+  //  async createUserOrder(dto: CreateUserOrderDto, userId: string) {
+  //   try {
+  //     const serviceType = await this.serviceTypeModel.findById(dto.serviceType);
+  //     if (!serviceType) {
+  //       return new ApiResponse(404, {}, Msg.SERVICE_TYPE_NOT_FOUND);
+  //     }
+  //     const parcelType = await this.parcelTypeModel.findById(dto.parcelType);
+  //     if (!parcelType) {
+  //       return new ApiResponse(404, {}, Msg.PARCEL_TYPE_NOT_FOUND);
+  //     }
+  //     const itemCategory = await this.itemCategoryModel.findById(
+  //       dto.itemCategory,
+  //     );
+  //     if (!itemCategory) {
+  //       return new ApiResponse(404, {}, Msg.ITEM_CATEGORY_NOT_FOUND);
+  //     }
+  //     const vehicleType = await this.vehicleModel.findById(dto.vehicleType);
+  //     if (!vehicleType) {
+  //       return new ApiResponse(404, {}, Msg.VEHICLE_TYPE_NOT_FOUND);
+  //     }
+
+  //     // 2️⃣ Calculate price
+  //     const basePrice = serviceType.basePrice;
+  //     const totalPrice = basePrice * parcelType.priceMultiplier;
+
+  //     const orderNumber = `BS-${Date.now()}`;
+  //     const now = new Date();
+
+  //     // 3️⃣ Create order
+  //     const order = await this.orderModel.create({
+  //       userId: new Types.ObjectId(userId),
+  //       orderNumber,
+
+  //       recipientName: dto.recipientName,
+  //       recipientPhone: dto.recipientPhone,
+
+  //       pickupAddress: dto.pickupAddress,
+  //       pickupLat: dto.pickupLat,
+  //       pickupLng: dto.pickupLng,
+
+  //       weight: dto.weight,
+  //       height: dto.height,
+  //       length: dto.length,
+  //       width: dto.width,
+
+  //       dropAddress: dto.dropAddress,
+  //       dropLat: dto.dropLat,
+  //       dropLng: dto.dropLng,
+
+  //       serviceTypeId: new Types.ObjectId(dto.serviceType),
+  //       vehicleId: new Types.ObjectId(dto.vehicleType),
+  //       itemCategoryId: new Types.ObjectId(dto.itemCategory),
+  //       parcelTypeId: new Types.ObjectId(dto.parcelType),
+
+  //       deliveryType: dto.deliveryType,
+  //       specialHandling: dto.specialHandling,
+
+  //       note: dto.note,
+
+  //       basePrice,
+  //       totalPrice,
+
+  //       orderSource: Role.USER,
+
+  //       dispatchStatus: DELIVERY_STATUS.CREATED,
+  //       dispatchStatusDate: now,
+
+  //       statusHistory: [
+  //         {
+  //           status: DELIVERY_STATUS.CREATED,
+  //           time: now,
+  //           updatedBy: userId,
+  //         },
+  //       ],
+  //     });
+
+  //     return new ApiResponse(201, order, Msg.ORDER_CREATED);
+  //   } catch (error) {
+  //     console.log(`Error creating user order: ${error}`);
   //     return new ApiResponse(500, {}, Msg.SERVER_ERROR);
   //   }
   // }
