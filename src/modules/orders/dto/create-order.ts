@@ -44,16 +44,5 @@ export class CreateOrderDto {
   
   @IsNumber()
   width: number;
-
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  specialHandling?: string[];
-
-
-  @IsOptional()
-  @IsString()
-  deliveryType?: string;
 }
 

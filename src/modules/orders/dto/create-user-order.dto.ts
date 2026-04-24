@@ -1,4 +1,11 @@
-import { IsString, IsNotEmpty, IsMongoId, IsNumber, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsMongoId,
+  IsNumber,
+  IsOptional,
+  IsArray,
+} from 'class-validator';
 
 export class CreateUserOrderDto {
   @IsString()
@@ -54,4 +61,13 @@ export class CreateUserOrderDto {
   @IsString()
   @IsOptional()
   note: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  specialHandling?: string[];
+
+  @IsOptional()
+  @IsString()
+  deliveryType?: string;
 }
