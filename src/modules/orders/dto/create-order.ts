@@ -1,9 +1,7 @@
 import {
   IsString,
   IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsArray,
+  IsNumber
 } from 'class-validator';
 
 export class CreateOrderDto {
