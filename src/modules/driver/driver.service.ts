@@ -6,6 +6,7 @@ import { Msg } from '../../utils/helpers/responseMsg';
 import { ApiResponse } from '../../utils/helpers/ApiResponse';
 
 import { DELIVERY_STATUS } from 'src/common/enums/delivery-status.enum';
+import { Role } from 'src/common/enums/role.enum';
 
 import { User, UserDocument } from '../user/schemas/user.schema';
 import { Order, OrderDocument } from '../orders/schemas/order.schema';
@@ -17,6 +18,7 @@ import {
 
 import { FailDeliveryDto } from './dto/fail-delivery.dto';
 
+
 @Injectable()
 export class DriverService {
   constructor(
@@ -27,6 +29,15 @@ export class DriverService {
     @InjectModel(DriverVehicle.name)
     private readonly driverVehicleModel: Model<DriverVehicleDocument>,
   ) {}
+
+
+  async registerDriver(driverData: any) {
+    try {
+      
+    } catch (error) {
+      
+    }
+  }
 
   async getDriverTasks(driverId: string, tab: string) {
     try {
