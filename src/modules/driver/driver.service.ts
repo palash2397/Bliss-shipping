@@ -454,10 +454,12 @@ export class DriverService {
         description: string;
       };
 
+      user.profilePic = user.profilePic
+        ? `${process.env.BASE_URL}/uploads/profile/${user.profilePic}`
+        : null;
+
       const data = {
-        id: user._id,
-        name: user.name,
-        email: user.email,
+        ...user,
         vehicle: driverVehicle
           ? {
               id: vehicle._id,
