@@ -51,10 +51,14 @@ export class DispatcherService {
         return new ApiResponse(404, {}, Msg.DRIVER_NOT_FOUND);
       }
 
-
+      data.map((driver) => {
+        driver.profilePic = driver.profilePic
+          ? `${process.env.BASE_URL}/uploads/profile/${driver.profilePic}`
+          : null;
+      });
 
       // user.array.forEach(element => {
-        
+
       // });
 
       return new ApiResponse(200, data, Msg.DRIVERS_FETCHED);
