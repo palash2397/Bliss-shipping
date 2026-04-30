@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+
 import { Msg } from '../../utils/helpers/responseMsg';
 import { ApiResponse } from '../../utils/helpers/ApiResponse';
 
