@@ -39,12 +39,7 @@ export class DriverService {
     try {
       const { name, email, password, countryCode, phone } = dto;
       const user = await this.userModel.findOne({
-        $or: [
-          { name },
-          { phone },
-          { email },
-          { countryCode }
-        ]
+        $or: [{ phone }, { email }],
       });
 
       console.log('user', user);
@@ -87,18 +82,21 @@ export class DriverService {
         return new ApiResponse(404, {}, Msg.INVALID_CREDENTIALS);
       }
 
-      console.log('user', user);
+      // console.log('user', user);
 
-      if (!user.isActive) {
+      if (!user.isActive) 
         return new ApiResponse(401, {}, Msg.USER_INACTIVE);
-      }
+      
+
+      if (!user.isVerified)
+        return new ApiResponse(401, {}, Msg.USER_NOT_VERIFIED);
 
       // if (user.role !== dto.role) {
       //   return new ApiResponse(401, {}, Msg.INVALID_CREDENTIALS);
       // }
 
-      console.log('password', typeof password);
-      console.log('user.password', typeof user.password);
+      // console.log('password', typeof password);
+      // console.log('user.password', typeof user.password);
 
       const isPasswordValid = await bcrypt.compare(password, user.password);
       console.log('isPasswordValid', isPasswordValid);
@@ -106,14 +104,10 @@ export class DriverService {
         return new ApiResponse(401, {}, Msg.INVALID_CREDENTIALS);
       }
 
-      if (!user.isActive) {
-        return new ApiResponse(401, {}, Msg.USER_INACTIVE);
-      }
-
       const vehicle = await this.driverVehicleModel.findOne({
         driverId: new Types.ObjectId(user._id),
       });
-      // console.log('vehicle', vehicle);
+      console.log('vehicle', vehicle);
 
       const token = jwt.sign(
         { id: user._id, email: user.email, role: user.role },
