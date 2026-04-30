@@ -39,10 +39,15 @@ export class DriverService {
     try {
       const { name, email, password, countryCode, phone } = dto;
       const user = await this.userModel.findOne({
-        name,
-        phone,
-        countryCode,
+        $or: [
+          { name },
+          { phone },
+          { email },
+          { countryCode }
+        ]
       });
+
+      console.log('user', user);
 
       if (user) {
         return new ApiResponse(400, {}, Msg.USER_EXISTS);
@@ -108,7 +113,7 @@ export class DriverService {
       const vehicle = await this.driverVehicleModel.findOne({
         driverId: new Types.ObjectId(user._id),
       });
-      console.log('vehicle', vehicle);
+      // console.log('vehicle', vehicle);
 
       const token = jwt.sign(
         { id: user._id, email: user.email, role: user.role },
