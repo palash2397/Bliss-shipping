@@ -7,6 +7,7 @@ import { ApiResponse } from '../../utils/helpers/ApiResponse';
 
 import { DELIVERY_STATUS } from 'src/common/enums/delivery-status.enum';
 import { Role } from 'src/common/enums/role.enum';
+import { generateOtp, getExpirationTime } from 'src/utils/helpers';
 
 import { User, UserDocument } from '../user/schemas/user.schema';
 import { Order, OrderDocument } from '../orders/schemas/order.schema';
@@ -17,7 +18,7 @@ import {
 } from '../vehicle/schemas/driver-vehicle.schema';
 
 import { FailDeliveryDto } from './dto/fail-delivery.dto';
-
+import { DriverRegisterDto } from './dto/driver-register.dto';
 
 @Injectable()
 export class DriverService {
@@ -30,12 +31,39 @@ export class DriverService {
     private readonly driverVehicleModel: Model<DriverVehicleDocument>,
   ) {}
 
-
-  async registerDriver(driverData: any) {
+  async registerDriver(dto: DriverRegisterDto) {
     try {
-      
+      const { name, email, password, countryCode, phone } = dto;
+      const user = await this.userModel.findOne({
+        name,
+        phone,
+        countryCode,
+      });
+
+      if (user) {
+        return new ApiResponse(400, {}, Msg.USER_EXISTS);
+      }
+
+      const otp = generateOtp();
+      const otpExpiresAt = getExpirationTime(); // 10 minutes
+
+      console.log('OTP:', otp);
+      console.log('OTP Expiration:', otpExpiresAt);
+
+      await this.userModel.create({
+        name,
+        email,
+        password,
+        countryCode,
+        phone,
+        otp,
+        role: Role.DRIVER,
+        otpExpiresAt,
+      });
+
+      return new ApiResponse(201, { otp: otp }, Msg.OTP_SENT);
     } catch (error) {
-      
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
 
