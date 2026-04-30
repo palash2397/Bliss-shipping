@@ -46,7 +46,7 @@ export class DriverService {
       }
 
       const otp = generateOtp();
-      const otpExpiresAt = getExpirationTime(); // 10 minutes
+      const otpExpiresAt = getExpirationTime(); 
 
       console.log('OTP:', otp);
       console.log('OTP Expiration:', otpExpiresAt);
@@ -69,7 +69,7 @@ export class DriverService {
   }
 
 
-    async verifyOtp(dto: VerifyOtpDto) {
+  async verifyOtp(dto: VerifyOtpDto) {
       try {
         const user = await this.userModel.findOne({ email: dto.email });
         if (!user) {
