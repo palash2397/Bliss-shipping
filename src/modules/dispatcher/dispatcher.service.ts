@@ -54,7 +54,7 @@ export class DispatcherService {
       data.map((driver) => {
         driver.profilePic = driver.profilePic
           ? `${process.env.BASE_URL}/uploads/profile/${driver.profilePic}`
-          : null;
+          : `${process.env.DEFAULT_PROFILE}`;
       });
 
       // user.array.forEach(element => {
