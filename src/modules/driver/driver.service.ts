@@ -46,7 +46,7 @@ export class DriverService {
       }
 
       const otp = generateOtp();
-      const otpExpiresAt = getExpirationTime(); 
+      const otpExpiresAt = getExpirationTime();
 
       console.log('OTP:', otp);
       console.log('OTP Expiration:', otpExpiresAt);
@@ -68,33 +68,60 @@ export class DriverService {
     }
   }
 
+  // async verifyOtp(dto: VerifyOtpDto) {
+  //   try {
+  //     const user = await this.userModel.findOne({ email: dto.email });
+  //     if (!user) {
+  //       return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
+  //     }
 
-  async verifyOtp(dto: VerifyOtpDto) {
-      try {
-        const user = await this.userModel.findOne({ email: dto.email });
-        if (!user) {
-          return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
-        }
-  
-        if (!user.otp || !user.otpExpiresAt) {
-          return new ApiResponse(400, {}, Msg.OTP_NOT_FOUND);
-        }
-  
-        if (user.otp !== dto.otp || new Date() > user.otpExpiresAt) {
-          return new ApiResponse(400, {}, Msg.OTP_INVALID);
-        }
-  
-        user.otp = null;
-        user.otpExpiresAt = null;
-        user.isVerified = true;
-        await user.save();
-  
-        return new ApiResponse(200, {}, Msg.OTP_VERIFIED);
-      } catch (error) {
-        console.log(`error while verifying otp: ${error}`);
-        return new ApiResponse(500, {}, Msg.SERVER_ERROR);
-      }
-    }
+  //     if (!user.otp || !user.otpExpiresAt) {
+  //       return new ApiResponse(400, {}, Msg.OTP_NOT_FOUND);
+  //     }
+
+  //     if (user.otp !== dto.otp || new Date() > user.otpExpiresAt) {
+  //       return new ApiResponse(400, {}, Msg.OTP_INVALID);
+  //     }
+
+  //     user.otp = null;
+  //     user.otpExpiresAt = null;
+  //     user.isVerified = true;
+  //     await user.save();
+
+  //     return new ApiResponse(200, {}, Msg.OTP_VERIFIED);
+  //   } catch (error) {
+  //     console.log(`error while verifying otp: ${error}`);
+  //     return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+  //   }
+  // }
+
+  // async resendOtp(email: string) {
+  //   try {
+  //     const user = await this.userModel.findOne({ email });
+  //     if (!user) {
+  //       return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
+  //     }
+
+  //     if (user.isVerified) {
+  //       return new ApiResponse(400, {}, Msg.USER_ALREADY_VERIFIED);
+  //     }
+
+  //     const otp = generateOtp();
+  //     const otpExpiresAt = getExpirationTime();
+
+  //     user.otp = otp;
+  //     user.otpExpiresAt = otpExpiresAt;
+  //     await user.save();
+
+  //     console.log('OTP:', otp);
+  //     console.log('OTP Expiration:', otpExpiresAt);
+
+  //     return new ApiResponse(200, { otp: otp }, Msg.OTP_RESENT);
+  //   } catch (error) {
+  //     console.log(`error while resending otp: ${error}`);
+  //     return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+  //   }
+  // }
 
   async getDriverTasks(driverId: string, tab: string) {
     try {
