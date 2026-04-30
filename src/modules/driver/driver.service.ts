@@ -58,9 +58,9 @@ export class DriverService {
         _id: new Types.ObjectId(vehicleType),
       });
 
-      if(!vehicle) return new ApiResponse(404, {}, Msg.VEHICLES_NOT_FOUND)
+      if (!vehicle) return new ApiResponse(404, {}, Msg.VEHICLES_NOT_FOUND);
 
-      await this.userModel.create({
+      const driverData =  await this.userModel.create({
         name,
         email,
         password,
@@ -69,6 +69,11 @@ export class DriverService {
         otp,
         role: Role.DRIVER,
         otpExpiresAt,
+      });
+
+      await this.driverVehicleModel.create({
+        driverId: new Types.ObjectId(driverData._id),
+        vehicleId: new Types.ObjectId(vehicle._id),
       });
 
       return new ApiResponse(201, { otp: otp }, Msg.OTP_SENT);
@@ -90,9 +95,7 @@ export class DriverService {
 
       // console.log('user', user);
 
-      if (!user.isActive) 
-        return new ApiResponse(401, {}, Msg.USER_INACTIVE);
-      
+      if (!user.isActive) return new ApiResponse(401, {}, Msg.USER_INACTIVE);
 
       if (!user.isVerified)
         return new ApiResponse(401, {}, Msg.USER_NOT_VERIFIED);
