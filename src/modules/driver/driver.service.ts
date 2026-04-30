@@ -19,6 +19,7 @@ import {
 
 import { FailDeliveryDto } from './dto/fail-delivery.dto';
 import { DriverRegisterDto } from './dto/driver-register.dto';
+import { VerifyOtpDto } from 'src/modules/user/dto/verify-otp.dto';
 
 @Injectable()
 export class DriverService {
@@ -66,6 +67,34 @@ export class DriverService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
+
+
+    async verifyOtp(dto: VerifyOtpDto) {
+      try {
+        const user = await this.userModel.findOne({ email: dto.email });
+        if (!user) {
+          return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
+        }
+  
+        if (!user.otp || !user.otpExpiresAt) {
+          return new ApiResponse(400, {}, Msg.OTP_NOT_FOUND);
+        }
+  
+        if (user.otp !== dto.otp || new Date() > user.otpExpiresAt) {
+          return new ApiResponse(400, {}, Msg.OTP_INVALID);
+        }
+  
+        user.otp = null;
+        user.otpExpiresAt = null;
+        user.isVerified = true;
+        await user.save();
+  
+        return new ApiResponse(200, {}, Msg.OTP_VERIFIED);
+      } catch (error) {
+        console.log(`error while verifying otp: ${error}`);
+        return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+      }
+    }
 
   async getDriverTasks(driverId: string, tab: string) {
     try {
