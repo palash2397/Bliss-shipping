@@ -33,7 +33,7 @@ export class VehicleController {
   }
 
   @Get('all')
-  @UseGuards(JwtAuthGuard, RoleGuard)
+  // @UseGuards(JwtAuthGuard, RoleGuard)
   // @Roles(Role.ADMIN, Role.DRIVER, Role.USER)
   findAll() {
     return this.vehicleService.allVehicles();
