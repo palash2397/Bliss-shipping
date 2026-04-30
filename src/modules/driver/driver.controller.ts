@@ -35,15 +35,11 @@ export class DriverController {
   constructor(private readonly driverService: DriverService) {}
 
   @Post('register')
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @Roles(Role.DRIVER)
   register(@Body() dto: DriverRegisterDto) {
     return this.driverService.registerDriver(dto);
   }
 
   @Post('login')
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @Roles(Role.DRIVER)
   login(@Body() dto: LoginUserDto) {
     return this.driverService.login(dto);
   }
