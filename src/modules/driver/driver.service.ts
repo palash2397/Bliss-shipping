@@ -37,7 +37,7 @@ export class DriverService {
 
   async registerDriver(dto: DriverRegisterDto) {
     try {
-      const { name, email, password, countryCode, phone } = dto;
+      const { name, email, password, countryCode, phone, vehicleType } = dto;
       const user = await this.userModel.findOne({
         $or: [{ phone }, { email }],
       });
@@ -53,6 +53,12 @@ export class DriverService {
 
       console.log('OTP:', otp);
       console.log('OTP Expiration:', otpExpiresAt);
+
+      const vehicle = await this.vehicleModel.findOne({
+        _id: new Types.ObjectId(vehicleType),
+      });
+
+      if(!vehicle) return new ApiResponse(404, {}, Msg.VEHICLES_NOT_FOUND)
 
       await this.userModel.create({
         name,
