@@ -154,6 +154,8 @@ export const Msg = {
   VEHICLES_NOT_FOUND: `Vehicles not found`,
   VEHICLE_ASSIGNED: `Vehicle assigned successfully`,
 
+  DRIVER_ASSIGNED_VEHICLE_NOT_FOUND: `Driver assigned vehicle not found`,
+
 
   // Images
   IMAGE_UPLOADED: `Image uploaded successfully`,

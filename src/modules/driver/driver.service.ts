@@ -60,7 +60,7 @@ export class DriverService {
 
       if (!vehicle) return new ApiResponse(404, {}, Msg.VEHICLES_NOT_FOUND);
 
-      const driverData =  await this.userModel.create({
+      const driverData = await this.userModel.create({
         name,
         email,
         password,
@@ -600,7 +600,10 @@ export class DriverService {
 
   async getDriverProfile(driverId: string) {
     try {
-      const user = await this.userModel.findById(driverId).lean();
+      const user = await this.userModel
+        .findById(driverId)
+        .select('-password -otp -otpExpiresAt -__v')
+        .lean();
 
       if (!user) {
         return new ApiResponse(404, {}, Msg.DRIVER_NOT_FOUND);
@@ -640,6 +643,25 @@ export class DriverService {
       return new ApiResponse(200, data, Msg.DRIVER_FETCHED);
     } catch (error) {
       console.log('error while getting driver profile:', error);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+  async updateAssignVehicle(driverId: string, vehicleId: string) {
+    try {
+      const driverVehicle = await this.driverVehicleModel.findOne({
+        driverId: new Types.ObjectId(driverId),
+        isActive: true,
+      });
+
+      if (!driverVehicle)
+        return new ApiResponse(404, {}, Msg.DRIVER_ASSIGNED_VEHICLE_NOT_FOUND);
+
+      driverVehicle.vehicleId = new Types.ObjectId(vehicleId);
+      await driverVehicle.save();
+      return new ApiResponse(200, {}, Msg.VEHICLE_ASSIGNED);
+    } catch (error) {
+      console.log(`error while updating assign vehicle`, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
