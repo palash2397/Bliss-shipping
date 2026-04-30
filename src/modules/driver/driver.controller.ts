@@ -27,9 +27,26 @@ import { DeclineOrderDto } from './dto/order-decline.dto';
 import { FailDeliveryDto } from './dto/fail-delivery.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
+import { DriverRegisterDto } from './dto/driver-register.dto';
+import { LoginUserDto } from 'src/modules/user/dto/login-user.dto';
+
 @Controller('driver')
 export class DriverController {
   constructor(private readonly driverService: DriverService) {}
+
+  @Post('register')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.DRIVER)
+  register(@Body() dto: DriverRegisterDto) {
+    return this.driverService.registerDriver(dto);
+  }
+
+  @Post('login')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.DRIVER)
+  login(@Body() dto: LoginUserDto) {
+    return this.driverService.login(dto);
+  }
 
   @Get('tasks')
   @UseGuards(JwtAuthGuard, RoleGuard)
@@ -89,7 +106,6 @@ export class DriverController {
   ) {
     return this.driverService.failDelivery(req.user.id, dto, file);
   }
-
 
   @Get('order/:id')
   @UseGuards(JwtAuthGuard, RoleGuard)

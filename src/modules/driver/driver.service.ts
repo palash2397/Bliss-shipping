@@ -22,7 +22,7 @@ import {
 
 import { FailDeliveryDto } from './dto/fail-delivery.dto';
 import { DriverRegisterDto } from './dto/driver-register.dto';
-import { VerifyOtpDto } from 'src/modules/user/dto/verify-otp.dto';
+import { LoginUserDto } from 'src/modules/user/dto/login-user.dto';
 
 @Injectable()
 export class DriverService {
@@ -66,6 +66,68 @@ export class DriverService {
       });
 
       return new ApiResponse(201, { otp: otp }, Msg.OTP_SENT);
+    } catch (error) {
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+  async login(dto: LoginUserDto) {
+    try {
+      const { email, password } = dto;
+
+      const user = await this.userModel
+        .findOne({ email, role: Role.DRIVER })
+        .select('+password');
+      if (!user) {
+        return new ApiResponse(404, {}, Msg.INVALID_CREDENTIALS);
+      }
+
+      console.log('user', user);
+
+      if (!user.isActive) {
+        return new ApiResponse(401, {}, Msg.USER_INACTIVE);
+      }
+
+      // if (user.role !== dto.role) {
+      //   return new ApiResponse(401, {}, Msg.INVALID_CREDENTIALS);
+      // }
+
+      console.log('password', typeof password);
+      console.log('user.password', typeof user.password);
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      console.log('isPasswordValid', isPasswordValid);
+      if (!isPasswordValid) {
+        return new ApiResponse(401, {}, Msg.INVALID_CREDENTIALS);
+      }
+
+      if (!user.isActive) {
+        return new ApiResponse(401, {}, Msg.USER_INACTIVE);
+      }
+
+      const vehicle = await this.driverVehicleModel.findOne({
+        driver: new Types.ObjectId(user._id),
+      });
+      console.log('vehicle', vehicle);
+
+      const token = jwt.sign(
+        { id: user._id, email: user.email, role: user.role },
+        process.env.JWT_SECRET!,
+        {
+          expiresIn: '10d',
+        },
+      );
+
+      const userData = {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isVehicleAssigned: !!vehicle,
+        token,
+      };
+
+      return new ApiResponse(200, userData, Msg.LOGIN_SUCCESS);
     } catch (error) {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
