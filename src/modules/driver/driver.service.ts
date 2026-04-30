@@ -106,7 +106,7 @@ export class DriverService {
       }
 
       const vehicle = await this.driverVehicleModel.findOne({
-        driver: new Types.ObjectId(user._id),
+        driverId: new Types.ObjectId(user._id),
       });
       console.log('vehicle', vehicle);
 
