@@ -116,4 +116,11 @@ export class DriverController {
   getProfile(@Req() req: any) {
     return this.driverService.getDriverProfile(req.user.id);
   }
+
+  @Patch('update/assign/vehicle/:vehicleId')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.DRIVER, Role.ADMIN)
+  assignVehicle(@Req() req: any, @Param('vehicleId') vehicleId: string) {
+    return this.driverService.updateAssignVehicle(req.user.id, vehicleId);
+  }
 }
