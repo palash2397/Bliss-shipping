@@ -25,51 +25,73 @@
 
 Bliss Shipping is a modern logistics platform that connects customers, drivers, and dispatchers for seamless package delivery and tracking. This backend provides RESTful APIs for order management, real-time tracking, driver assignment, and vehicle management.
 
-## Project setup
+## Project Setup
 
 ```bash
+# Install dependencies
 $ npm install
 ```
 
 ## Compile and run the project
 
 ```bash
-# development
+# Development mode
 $ npm run start
 
-# watch mode
-$ npm run start:dev
-
-# production mode
+# Production mode
 $ npm run start:prod
 ```
 
-## Run tests
+## Environment Variables
+
+Create a `.env` file with the following variables:
+
+```env
+# Database
+MONGODB_URI=mongodb://localhost:27017/bliss-shipping
+
+# JWT
+JWT_SECRET=your-super-secret-jwt-key-here
+
+# Server
+PORT=4005
+
+# File Upload
+BASE_URL=http://localhost:4005
+DEFAULT_PROFILE=/images/default-avatar.png
+```
+
+## Project Structure
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+src/
+├── modules/
+│   ├── auth/
+│   ├── driver/
+│   │   ├── dto/
+│   │   ├── controller.ts
+│   │   └── service.ts
+│   └── user/
+│       ├── dto/
+│       └── service.ts
+├── common/
+│   ├── constants/
+│   ├── enums/
+│   └── helpers/
+├── utils/
+│   └── helpers/
+└── uploads/
+    ├── profile/
+    ├── pod/
+    └── failed/
 ```
 
 ## Deployment
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
 
-## Resources
-
-For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
 
 ## Support
 
