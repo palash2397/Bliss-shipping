@@ -1,13 +1,15 @@
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+
+
 import { Msg } from '../../utils/helpers/responseMsg';
 import { ApiResponse } from '../../utils/helpers/ApiResponse';
 
 import { generateOtp, getExpirationTime } from '../../utils/helpers';
-
 import { UserDocument, User } from './schemas/user.schema';
 import {
   MerchantDocument,
