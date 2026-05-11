@@ -136,5 +136,24 @@ export class DispatcherService {
     }
   }
 
+
+  async filterOrders(filter: any) {
+    try {
+
+      const orders = await this.orderModel.find({
+         dispatchStatus: filter
+      }).lean();
+
+      if (!orders || orders.length === 0) {
+        return new ApiResponse(404, {}, Msg.ORDERS_NOT_FOUND);
+      }
+      return new ApiResponse(200, orders, Msg.ORDERS_FETCHED);
+      
+    } catch (error) {
+      console.log(`Error in filterOrders by dispatcher: `, error);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
   // async assign
 }
