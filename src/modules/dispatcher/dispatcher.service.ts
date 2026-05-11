@@ -147,6 +147,9 @@ export class DispatcherService {
         .find({
           dispatchStatus: filter,
         })
+        .populate('userId', 'name email')
+        .populate('statusHistory.updatedBy', 'name')
+        .populate('assignedDriverId', 'name email')
         .sort({ createdAt: -1 })
         .lean();
 
