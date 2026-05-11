@@ -140,7 +140,7 @@ export class DispatcherService {
     try {
       const validStatuses = Object.values(DELIVERY_STATUS);
       if (!validStatuses.includes(filter as any)) {
-        return new ApiResponse(400, {}, 'Invalid delivery status');
+        return new ApiResponse(400, {}, Msg.INVALID_DELIVERY_STATUS);
       }
 
       const orders = await this.orderModel

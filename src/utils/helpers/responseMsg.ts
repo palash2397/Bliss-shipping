@@ -218,4 +218,12 @@ export const Msg = {
   PARCEL_TYPES_FETCHED: `Parcel types fetched successfully`,
   PARCEL_TYPES_NOT_FOUND: `Parcel types not found`,
 
+
+  // Dispatcher
+  DISPATCHER_ORDERS_FETCHED: `Dispatcher orders fetched successfully`,
+  DISPATCHER_DRIVERS_FETCHED: `Dispatcher drivers fetched successfully`,
+  INVALID_DISPATCHER_ACTION: `Invalid dispatcher action`,
+  INVALID_DELIVERY_STATUS: `Invalid delivery status`,
+
+
 };
