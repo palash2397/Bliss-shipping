@@ -150,6 +150,10 @@ export class DispatcherService {
         .populate('userId', 'name email')
         .populate('statusHistory.updatedBy', 'name')
         .populate('assignedDriverId', 'name email')
+        .populate('vehicleId', 'name number')  
+        .populate('serviceTypeId', 'name code description')
+        .populate('parcelTypeId', 'name code description')
+        .populate('itemCategoryId', 'name code description')
         .sort({ createdAt: -1 })
         .lean();
 
