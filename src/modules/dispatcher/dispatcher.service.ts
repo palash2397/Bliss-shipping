@@ -136,12 +136,18 @@ export class DispatcherService {
     }
   }
 
-  async filterOrders(filter: any) {
+  async filterOrders(filter: string) {
     try {
+      const validStatuses = Object.values(DELIVERY_STATUS);
+      if (!validStatuses.includes(filter as any)) {
+        return new ApiResponse(400, {}, 'Invalid delivery status');
+      }
+
       const orders = await this.orderModel
         .find({
           dispatchStatus: filter,
         })
+        .sort({ createdAt: -1 })
         .lean();
 
       if (!orders || orders.length === 0) {

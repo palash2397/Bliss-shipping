@@ -42,6 +42,14 @@ export class DispatcherController {
     return this.dispatcherService.assignDriver(dto, req.user.id);
   }
 
+
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN, Role.DISPATCHER)
+  @Get('/orders/:filter')
+  filterOrders(@Param('filter') filter: string) {
+    return this.dispatcherService.filterOrders(filter);
+  }
+
   // @UseGuards(JwtAuthGuard, RoleGuard)
   // @Roles(Role.ADMIN, Role.DISPATCHER)
   // @Get('assigned/orders')
