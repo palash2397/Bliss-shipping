@@ -72,6 +72,14 @@ export class DriverController {
     return this.driverService.markArrived(orderId, req.user.id);
   }
 
+
+  @Patch('picked-up/order/:id')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.DRIVER)
+  markPickedUp(@Req() req: any, @Param('id') orderId: string) {
+    return this.driverService.pickedUp(orderId, req.user.id);
+  } 
+
   @Patch('delivered/order/:id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.DRIVER)

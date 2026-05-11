@@ -536,6 +536,43 @@ export class DriverService {
     }
   }
 
+
+  async pickedUp(orderId: string, driverId: string) {
+    try {
+      const order = await this.orderModel.findOne({
+        _id: new Types.ObjectId(orderId),
+        assignedDriverId: new Types.ObjectId(driverId),
+        isDeleted: false,
+      });
+
+      if (!order) {
+        return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
+      }
+
+      if (order.dispatchStatus !== DELIVERY_STATUS.ARRIVED) {
+        return new ApiResponse(400, {}, Msg.ORDER_IS_NOT_IN_ARRIVED_STATE);
+      }
+
+      const now = new Date();
+
+      order.dispatchStatus = DELIVERY_STATUS.PICKED_UP;
+      order.dispatchStatusDate = now;
+
+      order.statusHistory.push({
+        status: DELIVERY_STATUS.PICKED_UP,
+        time: now,
+        updatedBy: driverId,
+      });
+
+      await order.save();
+
+      return new ApiResponse(200, { order }, Msg.ORDER_PICKED_UP_SUCCESSFULLY);
+    } catch (error) {
+      console.log(`error while picking up order:`, error);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
   async getOrderDetail(orderId: string, driverId: string) {
     try {
       let folderName: string;
