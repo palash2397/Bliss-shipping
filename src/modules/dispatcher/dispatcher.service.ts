@@ -145,7 +145,7 @@ export class DispatcherService {
 
       const orders = await this.orderModel
         .find({
-          dispatchStatus: filter,
+          dispatchStatus: filter || DELIVERY_STATUS.CREATED,
         })
         .populate('userId', 'name email')
         .populate('statusHistory.updatedBy', 'name')
