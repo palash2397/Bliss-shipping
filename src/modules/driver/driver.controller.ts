@@ -76,7 +76,7 @@ export class DriverController {
   @Patch('picked-up/order/:id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.DRIVER)
-  markPickedUp(@Req() req: any, @Param('id') orderId: string) {
+  pickedUp(@Req() req: any, @Param('id') orderId: string) {
     return this.driverService.pickedUp(orderId, req.user.id);
   } 
 
