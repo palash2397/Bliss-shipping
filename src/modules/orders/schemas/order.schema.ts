@@ -106,8 +106,7 @@ export class Order {
   })
   assignedDriverId: Types.ObjectId | null;
 
-
-   @Prop({
+  @Prop({
     type: Types.ObjectId,
     ref: 'User',
     default: null,
@@ -176,8 +175,6 @@ export class Order {
 
   @Prop({ default: 0 })
   basePrice: number;
-
-
 
   @Prop({
     enum: Object.values(Role),
