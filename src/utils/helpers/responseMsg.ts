@@ -223,6 +223,7 @@ export const Msg = {
 
   // Dispatcher
   DISPATCHER_ORDERS_FETCHED: `Dispatcher orders fetched successfully`,
+  DISPATCHER_DASHBOARD_DATA_FETCHED: `Dispatcher dashboard data fetched successfully`,
   DISPATCHER_DRIVERS_FETCHED: `Dispatcher drivers fetched successfully`,
   INVALID_DISPATCHER_ACTION: `Invalid dispatcher action`,
   INVALID_DELIVERY_STATUS: `Invalid delivery status`,

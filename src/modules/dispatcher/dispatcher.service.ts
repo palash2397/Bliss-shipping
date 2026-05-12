@@ -168,5 +168,15 @@ export class DispatcherService {
     }
   }
 
+  async countOrders() {
+    try {
+      const orders = await this.orderModel.countDocuments();
+      return new ApiResponse(200, orders, Msg.DISPATCHER_DASHBOARD_DATA_FETCHED);
+    } catch (error) {
+      console.log(`Error in countOrders by dispatcher: `, error);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
   // async assign
 }
