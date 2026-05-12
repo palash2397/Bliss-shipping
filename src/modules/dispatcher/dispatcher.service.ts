@@ -229,8 +229,7 @@ export class DispatcherService {
 
       return new ApiResponse(200, formatted, Msg.DASHBOARD_DATA_FETCHED);
     } catch (error) {
-      console.log(error);
-
+      console.log(`Error in dashboardCounts: `, error);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
