@@ -14,6 +14,7 @@ import { FeedbackModule } from './modules/feedback/feedback.module';
 import { ServiceTypeModule } from './modules/service-type/service-type.module';
 import { ItemCategoryModule } from './modules/item-category/item-category.module';
 import { ParcelTypeModule } from './modules/parcel-type/parcel-type.module';
+import { NotificationModule } from './modules/notification/notification.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ParcelTypeModule } from './modules/parcel-type/parcel-type.module';
     ServiceTypeModule,
     ItemCategoryModule,
     ParcelTypeModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [],
