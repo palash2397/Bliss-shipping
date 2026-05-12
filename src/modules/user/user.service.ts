@@ -55,7 +55,7 @@ export class UserService {
         return new ApiResponse(404, {}, Msg.INVALID_CREDENTIALS);
       }
 
-      console.log('user', user);
+      // console.log('user', user);
 
       if (!user.isActive) {
         return new ApiResponse(401, {}, Msg.USER_INACTIVE);
@@ -65,11 +65,13 @@ export class UserService {
       //   return new ApiResponse(401, {}, Msg.INVALID_CREDENTIALS);
       // }
 
-      console.log('password', typeof password);
-      console.log('user.password', typeof user.password);
+      // console.log('password', typeof password);
+      // console.log('user.password', typeof user.password);
 
       const isPasswordValid = await bcrypt.compare(password, user.password);
-      console.log('isPasswordValid', isPasswordValid);
+      // console.log('isPasswordValid', isPasswordValid);
+
+
       if (!isPasswordValid) {
         return new ApiResponse(401, {}, Msg.INVALID_CREDENTIALS);
       }
@@ -107,7 +109,7 @@ export class UserService {
       };
 
       if (user.role === Role.MERCHANT) {
-        console.log('Merchant ID:', user._id);
+        // console.log('Merchant ID:', user._id);
         const merchant = await this.merchantModel.findOne({ userId: user._id });
         if (merchant) {
           return new ApiResponse(
