@@ -50,6 +50,14 @@ export class DispatcherController {
     return this.dispatcherService.filterOrders(filter);
   }
 
+
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN, Role.DISPATCHER)
+  @Get('/dashboard/counts')
+  dashboardCounts() {
+    return this.dispatcherService.dashboardCounts();
+  }
+
   // @UseGuards(JwtAuthGuard, RoleGuard)
   // @Roles(Role.ADMIN, Role.DISPATCHER)
   // @Get('assigned/orders')
