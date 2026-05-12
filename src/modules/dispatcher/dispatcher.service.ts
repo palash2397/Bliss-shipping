@@ -161,6 +161,10 @@ export class DispatcherService {
       if (!orders || orders.length === 0) {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
       }
+
+      orders.map((order) => {
+        order.podImage = order.podImage ? `${process.env.BASE_URL}/uploads/pod/${order.podImage}` : null;
+      });
       return new ApiResponse(200, orders, Msg.ORDERS_FETCHED);
     } catch (error) {
       console.log(`Error in filterOrders by dispatcher: `, error);

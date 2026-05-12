@@ -7,6 +7,8 @@
 // $$$$$$$  |$$$$$$$$\ $$$$$$\ \$$$$$$  |\$$$$$$  |
 // \_______/ \________|\______| \______/  \______/
 
+
+
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -17,7 +19,6 @@ import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-
   app.use(morgan('dev'));
 
   // Serve uploaded files statically
