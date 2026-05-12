@@ -48,7 +48,7 @@ export class UserService {
 
   async login(dto: LoginUserDto) {
     try {
-      const { email, password } = dto;
+      const { email, password, fcmToken } = dto;
 
       const user = await this.userModel.findOne({ email }).select('+password');
       if (!user) {
@@ -83,6 +83,11 @@ export class UserService {
           return new ApiResponse(401, {}, Msg.USER_NOT_VERIFIED);
         }
       }
+      
+      if (fcmToken) {
+        user.fcmToken = fcmToken;
+        await user.save();
+      }
 
       const token = jwt.sign(
         { id: user._id, role: user.role },
@@ -98,6 +103,7 @@ export class UserService {
         email: user.email,
         role: user.role,
         token,
+        fcmToken: fcmToken || user.fcmToken,
       };
 
       if (user.role === Role.MERCHANT) {

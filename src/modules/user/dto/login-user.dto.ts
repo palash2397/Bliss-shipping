@@ -2,7 +2,7 @@ import {
   IsEmail,
   IsNotEmpty,
   MinLength,
-
+  IsOptional,
 } from 'class-validator';
 
 export class LoginUserDto {
@@ -18,6 +18,10 @@ export class LoginUserDto {
   })
  
   password: string;
+
+
+  @IsOptional()
+  fcmToken?: string;
   
   
 }
