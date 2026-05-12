@@ -84,7 +84,7 @@ export class DriverService {
 
   async login(dto: LoginUserDto) {
     try {
-      const { email, password } = dto;
+      const { email, password, fcmToken } = dto;
 
       const user = await this.userModel
         .findOne({ email, role: Role.DRIVER })
@@ -108,7 +108,7 @@ export class DriverService {
       // console.log('user.password', typeof user.password);
 
       const isPasswordValid = await bcrypt.compare(password, user.password);
-      console.log('isPasswordValid', isPasswordValid);
+      // console.log('isPasswordValid', isPasswordValid);
       if (!isPasswordValid) {
         return new ApiResponse(401, {}, Msg.INVALID_CREDENTIALS);
       }
@@ -116,7 +116,7 @@ export class DriverService {
       const vehicle = await this.driverVehicleModel.findOne({
         driverId: new Types.ObjectId(user._id),
       });
-      console.log('vehicle', vehicle);
+      // console.log('vehicle', vehicle);
 
       const token = jwt.sign(
         { id: user._id, email: user.email, role: user.role },
@@ -126,6 +126,11 @@ export class DriverService {
         },
       );
 
+      if (fcmToken) {
+        user.fcmToken = fcmToken;
+        await user.save();
+      }
+
       const userData = {
         _id: user._id,
         name: user.name,
@@ -133,6 +138,7 @@ export class DriverService {
         role: user.role,
         isVehicleAssigned: !!vehicle,
         token,
+        fcmToken: fcmToken || user.fcmToken,
       };
 
       return new ApiResponse(200, userData, Msg.LOGIN_SUCCESS);
@@ -535,7 +541,6 @@ export class DriverService {
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
-
 
   async pickedUp(orderId: string, driverId: string) {
     try {
