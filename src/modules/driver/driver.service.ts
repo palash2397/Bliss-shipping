@@ -399,14 +399,14 @@ export class DriverService {
         return new ApiResponse(404, {}, Msg.ORDER_NOT_FOUND);
       }
 
-      // must be accepted
-      if (order.dispatchStatus !== 'ACCEPTED') {
-        return new ApiResponse(
-          400,
-          {},
-          Msg.ORDER_MUST_BE_ACCEPTED_BEFORE_STARTING_DELIVERY,
-        );
-      }
+      // // must be accepted
+      // if (order.dispatchStatus !== DELIVERY_STATUS.ACCEPTED) {
+      //   return new ApiResponse(
+      //     400,
+      //     {},
+      //     Msg.ORDER_MUST_BE_ACCEPTED_BEFORE_STARTING_DELIVERY,
+      //   );
+      // }
 
       // must be arrived first
       const hasArrived = order.statusHistory.some(
