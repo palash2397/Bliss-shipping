@@ -151,7 +151,7 @@ export class DispatcherService {
         .populate('userId', 'name email')
         .populate('statusHistory.updatedBy', 'name')
         .populate('assignedDriverId', 'name email')
-        .populate('vehicleId', 'name number')  
+        .populate('vehicleId', 'name number')
         .populate('serviceTypeId', 'name code description')
         .populate('parcelTypeId', 'name code description')
         .populate('itemCategoryId', 'name code description')
@@ -168,12 +168,39 @@ export class DispatcherService {
     }
   }
 
-  async countOrders() {
+  async getDashboardCounts() {
     try {
-      const orders = await this.orderModel.countDocuments();
-      return new ApiResponse(200, orders, Msg.DISPATCHER_DASHBOARD_DATA_FETCHED);
+      const [created, assigned, outForDelivery, delivered] = await Promise.all([
+        this.orderModel.countDocuments({
+          dispatchStatus: 'CREATED',
+        }),
+
+        this.orderModel.countDocuments({
+          dispatchStatus: 'ASSIGNED',
+        }),
+
+        this.orderModel.countDocuments({
+          dispatchStatus: 'OUT_FOR_DELIVERY',
+        }),
+
+        this.orderModel.countDocuments({
+          dispatchStatus: 'DELIVERED',
+        }),
+      ]);
+
+      return new ApiResponse(
+        200,
+        {
+          created,
+          assigned,
+          outForDelivery,
+          delivered,
+        },
+        'Dashboard counts fetched successfully',
+      );
     } catch (error) {
-      console.log(`Error in countOrders by dispatcher: `, error);
+      console.log('Error fetching dashboard counts:', error);
+
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
