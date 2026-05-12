@@ -22,7 +22,7 @@ async function bootstrap() {
 
   // Serve uploaded files statically
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
-    prefix: '/bliss/uploads/',
+    prefix: '/api/v1/uploads/',
   });
 
   // enable global validation for DTOs
