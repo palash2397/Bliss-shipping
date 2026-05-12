@@ -172,19 +172,19 @@ export class DispatcherService {
     try {
       const [created, assigned, outForDelivery, delivered] = await Promise.all([
         this.orderModel.countDocuments({
-          dispatchStatus: 'CREATED',
+          dispatchStatus: DELIVERY_STATUS.CREATED,
         }),
 
         this.orderModel.countDocuments({
-          dispatchStatus: 'ASSIGNED',
+          dispatchStatus: DELIVERY_STATUS.ASSIGNED,
         }),
 
         this.orderModel.countDocuments({
-          dispatchStatus: 'OUT_FOR_DELIVERY',
+          dispatchStatus: DELIVERY_STATUS.OUT_FOR_DELIVERY,
         }),
 
         this.orderModel.countDocuments({
-          dispatchStatus: 'DELIVERED',
+          dispatchStatus: DELIVERY_STATUS.DELIVERED,
         }),
       ]);
 
