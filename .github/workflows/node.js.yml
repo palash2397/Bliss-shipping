@@ -25,11 +25,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Create .env file safely
+      # - name: Create .env file safely
+      #   run: |
+      #     rm -f .env
+      #     printf "%s" "${{ secrets.PROD_ENV_FILE }}" > .env
+      #     chmod 600 .env
+
+      - name: Create ENV File
         run: |
-          rm -f .env
-          printf "%s" "${{ secrets.PROD_ENV_FILE }}" > .env
+          echo "${{ secrets.PROD_ENV_BASE64 }}" | base64 --decode > .env
           chmod 600 .env
+          ls -lah .env
 
       - name: run bliss backend
         run: npm run build
