@@ -376,6 +376,8 @@ export class DriverService {
         updatedBy: driverId,
       });
 
+      order.dispatchStatus = DELIVERY_STATUS.ARRIVED;
+
       await order.save();
 
       return new ApiResponse(200, { order }, Msg.ARRIVAL_CONFIRMED);
