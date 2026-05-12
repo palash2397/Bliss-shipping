@@ -106,6 +106,15 @@ export class Order {
   })
   assignedDriverId: Types.ObjectId | null;
 
+
+   @Prop({
+    type: Types.ObjectId,
+    ref: 'User',
+    default: null,
+    index: true,
+  })
+  assignedBy: Types.ObjectId | null;
+
   @Prop({ default: null })
   dispatchStatusDate: Date;
 

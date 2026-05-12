@@ -103,7 +103,7 @@ export class OrdersController {
   @Roles(Role.USER, Role.ADMIN)
   cancelOrder(@Req() req: any, @Param('id') id: string) {
     return this.ordersService.cancelOrder(req.user.id, id);
-  }
+  } 
 
   @Get('import/history')
   async getImportHistory(@Req() req: any) {
