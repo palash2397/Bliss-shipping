@@ -75,6 +75,13 @@ export class User {
     default: null,
   })
   profilePic: string | null;
+
+  @Prop({
+    type: String,
+    required: false,
+    default: null,
+  })
+  fcmToken: string | null;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -118,6 +118,7 @@ export class UserService {
       }
       return new ApiResponse(200, userData, Msg.LOGIN_SUCCESS);
     } catch (error) {
+      console.log(`while login the user: ${error}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
