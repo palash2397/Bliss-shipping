@@ -69,17 +69,12 @@ export class User {
   })
   isVerified: boolean;
 
-
   @Prop({
     type: String,
     required: false,
     default: null,
   })
   profilePic: string | null;
-
-
-
-
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
