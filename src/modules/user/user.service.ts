@@ -166,6 +166,7 @@ export class UserService {
 
       return new ApiResponse(201, { otp: otp }, Msg.OTP_SENT);
     } catch (error) {
+      console.log(`while registering the user: ${error}`);
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }
   }
