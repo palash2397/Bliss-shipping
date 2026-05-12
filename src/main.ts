@@ -24,7 +24,7 @@ async function bootstrap() {
 
   // Serve uploaded files statically
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
-    prefix: '/uploads',
+    prefix: '/bliss/uploads',
   });
 
   // enable global validation for DTOs
