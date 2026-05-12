@@ -99,6 +99,7 @@ export class DispatcherService {
           assignedDriverId: new Types.ObjectId(driverId),
           dispatchStatus: DELIVERY_STATUS.ASSIGNED,
           dispatchStatusDate: now,
+          assignedBy: new Types.ObjectId(userId),
           $push: {
             statusHistory: {
               status: DELIVERY_STATUS.ASSIGNED,
