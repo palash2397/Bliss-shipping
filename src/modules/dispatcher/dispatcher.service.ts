@@ -168,38 +168,68 @@ export class DispatcherService {
     }
   }
 
+  // async dashboardCounts() {
+  //   try {
+  //     const [created, assigned, outForDelivery, delivered] = await Promise.all([
+  //       this.orderModel.countDocuments({
+  //         dispatchStatus: DELIVERY_STATUS.CREATED,
+  //       }),
+
+  //       this.orderModel.countDocuments({
+  //         dispatchStatus: DELIVERY_STATUS.ASSIGNED,
+  //       }),
+
+  //       this.orderModel.countDocuments({
+  //         dispatchStatus: DELIVERY_STATUS.OUT_FOR_DELIVERY,
+  //       }),
+
+  //       this.orderModel.countDocuments({
+  //         dispatchStatus: DELIVERY_STATUS.DELIVERED,
+  //       }),
+  //     ]);
+
+  //     return new ApiResponse(
+  //       200,
+  //       {
+  //         created,
+  //         assigned,
+  //         outForDelivery,
+  //         delivered,
+  //       },
+  //       Msg.DASHBOARD_DATA_FETCHED,
+  //     );
+  //   } catch (error) {
+  //     console.log('Error fetching dashboard counts:', error);
+
+  //     return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+  //   }
+  // }
+
   async dashboardCounts() {
     try {
-      const [created, assigned, outForDelivery, delivered] = await Promise.all([
-        this.orderModel.countDocuments({
-          dispatchStatus: DELIVERY_STATUS.CREATED,
-        }),
-
-        this.orderModel.countDocuments({
-          dispatchStatus: DELIVERY_STATUS.ASSIGNED,
-        }),
-
-        this.orderModel.countDocuments({
-          dispatchStatus: DELIVERY_STATUS.OUT_FOR_DELIVERY,
-        }),
-
-        this.orderModel.countDocuments({
-          dispatchStatus: DELIVERY_STATUS.DELIVERED,
-        }),
+      const counts = await this.orderModel.aggregate([
+        {
+          $group: {
+            _id: '$dispatchStatus',
+            count: { $sum: 1 },
+          },
+        },
       ]);
 
-      return new ApiResponse(
-        200,
-        {
-          created,
-          assigned,
-          outForDelivery,
-          delivered,
-        },
-        Msg.DASHBOARD_DATA_FETCHED,
-      );
+      const formatted = {
+        CREATED: 0,
+        ASSIGNED: 0,
+        OUT_FOR_DELIVERY: 0,
+        DELIVERED: 0,
+      };
+
+      counts.forEach((item) => {
+        formatted[item._id] = item.count;
+      });
+
+      return new ApiResponse(200, formatted, Msg.DASHBOARD_DATA_FETCHED);
     } catch (error) {
-      console.log('Error fetching dashboard counts:', error);
+      console.log(error);
 
       return new ApiResponse(500, {}, Msg.SERVER_ERROR);
     }

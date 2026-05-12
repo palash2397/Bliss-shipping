@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsMongoId } from 'class-validator';
+import {IsNotEmpty, IsMongoId } from 'class-validator';
 
 export class CompleteDeliveryDto {
   @IsMongoId()
