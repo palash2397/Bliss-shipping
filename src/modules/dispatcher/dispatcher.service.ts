@@ -168,7 +168,7 @@ export class DispatcherService {
     }
   }
 
-  async getDashboardCounts() {
+  async dashboardCounts() {
     try {
       const [created, assigned, outForDelivery, delivered] = await Promise.all([
         this.orderModel.countDocuments({
@@ -196,7 +196,7 @@ export class DispatcherService {
           outForDelivery,
           delivered,
         },
-        'Dashboard counts fetched successfully',
+        Msg.DASHBOARD_DATA_FETCHED,
       );
     } catch (error) {
       console.log('Error fetching dashboard counts:', error);

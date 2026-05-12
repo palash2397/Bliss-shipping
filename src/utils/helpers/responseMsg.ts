@@ -229,4 +229,8 @@ export const Msg = {
   INVALID_DELIVERY_STATUS: `Invalid delivery status`,
 
 
+  // Dashboard
+  DASHBOARD_DATA_FETCHED: `Dashboard data fetched successfully`,
+
+
 };
