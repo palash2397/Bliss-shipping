@@ -3,6 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 
+import { NotificationService } from '../notification/notification.service';
+
 import { Order, OrderDocument } from '../orders/schemas/order.schema';
 import { User, UserDocument } from '../user/schemas/user.schema';
 import { DELIVERY_STATUS } from '../../common/enums/delivery-status.enum';
@@ -17,6 +19,8 @@ export class DispatcherService {
   constructor(
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+
+    private readonly notificationService: NotificationService,
   ) {}
 
   async allOrders() {
@@ -163,7 +167,9 @@ export class DispatcherService {
       }
 
       orders.map((order) => {
-        order.podImage = order.podImage ? `${process.env.BASE_URL}/uploads/pod/${order.podImage}` : null;
+        order.podImage = order.podImage
+          ? `${process.env.BASE_URL}/uploads/pod/${order.podImage}`
+          : null;
       });
       return new ApiResponse(200, orders, Msg.ORDERS_FETCHED);
     } catch (error) {
