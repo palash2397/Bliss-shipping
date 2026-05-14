@@ -24,6 +24,8 @@ import { FailDeliveryDto } from './dto/fail-delivery.dto';
 import { DriverRegisterDto } from './dto/driver-register.dto';
 import { LoginUserDto } from 'src/modules/user/dto/login-user.dto';
 
+import { NotificationService } from '../notification/notification.service';
+
 @Injectable()
 export class DriverService {
   constructor(
@@ -33,6 +35,8 @@ export class DriverService {
     private readonly vehicleModel: Model<VehicleDocument>,
     @InjectModel(DriverVehicle.name)
     private readonly driverVehicleModel: Model<DriverVehicleDocument>,
+
+    private readonly notificationService: NotificationService,
   ) {}
 
   async registerDriver(dto: DriverRegisterDto) {
