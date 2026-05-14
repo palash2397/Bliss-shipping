@@ -71,7 +71,7 @@ export class NotificationService {
   async myNotifications(userId: string) {
     try {
       const notifications = await this.notificationModel.find({
-        userId,
+        userId: new mongoose.Types.ObjectId(userId),
         isDeleted: false,
       });
 
@@ -91,7 +91,7 @@ export class NotificationService {
       const notification = await this.notificationModel.findOneAndUpdate(
         {
           _id: notificationId,
-          userId,
+          userId: new mongoose.Types.ObjectId(userId),
         },
         {
           isRead: true,
@@ -115,7 +115,7 @@ export class NotificationService {
   async markAllNotificationAsRead(userId: string) {
     try {
       const notifications = await this.notificationModel.updateMany(
-        { userId },
+        { userId: new mongoose.Types.ObjectId(userId) },
         {
           isRead: true,
         },
@@ -136,7 +136,7 @@ export class NotificationService {
     try {
       const notification = await this.notificationModel.findOneAndDelete({
         _id: notificationId,
-        userId,
+        userId: new mongoose.Types.ObjectId(userId),
       });
 
       if (!notification) {
@@ -152,7 +152,9 @@ export class NotificationService {
 
   async deleteAllNotification(userId: string) {
     try {
-      const notifications = await this.notificationModel.deleteMany({ userId });
+      const notifications = await this.notificationModel.deleteMany({
+        userId: new mongoose.Types.ObjectId(userId),
+      });
 
       if (!notifications) {
         return new ApiResponse(404, {}, Msg.NOTIFICATIONS_NOT_FOUND);
