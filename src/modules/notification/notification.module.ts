@@ -2,7 +2,7 @@ import { Module, Global } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { NotificationService } from './notification.service';
 import { FirebaseProvider } from './firebase/firebase.config';
-import { NotificationController } from './merchant.controller';
+import { NotificationController } from './notification.controller';
 
 import { Notification, NotificationSchema } from './schema/notification.schema';
 import { User, UserSchema } from '../user/schemas/user.schema';

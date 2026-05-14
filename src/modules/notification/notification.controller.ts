@@ -1,6 +1,22 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Req,
+  Get,
+  Param,
+  Query,
+  Patch,
+} from '@nestjs/common';
 import { NotificationService } from './notification.service';
 
+import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
+// import { RoleGuard } from '../auth/roles/roles.guard';
+// import { Role } from 'src/common/enums/role.enum';
+// import { Roles } from '../auth/roles/roles.decorator';
+
+@UseGuards(JwtAuthGuard)
 @Controller('notifications')
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
@@ -22,5 +38,10 @@ export class NotificationController {
         type: 'TEST_NOTIFICATION',
       },
     );
+  }
+
+  @Get('/my/all')
+  async myNotifications(@Req() req: any) {
+    return this.notificationService.myNotifications(req.user.id);
   }
 }

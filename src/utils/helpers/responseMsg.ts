@@ -213,6 +213,7 @@ export const Msg = {
   // notification
   NOTIFICATION_SENT: `Notification sent successfully`,
   NOTIFICATION_NOT_FOUND: `Notification not found`,
+  NOTIFICATIONS_NOT_FOUND: `Notifications not found`,
   NOTIFICATION_FETCHED: `Notification fetched successfully`,
   NOTIFICATIONS_FETCHED: `Notifications fetched successfully`,
   NOTIFICATION_DELETED: `Notification deleted successfully`,

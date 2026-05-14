@@ -67,4 +67,40 @@ export class NotificationService {
       };
     }
   }
+
+  async myNotifications(userId: string) {
+    try {
+      const notifications = await this.notificationModel.find({
+        userId,
+      });
+
+      if (!notifications || notifications.length === 0) {
+        return new ApiResponse(404, {}, Msg.NOTIFICATIONS_NOT_FOUND);
+      }
+
+      return new ApiResponse(200, notifications, Msg.NOTIFICATIONS_FETCHED);
+    } catch (error) {
+      console.log(`error while getting notifications ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+  // async markNotificationAsRead(notificationId: string) {
+  //   try {
+  //     const notification = await this.notificationModel.findByIdAndUpdate(
+  //       notificationId,
+  //       {
+  //         isRead: true,
+  //       },
+  //       {
+  //         new: true,
+  //       },
+  //     );
+
+  //     return notification;
+  //   } catch (error) {
+  //     console.log(`error while marking notification as read ${error}`);
+  //     return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+  //   }
+  // }
 }
