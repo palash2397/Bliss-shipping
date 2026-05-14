@@ -682,10 +682,10 @@ export class OrdersService {
       }
 
       await this.notificationService.sendPushNotification(
-        dispatcherUser?._id.toString(),
+        dispatcherUser._id.toString(),
         dispatcherUser.fcmToken ?? '',
-        'Order Created',
-        'Your order has been created successfully',
+        'New Order Received',
+        `A new order ${order.orderNumber} is waiting for dispatch.`,
         {
           orderId: order._id.toString(),
           type: 'ORDER_CREATED',
