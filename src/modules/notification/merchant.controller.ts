@@ -9,13 +9,15 @@ export class NotificationController {
   async sendTestNotification(
     @Body()
     body: {
+      userId: string;
       token: string;
     },
   ) {
     return this.notificationService.sendPushNotification(
+      body.userId,
       body.token,
       'Test Notification',
-      'Firebase notification is working successfully 🚀',
+      'Firebase notification is working 🚀',
       {
         type: 'TEST_NOTIFICATION',
       },

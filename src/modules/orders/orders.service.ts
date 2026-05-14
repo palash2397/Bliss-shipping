@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types, Connection } from 'mongoose';
 
+import { NotificationService } from '../notification/notification.service';
+
 import { InjectConnection } from '@nestjs/mongoose';
 import { parse } from 'csv-parse';
 
@@ -72,6 +74,8 @@ export class OrdersService {
 
     @InjectModel(ServiceType.name)
     private readonly serviceTypeModel: Model<ServiceTypeDocument>,
+
+    private readonly notificationService: NotificationService,
 
     @InjectConnection()
     private readonly connection: Connection,
@@ -614,6 +618,11 @@ export class OrdersService {
       const orderNumber = `BS-${Date.now()}`;
       const now = new Date();
 
+      const user = await this.userModel.findById(userId);
+      if (!user) {
+        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
+      }
+
       const order = await this.orderModel.create({
         userId: new Types.ObjectId(userId),
         orderNumber,
@@ -663,6 +672,17 @@ export class OrdersService {
           },
         ],
       });
+
+      await this.notificationService.sendPushNotification(
+        user._id.toString(),
+        user.fcmToken ?? '',
+        'Order Created',
+        'Your order has been created successfully',
+        {
+          orderId: order._id.toString(),
+          type: 'ORDER_CREATED',
+        },
+      );
 
       return new ApiResponse(201, order, Msg.ORDER_CREATED);
     } catch (error) {
