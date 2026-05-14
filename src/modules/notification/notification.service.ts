@@ -4,10 +4,15 @@ import * as admin from 'firebase-admin';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
+import { User, UserDocument } from '../user/schemas/user.schema';
+
 import {
   Notification,
   NotificationDocument,
 } from './schema/notification.schema';
+
+import { ApiResponse } from 'src/utils/helpers/ApiResponse';
+import { Msg } from 'src/utils/helpers/responseMsg';
 
 @Injectable()
 export class NotificationService {
@@ -17,6 +22,9 @@ export class NotificationService {
 
     @InjectModel(Notification.name)
     private readonly notificationModel: Model<NotificationDocument>,
+
+    @InjectModel(User.name)
+    private readonly userModel: Model<UserDocument>,
   ) {}
 
   async sendPushNotification(

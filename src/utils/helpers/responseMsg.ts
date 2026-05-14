@@ -209,4 +209,14 @@ export const Msg = {
 
   // Dashboard
   DASHBOARD_DATA_FETCHED: `Dashboard data fetched successfully`,
+
+  // notification
+  NOTIFICATION_SENT: `Notification sent successfully`,
+  NOTIFICATION_NOT_FOUND: `Notification not found`,
+  NOTIFICATION_FETCHED: `Notification fetched successfully`,
+  NOTIFICATIONS_FETCHED: `Notifications fetched successfully`,
+  NOTIFICATION_DELETED: `Notification deleted successfully`,
+  NOTIFICATION_UPDATED: `Notification updated successfully`,
+  NOTIFICATION_ALREADY_READ: `Notification already read`,
+  NOTIFICATION_ALREADY_UNREAD: `Notification already unread`,
 };
