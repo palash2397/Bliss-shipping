@@ -618,10 +618,10 @@ export class OrdersService {
       const orderNumber = `BS-${Date.now()}`;
       const now = new Date();
 
-      const user = await this.userModel.findById(userId);
-      if (!user) {
-        return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
-      }
+      // const user = await this.userModel.findById(userId);
+      // if (!user) {
+      //   return new ApiResponse(404, {}, Msg.USER_NOT_FOUND);
+      // }
 
       const order = await this.orderModel.create({
         userId: new Types.ObjectId(userId),
@@ -673,9 +673,17 @@ export class OrdersService {
         ],
       });
 
+      const dispatcherUser = await this.userModel.findOne({
+        role: 'DISPATCHER',
+      });
+
+      if (!dispatcherUser) {
+        return new ApiResponse(404, {}, Msg.DISPATCHER_ORDERS_NOT_FOUND);
+      }
+
       await this.notificationService.sendPushNotification(
-        user._id.toString(),
-        user.fcmToken ?? '',
+        dispatcherUser?._id.toString(),
+        dispatcherUser.fcmToken ?? '',
         'Order Created',
         'Your order has been created successfully',
         {

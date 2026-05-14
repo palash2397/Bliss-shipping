@@ -1,5 +1,3 @@
-
-
 export const Msg = {
   // General
   SERVER_ERROR: `Internal server error`,
@@ -22,10 +20,6 @@ export const Msg = {
   USER_UPDATED: `User updated successfully`,
   USER_ADDED: `User added successfully`,
   USER_INACTIVE: `User account is temporarily inactive`,
-
-
-
-
 
   // Authentication
   INVALID_CREDENTIALS: `Invalid Credentials`,
@@ -52,7 +46,6 @@ export const Msg = {
   DATA_IS_CLOSED: `Data is closed`,
   INVALID_DATA: `Invalid data`,
 
-
   // Id
   ID_REQUIRED: `Id is required`,
 
@@ -78,8 +71,6 @@ export const Msg = {
   PHONE_VERIFIED: `Phone number verified successfully`,
   PHONE_ALREADY_VERIFIED: `Phone number already verified`,
 
-
-
   // Merchant
   MERCHANT_ALREADY_EXISTS: `Merchant already exists`,
   MERCHANT_CREATED: `Merchant created successfully`,
@@ -94,7 +85,6 @@ export const Msg = {
   MERCHANT_PROFILE_FETCHED: `Merchant profile fetched successfully`,
   MERCHANT_PROFILES_FETCHED: `Merchant profiles fetched successfully`,
   MERCHANT_SUMMARY_FETCHED: `Merchant summary fetched successfully`,
-
 
   // Orders
   ORDER_CREATED: `Order created successfully`,
@@ -127,7 +117,6 @@ export const Msg = {
   IMPORT_HISTORY_FETCHED: `Import history fetched successfully`,
   IMPORT_HISTORY_NOT_FOUND: `Import history not found`,
 
-
   // Drivers
   DRIVERS_FETCHED: `Drivers fetched successfully`,
   DRIVER_FETCHED: `Driver fetched successfully`,
@@ -140,7 +129,6 @@ export const Msg = {
   ASSIGNED_VEHICLES_FETCHED: `Assigned vehicles fetched successfully`,
   ASSIGNED_VEHICLES_NOT_FOUND: `No assigned vehicles found`,
 
-  
   // Driver
   ARRIVAL_CONFIRMED: `Arrival confirmed successfully`,
   DELIVERY_STARTED_SUCCESSFULLY: `Delivery started successfully`,
@@ -158,22 +146,18 @@ export const Msg = {
 
   DRIVER_ASSIGNED_VEHICLE_NOT_FOUND: `Driver assigned vehicle not found`,
 
-
   // Images
   IMAGE_UPLOADED: `Image uploaded successfully`,
   IMAGE_DELETED: `Image deleted successfully`,
-
 
   // file
   FILE_UPLOADED: `File uploaded successfully`,
   FILE_DELETED: `File deleted successfully`,
   FILE_NOT_FOUND: `File not found`,
   FILE_REQUIRED: `File is required`,
- 
 
   // INVALID
   INVALID_TAB: `Invalid tab value`,
-
 
   // Rating
   RATING_CREATED: `Rating created successfully`,
@@ -185,11 +169,8 @@ export const Msg = {
   RATING_ALREADY_EXISTS_FOR_ORDER: `Rating already exists for this order`,
   RATING_ALREADY_NOT_EXIST_FOR_ORDER: `Rating does not exist for this order`,
 
-
   // Driver
   DRIVER_NOT_ASSIGNED_TO_ORDER: `Driver is not assigned to this order`,
-
-
 
   // Service Type
   SERVICE_TYPE_CREATED: `Service type created successfully`,
@@ -200,7 +181,6 @@ export const Msg = {
   SERVICE_TYPES_FETCHED: `Service types fetched successfully`,
   SERVICE_TYPES_NOT_FOUND: `Service types not found`,
 
-
   // Item Category
   ITEM_CATEGORY_CREATED: `Item category created successfully`,
   ITEM_CATEGORY_NOT_FOUND: `Item category not found`,
@@ -209,7 +189,6 @@ export const Msg = {
   ITEM_CATEGORY_FETCHED: `Item category fetched successfully`,
   ITEM_CATEGORIES_FETCHED: `Item categories fetched successfully`,
   ITEM_CATEGORIES_NOT_FOUND: `Item categories not found`,
-
 
   // Parcel Type
   PARCEL_TYPE_CREATED: `Parcel type created successfully`,
@@ -220,17 +199,14 @@ export const Msg = {
   PARCEL_TYPES_FETCHED: `Parcel types fetched successfully`,
   PARCEL_TYPES_NOT_FOUND: `Parcel types not found`,
 
-
   // Dispatcher
   DISPATCHER_ORDERS_FETCHED: `Dispatcher orders fetched successfully`,
+  DISPATCHER_ORDERS_NOT_FOUND: `No assigned orders found`,
   DISPATCHER_DASHBOARD_DATA_FETCHED: `Dispatcher dashboard data fetched successfully`,
   DISPATCHER_DRIVERS_FETCHED: `Dispatcher drivers fetched successfully`,
   INVALID_DISPATCHER_ACTION: `Invalid dispatcher action`,
   INVALID_DELIVERY_STATUS: `Invalid delivery status`,
 
-
   // Dashboard
   DASHBOARD_DATA_FETCHED: `Dashboard data fetched successfully`,
-
-
 };
