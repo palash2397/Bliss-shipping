@@ -134,18 +134,10 @@ export class NotificationService {
 
   async deleteNotification(notificationId: string, userId: string) {
     try {
-      const notification = await this.notificationModel.findOneAndUpdate(
-        {
-          _id: notificationId,
-          userId,
-        },
-        {
-          isDeleted: true,
-        },
-        {
-          new: true,
-        },
-      );
+      const notification = await this.notificationModel.findOneAndDelete({
+        _id: notificationId,
+        userId,
+      });
 
       if (!notification) {
         return new ApiResponse(404, {}, Msg.NOTIFICATION_NOT_FOUND);
@@ -160,12 +152,7 @@ export class NotificationService {
 
   async deleteAllNotification(userId: string) {
     try {
-      const notifications = await this.notificationModel.updateMany(
-        { userId },
-        {
-          isDeleted: true,
-        },
-      );
+      const notifications = await this.notificationModel.deleteMany({ userId });
 
       if (!notifications) {
         return new ApiResponse(404, {}, Msg.NOTIFICATIONS_NOT_FOUND);
