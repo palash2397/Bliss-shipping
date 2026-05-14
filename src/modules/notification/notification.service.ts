@@ -85,10 +85,13 @@ export class NotificationService {
     }
   }
 
-  async markNotificationAsRead(notificationId: string) {
+  async markNotificationAsRead(notificationId: string, userId: string) {
     try {
-      const notification = await this.notificationModel.findByIdAndUpdate(
-        notificationId,
+      const notification = await this.notificationModel.findOneAndUpdate(
+        {
+          _id: notificationId,
+          userId,
+        },
         {
           isRead: true,
         },
