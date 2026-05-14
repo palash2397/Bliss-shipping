@@ -114,7 +114,7 @@ export class DispatcherService {
         },
       );
 
-      orders.forEach(async (order: any) => {
+      const data = orders.forEach(async (order: any) => {
         await this.notificationService.sendPushNotification(
           driver._id.toString(),
           driver.fcmToken!,
@@ -125,6 +125,8 @@ export class DispatcherService {
           },
         );
       });
+
+      console.log('data', data);
 
       return new ApiResponse(200, { assign }, Msg.DRIVER_ASSIGNED_SUCCESSFULLY);
     } catch (error) {
