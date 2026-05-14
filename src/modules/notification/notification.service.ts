@@ -144,5 +144,20 @@ export class NotificationService {
     }
   }
 
-  async 
+  async deleteAllNotification(userId: string) {
+    try {
+      const notifications = await this.notificationModel.deleteMany({
+        userId,
+      });
+
+      if (!notifications) {
+        return new ApiResponse(404, {}, Msg.NOTIFICATIONS_NOT_FOUND);
+      }
+
+      return new ApiResponse(200, notifications, Msg.NOTIFICATION_DELETED);
+    } catch (error) {
+      console.log(`error while deleting notification ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
 }
