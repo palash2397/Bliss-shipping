@@ -5,12 +5,14 @@ import { FirebaseProvider } from './firebase/firebase.config';
 import { NotificationController } from './merchant.controller';
 
 import { Notification, NotificationSchema } from './schema/notification.schema';
+import { User, UserSchema } from '../user/schemas/user.schema';
 
 @Global()
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Notification.name, schema: NotificationSchema },
+      { name: User.name, schema: UserSchema },
     ]),
   ],
   providers: [NotificationService, FirebaseProvider],
