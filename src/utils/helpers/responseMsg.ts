@@ -218,6 +218,7 @@ export const Msg = {
   NOTIFICATIONS_FETCHED: `Notifications fetched successfully`,
   NOTIFICATION_DELETED: `Notification deleted successfully`,
   NOTIFICATION_UPDATED: `Notification updated successfully`,
+  NOTIFICATION_READ: `Notification read successfully`,
   NOTIFICATION_ALREADY_READ: `Notification already read`,
   NOTIFICATION_ALREADY_UNREAD: `Notification already unread`,
 };

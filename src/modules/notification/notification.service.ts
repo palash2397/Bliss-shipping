@@ -85,22 +85,64 @@ export class NotificationService {
     }
   }
 
-  // async markNotificationAsRead(notificationId: string) {
-  //   try {
-  //     const notification = await this.notificationModel.findByIdAndUpdate(
-  //       notificationId,
-  //       {
-  //         isRead: true,
-  //       },
-  //       {
-  //         new: true,
-  //       },
-  //     );
+  async markNotificationAsRead(notificationId: string) {
+    try {
+      const notification = await this.notificationModel.findByIdAndUpdate(
+        notificationId,
+        {
+          isRead: true,
+        },
+        {
+          new: true,
+        },
+      );
 
-  //     return notification;
-  //   } catch (error) {
-  //     console.log(`error while marking notification as read ${error}`);
-  //     return new ApiResponse(500, {}, Msg.SERVER_ERROR);
-  //   }
-  // }
+      if (!notification) {
+        return new ApiResponse(404, {}, Msg.NOTIFICATION_NOT_FOUND);
+      }
+
+      return new ApiResponse(200, notification, Msg.NOTIFICATION_READ);
+    } catch (error) {
+      console.log(`error while marking notification as read ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+  async markAllNotificationAsRead(userId: string) {
+    try {
+      const notifications = await this.notificationModel.updateMany(
+        { userId },
+        {
+          isRead: true,
+        },
+      );
+
+      if (!notifications) {
+        return new ApiResponse(404, {}, Msg.NOTIFICATIONS_NOT_FOUND);
+      }
+
+      return new ApiResponse(200, notifications, Msg.NOTIFICATION_READ);
+    } catch (error) {
+      console.log(`error while marking notification as read ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+  async deleteNotification(notificationId: string) {
+    try {
+      const notification =
+        await this.notificationModel.findByIdAndDelete(notificationId);
+
+      if (!notification) {
+        return new ApiResponse(404, {}, Msg.NOTIFICATION_NOT_FOUND);
+      }
+
+      return new ApiResponse(200, notification, Msg.NOTIFICATION_DELETED);
+    } catch (error) {
+      console.log(`error while deleting notification ${error}`);
+      return new ApiResponse(500, {}, Msg.SERVER_ERROR);
+    }
+  }
+
+  async 
 }
