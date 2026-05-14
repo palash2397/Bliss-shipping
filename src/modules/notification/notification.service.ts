@@ -72,6 +72,7 @@ export class NotificationService {
     try {
       const notifications = await this.notificationModel.find({
         userId,
+        isDeleted: false,
       });
 
       if (!notifications || notifications.length === 0) {
@@ -131,10 +132,20 @@ export class NotificationService {
     }
   }
 
-  async deleteNotification(notificationId: string) {
+  async deleteNotification(notificationId: string, userId: string) {
     try {
-      const notification =
-        await this.notificationModel.findByIdAndDelete(notificationId);
+      const notification = await this.notificationModel.findOneAndUpdate(
+        {
+          _id: notificationId,
+          userId,
+        },
+        {
+          isDeleted: true,
+        },
+        {
+          new: true,
+        },
+      );
 
       if (!notification) {
         return new ApiResponse(404, {}, Msg.NOTIFICATION_NOT_FOUND);
@@ -149,9 +160,12 @@ export class NotificationService {
 
   async deleteAllNotification(userId: string) {
     try {
-      const notifications = await this.notificationModel.deleteMany({
-        userId,
-      });
+      const notifications = await this.notificationModel.updateMany(
+        { userId },
+        {
+          isDeleted: true,
+        },
+      );
 
       if (!notifications) {
         return new ApiResponse(404, {}, Msg.NOTIFICATIONS_NOT_FOUND);

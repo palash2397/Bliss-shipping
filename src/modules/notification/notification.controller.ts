@@ -2,6 +2,7 @@ import {
   Controller,
   Post,
   Body,
+  Delete,
   UseGuards,
   Req,
   Get,
@@ -53,5 +54,15 @@ export class NotificationController {
   @Patch('/mark-as-read/:id')
   async markAsRead(@Req() req: any, @Param('id') id: string) {
     return this.notificationService.markNotificationAsRead(id, req.user.id);
+  }
+
+  @Delete('/all')
+  async deleteAllNotification(@Req() req: any) {
+    return this.notificationService.deleteAllNotification(req.user.id);
+  }
+
+  @Delete('/:id')
+  async deleteNotification(@Param('id') id: string, @Req() req: any) {
+    return this.notificationService.deleteNotification(id, req.user.id);
   }
 }

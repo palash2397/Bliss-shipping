@@ -16,8 +16,11 @@ export class Notification {
 
   @Prop({ default: false })
   isRead: boolean;
+  @Prop({ default: false })
+  isDeleted: boolean;
 
   @Prop({ type: Object })
+
   data?: Record<string, any>;
 }
 
