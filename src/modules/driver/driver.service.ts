@@ -37,7 +37,7 @@ export class DriverService {
     private readonly driverVehicleModel: Model<DriverVehicleDocument>,
 
     private readonly notificationService: NotificationService,
-  ) {}
+  ) { }
 
   async registerDriver(dto: DriverRegisterDto) {
     try {
@@ -681,10 +681,10 @@ export class DriverService {
         ...user,
         vehicle: driverVehicle
           ? {
-              id: vehicle._id,
-              name: vehicle.name,
-              description: vehicle.description,
-            }
+            id: vehicle._id,
+            name: vehicle.name,
+            description: vehicle.description,
+          }
           : null,
       };
 

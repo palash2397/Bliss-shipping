@@ -5,4 +5,4 @@ import { MongooseModule } from '@nestjs/mongoose';
 @Module({
   imports: [MongooseModule.forRoot(process.env.MONGO_URI!)],
 })
-export class DatabaseModule {}
+export class DatabaseModule { }
